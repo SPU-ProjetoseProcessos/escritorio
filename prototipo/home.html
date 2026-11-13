@@ -4,7 +4,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="robots" content="noindex, nofollow">
 <meta name="claude:viewport-fit-sides" content="cover">
-<title>Ferramentas — Escritório de Processos da SPU</title>
+<title>Escritório de Processos da SPU</title>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500&family=Raleway:wght@400;500;600;700&display=swap">
 
 <style>
@@ -82,9 +82,30 @@
   .modulo span { display: block; font-size: 12.5px; color: var(--fg-muted); line-height: 1.3; }
 
   /* ---------- Abertura ---------- */
-  .abertura { padding-block: 34px 22px; max-width: 60ch; }
+  .abertura { padding-block: 34px 6px; max-width: 68ch; }
   .abertura h1 { font-size: clamp(24px, 4.2vw, 32px); font-weight: 700; line-height: 1.18; letter-spacing: -.015em; }
-  .abertura p { margin-top: 10px; font-size: 16px; color: var(--fg-muted); }
+  .abertura p { margin-top: 12px; font-size: 16.5px; }
+
+  /* ---------- A ordem da página, de 13/11/2026: primeiro o Escritório, depois as
+     ferramentas. Com as ferramentas em primeiro plano a página se confundia com o
+     catálogo de soluções. ---------- */
+  .oquefaz { margin-top: 26px; }
+  .oquefaz > h2, .conheca > h2 { font-size: clamp(21px, 3.6vw, 27px); font-weight: 700; line-height: 1.2; }
+  .oquefaz .frentes { margin-top: 20px; }
+  .conheca { margin-top: 44px; padding-top: 34px; border-top: 1px solid var(--border); }
+  .contato { margin-top: 14px; }
+  /* Dois painéis lado a lado: as ferramentas do Escritório e o MemóriaSPU. */
+  .duo { margin-top: 20px; display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 360px), 1fr)); gap: 16px; align-items: stretch; }
+  .painel-ferramentas { min-width: 0; padding: 22px 24px; border: 1px solid var(--border-forte); border-radius: 12px; background: var(--surface); box-shadow: var(--sombra); display: flex; flex-direction: column; gap: 12px; }
+  .painel-etiqueta { font-size: 11px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: var(--fg-muted); }
+  .lista-ferramentas { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; }
+  .lista-ferramentas a { display: flex; flex-direction: column; gap: 3px; padding: 12px 0; border-top: 1px solid var(--border); color: inherit; text-decoration: none; }
+  .lista-ferramentas li:first-child a { border-top: 0; padding-top: 0; }
+  .lista-ferramentas li:last-child a { padding-bottom: 0; }
+  .lista-ferramentas a:hover .wordmark, .lista-ferramentas a:focus-visible .wordmark { text-decoration: underline; }
+  .lista-ferramentas a:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; border-radius: 4px; }
+  .duo .institucional { margin-top: 0; flex-direction: column; align-items: flex-start; justify-content: center; }
+  .duo .inst-texto { flex: 0 1 auto; }
 
   /* ---------- Prateleira ---------- */
   .prateleira {
@@ -241,77 +262,16 @@
 <main class="interno">
 
   <section class="abertura">
-    <h1>Ferramentas</h1>
-  </section>
-
-  <ul class="prateleira">
-
-    <li>
-      <a class="cartao" href="https://spu-projetoseprocessos.github.io/SPUProcessos/">
-        <span class="wordmark"><b>SPU</b><i>Processos</i></span>
-        <p class="descricao">O catálogo dos processos de trabalho da SPU mapeados em
-          Bizagi, com o fluxo publicado e o manual de cada um.</p>
-        <span class="abrir">abrir <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h13M13 6l6 6-6 6"/></svg></span>
-      </a>
-    </li>
-
-    <li>
-      <a class="cartao" href="https://spu-projetoseprocessos.github.io/tabelas-taxonomicas-spu/">
-        <span class="wordmark"><b>Tabelas Taxonômicas</b></span>
-        <p class="descricao">Os tipos de uso imobiliário e os regimes de destinação como
-          estão nas Resoluções do ComGC, ligados ao glossário.</p>
-        <span class="abrir">abrir <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h13M13 6l6 6-6 6"/></svg></span>
-      </a>
-    </li>
-
-    <li>
-      <a class="cartao" href="https://spu-projetoseprocessos.github.io/simulador-competencia-spu/">
-        <span class="wordmark"><b>Governança da Destinação</b></span>
-        <p class="descricao">Pelo regime, pelo valor e pela finalidade, diz quem tem
-          competência para o ato e se cabe manifestação prévia. Traz também a tabela de
-          regras, a ficha de cada regime e o rito.</p>
-        <span class="abrir">abrir <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h13M13 6l6 6-6 6"/></svg></span>
-      </a>
-    </li>
-
-    <li>
-      <a class="cartao" href="https://spu-projetoseprocessos.github.io/SPUProcessos/organograma/">
-        <span class="wordmark"><b>SPU</b><i>Organograma</i></span>
-        <p class="descricao">Quem é quem na SPU: a estrutura em árvore, do Gabinete às 27
-          superintendências, com o titular de cada unidade e quem está lotado nela.</p>
-        <span class="abrir">abrir <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h13M13 6l6 6-6 6"/></svg></span>
-      </a>
-    </li>
-
-  </ul>
-
-  <a class="saida" href="https://spu-projetoseprocessos.github.io/cade-catalogo-solucoes-spu/">
-    <div class="saida-texto">
-      <p class="titulo">Procurando outro sistema da SPU?</p>
-      <p class="descricao">Está tudo no <b>Cadê?</b> — o catálogo de todas as soluções
-        digitais da SPU.</p>
-    </div>
-    <span class="abrir">abrir o Cadê? <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h13M13 6l6 6-6 6"/></svg></span>
-  </a>
-
-  <a class="institucional" href="https://memoria-spu.gestao.gov.br/">
-    <div class="inst-texto">
-      <span class="inst-etiqueta">Acervo institucional da SPU</span>
-      <span class="inst-titulo">Não deixe de conhecer o MemóriaSPU</span>
-      <span class="inst-desc">Normas, pareceres e publicações, em um lugar só. Veja
-        também o <b>Acervo Histórico</b> — história fundiária do Brasil.</span>
-    </div>
-    <span class="inst-abrir">abrir o MemóriaSPU <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h13M13 6l6 6-6 6"/></svg></span>
-  </a>
-
-  <section class="dentro">
-    <h2>Por dentro do Escritório de Processos</h2>
+    <h1>Escritório de Processos</h1>
     <p class="intro">O Escritório existe para auxiliar as unidades da SPU a simplificar e
       otimizar seus processos de trabalho. Atendemos demandas de mapeamento de fluxos e
       elaboração de manuais, especificação e prototipação de ferramentas de tecnologia da
       informação, linguagem institucional, serviços de atendimento ao cidadão e de
-      atendimento interno — e construímos ferramentas como as desta página.</p>
+      atendimento interno.</p>
+  </section>
 
+  <section class="oquefaz">
+    <h2>O que fazemos</h2>
     <ul class="frentes">
       <li style="--acento-frente: var(--marca-1)">
         <h3>Processos de trabalho</h3>
@@ -349,7 +309,53 @@
       <p>Atendemos o <b>Gabinete</b>, as <b>cinco diretorias</b> e as <b>27
         superintendências</b> da SPU.</p>
     </div>
+  </section>
 
+  <section class="conheca">
+    <h2>Conheça nossas ferramentas</h2>
+    <div class="duo">
+      <div class="painel-ferramentas">
+        <span class="painel-etiqueta">Ferramentas do Escritório de Processos</span>
+        <ul class="lista-ferramentas">
+          <li><a href="https://spu-projetoseprocessos.github.io/SPUProcessos/">
+            <span class="wordmark"><b>SPU</b><i>Processos</i></span>
+            <span class="descricao">O catálogo dos processos de trabalho da SPU mapeados em Bizagi, com o fluxo publicado e o manual de cada um.</span>
+          </a></li>
+          <li><a href="https://spu-projetoseprocessos.github.io/tabelas-taxonomicas-spu/">
+            <span class="wordmark"><b>Tabelas Taxonômicas</b></span>
+            <span class="descricao">Os tipos de uso imobiliário e os regimes de destinação como estão nas Resoluções do ComGC, ligados ao glossário.</span>
+          </a></li>
+          <li><a href="https://spu-projetoseprocessos.github.io/simulador-competencia-spu/">
+            <span class="wordmark"><b>Governança da Destinação</b></span>
+            <span class="descricao">Pelo regime, pelo valor e pela finalidade, diz quem tem competência para o ato e se cabe manifestação prévia. Traz também a tabela de regras, a ficha de cada regime e o rito.</span>
+          </a></li>
+          <li><a href="https://spu-projetoseprocessos.github.io/SPUProcessos/organograma/">
+            <span class="wordmark"><b>SPU</b><i>Organograma</i></span>
+            <span class="descricao">Quem é quem na SPU: a estrutura em árvore, do Gabinete às 27 superintendências, com o titular de cada unidade e quem está lotado nela.</span>
+          </a></li>
+        </ul>
+      </div>
+      <a class="institucional" href="https://memoria-spu.gestao.gov.br/">
+    <div class="inst-texto">
+      <span class="inst-etiqueta">Acervo institucional da SPU</span>
+      <span class="inst-titulo">Não deixe de conhecer o MemóriaSPU</span>
+      <span class="inst-desc">Normas, pareceres e publicações, em um lugar só. Veja
+        também o <b>Acervo Histórico</b> — história fundiária do Brasil.</span>
+    </div>
+    <span class="inst-abrir">abrir o MemóriaSPU <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h13M13 6l6 6-6 6"/></svg></span>
+  </a>
+    </div>
+  <a class="saida" href="https://spu-projetoseprocessos.github.io/cade-catalogo-solucoes-spu/">
+    <div class="saida-texto">
+      <p class="titulo">Procurando outro sistema da SPU?</p>
+      <p class="descricao">Está tudo no <b>Cadê?</b> — o catálogo de todas as soluções
+        digitais da SPU.</p>
+    </div>
+    <span class="abrir">abrir o Cadê? <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h13M13 6l6 6-6 6"/></svg></span>
+  </a>
+  </section>
+
+  <section class="contato">
     <div class="sugerir">
       <div class="sugerir-texto">
         <span class="titulo">Achou um erro, tem uma sugestão ou quer solicitar um serviço?</span>
@@ -359,32 +365,6 @@
       </div>
       <button type="button" class="btn-sugerir" id="abrir-pedido">Fale com a equipe</button>
     </div>
-  </section>
-
-  <section class="validar">
-    <h2>Para validar — não faz parte da página final</h2>
-    <p>Quatro pontos. O primeiro é a resposta à observação do chefe.</p>
-    <ol>
-      <li><strong>Por que isto não concorre com o Cadê?.</strong> O Cadê? é o
-        <em>catálogo</em> de todas as soluções digitais da SPU, de qualquer área, com
-        cadastro e busca. Esta é a <em>página institucional de uma equipe</em>. Uma página
-        de equipe não concorre com um catálogo, do mesmo jeito que a página de uma
-        coordenação não concorre com a lista telefônica — e esta manda para o Cadê? quem
-        veio procurar outro sistema, em vez de competir. O MemóriaSPU, aliás, já aponta de
-        volta para o SPUProcessos e para as soluções digitais: a citação é recíproca.</li>
-      <li><strong>A página não tem nome de produto, de propósito.</strong> Identifica-se
-        pela unidade — Escritório de Processos, CGGES. Marca própria era justamente o que
-        a fazia parecer um produto concorrendo com o catálogo. O custo é não ter um nome
-        curto para citar; se incomodar, a saída é endereço curto na intranet, não marca
-        nova.</li>
-      <li><strong>"Registrar um pedido" ainda não leva a lugar nenhum.</strong> É marcação
-        de protótipo: vai apontar para o formulário quando ele existir.</li>
-      <li><strong>Falta decidir se a página é pública ou só da equipe.</strong> O conteúdo
-        institucional e a chamada de pedidos são de página pública — ninguém escreve "o que
-        é o Escritório de Processos" para sete colegas que já sabem. Mas ficou decidido
-        antes que a página seria área logada. As duas coisas convivem: página pública, e
-        atrás de login a área da equipe com o quadro de pedidos.</li>
-    </ol>
   </section>
 
 </main>

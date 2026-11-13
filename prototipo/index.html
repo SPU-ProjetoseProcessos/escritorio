@@ -1,0 +1,2325 @@
+<!doctype html>
+<html lang="pt-BR">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<meta name="claude:viewport-fit-sides" content="cover">
+<title>Área da Equipe</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500&family=Raleway:wght@400;500;600;700;800&display=swap">
+
+<style>
+  :root {
+    --bg: #eceff4; --surface: #ffffff; --surface-2: #f0f2f5; --zebra: #f7f9fc;
+    --border: #d9dee6; --border-forte: #b6bfcc;
+    --fg: #23262b; --fg-muted: #4f5660;
+    --accent: #1b2b85; --accent-escuro: #121d5e; --accent-claro: #5992ed; --accent-fg: #ffffff; --accent-soft: #e4ecff;
+    --ok: #15803d; --meio: #a16207; --off: #5b6572; --alerta: #b3261e; --laranja: #c2410c;
+    --roxo: #6d28d9; --azul: #1351b4; --mes: #0f766e; --rot: #8a4b08; --aviso: #b45309;
+    --tinta-solida: #ffffff;
+    --marca-1: #1351b4; --marca-2: #2e9e4f; --marca-3: #f2b705; --marca-4: #e8771f;
+    /* Uma cor por frente. Nenhuma é o vermelho do alerta nem o laranja do parado. */
+    --f1: #1d4ed8; --f2: #0e7490; --f3: #15803d; --f4: #6b7a0f; --f5: #a16207;
+    --f6: #a21caf; --f7: #6d28d9; --f8: #be185d; --f9: #475569;
+    --sombra: 0 1px 2px rgba(28,28,28,.06), 0 8px 24px -16px rgba(12,50,111,.4);
+    --fonte-ui: "Raleway", system-ui, -apple-system, "Segoe UI", sans-serif;
+    --fonte-codigo: "IBM Plex Mono", ui-monospace, "SF Mono", Menlo, monospace;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #0c1020; --surface: #171c2e; --surface-2: #1f2639; --zebra: #1b2135;
+      --border: #2e3650; --border-forte: #47506c;
+      --fg: #eef0f7; --fg-muted: #aab2c8;
+      --accent: #9db8ff; --accent-escuro: #c2d3ff; --accent-claro: #5992ed; --accent-fg: #0d1430; --accent-soft: #1d274d;
+      --ok: #4ccb78; --meio: #e6b44c; --off: #98a3b8; --alerta: #ff8a80; --laranja: #ffa35c;
+      --roxo: #b49cff; --azul: #7aa2ff; --mes: #5eead4; --rot: #f5b56b; --aviso: #fbbf24;
+      --tinta-solida: #0d1430;
+      --f1: #7aa2ff; --f2: #4fd1e0; --f3: #5fd38a; --f4: #c3d35a; --f5: #e6b44c;
+      --f6: #e58cf0; --f7: #b49cff; --f8: #f27fb2; --f9: #a8b3c7;
+      --sombra: 0 1px 2px rgba(0,0,0,.45), 0 8px 24px -16px rgba(0,0,0,.85);
+      color-scheme: dark;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #0c1020; --surface: #171c2e; --surface-2: #1f2639; --zebra: #1b2135;
+    --border: #2e3650; --border-forte: #47506c;
+    --fg: #eef0f7; --fg-muted: #aab2c8;
+    --accent: #9db8ff; --accent-escuro: #c2d3ff; --accent-claro: #5992ed; --accent-fg: #0d1430; --accent-soft: #1d274d;
+    --ok: #4ccb78; --meio: #e6b44c; --off: #98a3b8; --alerta: #ff8a80; --laranja: #ffa35c;
+    --roxo: #b49cff; --azul: #7aa2ff; --mes: #5eead4; --rot: #f5b56b; --aviso: #fbbf24;
+    --tinta-solida: #0d1430;
+    --f1: #7aa2ff; --f2: #4fd1e0; --f3: #5fd38a; --f4: #c3d35a; --f5: #e6b44c;
+    --f6: #e58cf0; --f7: #b49cff; --f8: #f27fb2; --f9: #a8b3c7;
+    --sombra: 0 1px 2px rgba(0,0,0,.45), 0 8px 24px -16px rgba(0,0,0,.85);
+    color-scheme: dark;
+  }
+
+  * { box-sizing: border-box; }
+  /* O atributo hidden perde para qualquer display: de classe; aqui ele volta a mandar. */
+  [hidden] { display:none !important; }
+  body { margin:0; background: var(--bg); color: var(--fg); font-family: var(--fonte-ui); font-size: 15px; line-height: 1.45; -webkit-font-smoothing: antialiased;
+         display:flex; flex-direction:column; min-height:100vh; }
+  body::before { content:""; position:fixed; inset:0 0 auto; height:env(safe-area-inset-top,0px); z-index:20; background:var(--surface); }
+  h1,h2,h3,p { margin:0; } h1,h2,h3 { text-wrap:balance; }
+  a { color: var(--accent); }
+  button, input, select { font: inherit; }
+
+  /* O cockpit: em tela larga a página não rola — rolam as colunas. */
+  @media (min-width: 1021px) { body { height:100vh; height:100dvh; overflow:hidden; } }
+
+  .interno { width:100%; max-width:1560px; margin-inline:auto;
+    padding-left:max(16px, env(safe-area-inset-left,0px));
+    padding-right:max(16px, env(safe-area-inset-right,0px)); }
+
+  /* ---------- Cabeçalho ---------- */
+  .topo { flex:none; background:var(--surface); border-bottom:1px solid var(--border); }
+  .topo .interno { padding-block:9px; display:flex; align-items:center; gap:10px 16px; flex-wrap:wrap; }
+  .marca { display:flex; align-items:center; gap:10px; }
+  .marca-texto { display:flex; flex-direction:column; align-items:flex-start; gap:1px; }
+  .marca-nome { font-size:21px; line-height:1.1; letter-spacing:-.02em; font-weight:700; }
+  .marca-autoria { font-size:12px; color:var(--fg-muted); white-space:nowrap; }
+  .marca-barras { display:flex; align-items:flex-end; gap:2px; height:18px; flex:none; }
+  .marca-barras i { width:3px; border-radius:1px; display:block; }
+  .modulo { padding-left:14px; border-left:1px solid var(--border); min-width:0; }
+  .modulo strong { display:block; font-size:15px; font-weight:700; line-height:1.25; }
+  .modulo span { display:block; font-size:13px; color:var(--fg-muted); }
+  .topo-dir { margin-left:auto; display:flex; align-items:center; gap:8px 12px; flex-wrap:wrap; }
+  .quem { display:flex; align-items:center; gap:6px; font-size:13px; color:var(--fg-muted); font-weight:600; }
+  .quem select { font-size:14px; padding:5px 8px; border:1px dashed var(--border-forte); border-radius:7px; background:var(--surface); color:var(--fg); max-width:190px; }
+  .ir { border:2px solid var(--accent); background:var(--accent); color:var(--accent-fg); font-size:14px; font-weight:700; padding:6px 14px; border-radius:8px; cursor:pointer; white-space:nowrap; }
+  .ir:hover { background:var(--accent-escuro); border-color:var(--accent-escuro); }
+  .mem-topo { display:inline-flex; align-items:center; gap:5px; font:inherit; font-size:13.5px;
+    font-weight:600; color:inherit; opacity:.75; text-decoration:none; white-space:nowrap;
+    padding:5px 10px; border-radius:7px; border:1px solid transparent; }
+  .mem-topo:hover { opacity:1; background:rgb(128 128 128 / .13); }
+  .mem-topo svg { width:12px; height:12px; flex:none; }
+
+  /* ---------- Faixa de contadores: cada um com a sua cor ---------- */
+  .faixa { flex:none; }
+  .faixa .interno { padding-block:10px 0; display:grid; grid-template-columns:repeat(auto-fit,minmax(min(100%,150px),1fr)); gap:8px; }
+  .tile { --tc: var(--accent); text-align:left; padding:8px 12px 8px 14px; border:1px solid var(--border); border-left:6px solid var(--tc); border-radius:9px;
+          background:color-mix(in srgb, var(--tc) 9%, var(--surface)); cursor:pointer; display:flex; align-items:baseline; gap:10px; color:inherit; }
+  .tile:hover { border-color:var(--tc); }
+  .tile b { font-size:24px; font-weight:800; line-height:1; font-variant-numeric:tabular-nums; color:var(--tc); }
+  .tile span { font-size:13px; color:var(--fg); font-weight:700; letter-spacing:.02em; text-transform:uppercase; }
+  .tile.zero { background:var(--surface); border-left-color:var(--border-forte); }
+  .tile.zero b { color:var(--fg-muted); }
+  .tile[aria-current="true"] { border-color:var(--tc); box-shadow:inset 0 0 0 2px var(--tc); background:color-mix(in srgb, var(--tc) 22%, var(--surface)); }
+
+  /* ---------- O casco de três colunas ---------- */
+  .casco { flex:1; min-height:0; display:grid; grid-template-columns:270px minmax(0,1fr) 348px; gap:12px; padding-block:10px 12px; }
+  .col { min-height:0; overflow:auto; display:flex; flex-direction:column; gap:10px; scrollbar-width:thin; }
+  .col-meio { background:var(--surface); border:1px solid var(--border); border-radius:10px; padding:14px; gap:12px; }
+  @media (max-width: 1020px) {
+    .casco { display:flex; flex-direction:column; }
+    .col { overflow:visible; }
+    .col-dir { order:-1; }
+  }
+
+  /* ---------- Bloco: toda divisão tem fronteira e faixa de título ---------- */
+  .bloco { --bc: var(--off); border:1.5px solid color-mix(in srgb, var(--bc) 45%, var(--border)); border-radius:10px; overflow:hidden; background:var(--surface); flex:none; }
+  .bloco-cab { display:flex; align-items:center; gap:8px; padding:7px 12px; background:var(--bc); color:var(--tinta-solida); font-size:13px; font-weight:800; letter-spacing:.04em; text-transform:uppercase; }
+  .bloco-cab .n { margin-left:auto; font-family:var(--fonte-codigo); font-size:12.5px; font-weight:500; }
+  .bloco-cab small { font-size:12.5px; font-weight:600; letter-spacing:0; text-transform:none; opacity:.92; }
+  .bloco-corpo { display:flex; flex-direction:column; gap:1px; background:var(--border); }
+  .bloco-corpo > .vazio, .bloco-corpo > .nova-linha { background:var(--surface); }
+
+  button.bloco-cab { width:100%; border:0; cursor:pointer; text-align:left; font-family:inherit; }
+  button.bloco-cab:hover .abre, button.bloco-cab:focus-visible .abre { text-decoration:underline; }
+  .bloco-cab .abre { margin-left:auto; font-size:12.5px; font-weight:700; letter-spacing:0; text-transform:none; white-space:nowrap; }
+  .bloco-cab .abre + .n { margin-left:0; }
+
+  /* ---------- Menu da esquerda ---------- */
+  .nav { --nc: var(--off); display:flex; align-items:center; gap:9px; width:100%; text-align:left; padding:6px 10px 6px 8px; border:0; border-left:5px solid transparent;
+         background:var(--surface); color:inherit; cursor:pointer; font-size:14.5px; font-weight:600; }
+  .nav:hover { background:var(--zebra); }
+  .nav[aria-current="true"] { background:color-mix(in srgb, var(--nc) 16%, var(--surface)); border-left-color:var(--nc); font-weight:800; }
+  .nav .ponto { width:11px; height:11px; border-radius:3px; background:var(--nc); flex:none; }
+  .nav span { flex:1; min-width:0; }
+  .nav .n { font-family:var(--fonte-codigo); font-size:13px; font-weight:500; color:var(--fg-muted); }
+  .nav .n.ruim { color:var(--tinta-solida); background:var(--alerta); padding:0 6px; border-radius:999px; }
+  .assina { padding:4px 6px 10px; font-size:12.5px; color:var(--fg-muted); }
+  .assina .versao { display:block; font-family:var(--fonte-codigo); font-size:11.5px; margin-top:3px; }
+
+  /* ---------- Banda: o cabeçalho colorido de frente e de projeto ---------- */
+  .banda { --fc: var(--accent); border-radius:10px; padding:12px 14px; background:color-mix(in srgb, var(--fc) 13%, var(--surface)); border:1.5px solid color-mix(in srgb, var(--fc) 50%, var(--border)); border-left:8px solid var(--fc); display:flex; flex-direction:column; gap:5px; flex:none; }
+  .banda .sobre { font-size:12.5px; font-weight:800; letter-spacing:.05em; text-transform:uppercase; color:var(--fc); }
+  .banda h2 { font-size:20px; font-weight:800; letter-spacing:-.01em; }
+  .banda p { font-size:13.5px; color:var(--fg-muted); }
+  .banda .grupo-linha { margin-top:4px; }
+  .link { border:0; background:none; color:var(--accent); font-size:14px; font-weight:700; cursor:pointer; padding:2px 0; text-align:left; }
+  .aviso { padding:9px 12px; border-radius:8px; background:var(--accent-soft); border:1.5px solid var(--accent-claro); font-size:14px; flex:none; }
+  .aviso b { font-weight:800; }
+
+  /* ---------- Linhas de trabalho ---------- */
+  .linha { --fc: transparent; display:flex; gap:6px 12px; align-items:center; flex-wrap:wrap; padding:10px 12px 10px 10px; background:var(--surface); border-left:5px solid var(--fc); }
+  .linha-corpo { flex:1 1 240px; min-width:0; display:flex; flex-direction:column; gap:4px; cursor:pointer; border:0; background:none; text-align:left; color:inherit; padding:0; }
+  .linha-corpo:hover .mt-nome { color:var(--accent); text-decoration:underline; }
+  .linha-corpo:focus-visible { outline:2px solid var(--accent); outline-offset:3px; border-radius:4px; }
+  .linha-acoes { display:flex; gap:6px; flex-wrap:wrap; align-items:center; }
+  .item-topo { display:flex; gap:6px; align-items:center; flex-wrap:wrap; }
+  .mt-nome { font-size:15px; font-weight:700; overflow-wrap:anywhere; }
+  .mt-pe { font-size:13px; color:var(--fg-muted); overflow-wrap:anywhere; }
+  .mt-onde { font-size:13px; font-weight:700; color:var(--fc); overflow-wrap:anywhere; }
+  .vazio { padding:16px 12px; text-align:center; color:var(--fg-muted); background:var(--surface); font-size:14px; }
+  .vazio b { color:var(--ok); font-weight:700; }
+  .estreita .linha-corpo { flex-basis:100%; }
+
+  .pediu { flex-basis:100%; display:flex; flex-direction:column; gap:6px; padding:9px 10px; border-radius:8px; background:color-mix(in srgb, var(--laranja) 14%, var(--surface)); border:1.5px solid var(--laranja); font-size:13.5px; }
+  .pediu b { font-weight:800; }
+  .pediu div { display:flex; gap:6px; }
+  .pediu input { flex:1; min-width:0; }
+
+  .bt { border:1.5px solid var(--border-forte); background:var(--surface); color:var(--fg); font-size:13.5px; font-weight:700; padding:5px 11px; border-radius:7px; cursor:pointer; white-space:nowrap; }
+  .bt:hover { border-color:var(--accent); color:var(--accent); }
+  .bt.pri { border-color:var(--accent); background:var(--accent); color:var(--accent-fg); }
+  .bt.pri:hover { background:var(--accent-escuro); border-color:var(--accent-escuro); color:var(--accent-fg); }
+  .bt.verde { border-color:var(--ok); background:var(--ok); color:var(--tinta-solida); }
+  .mini { font-size:13.5px; padding:4px 7px; border:1.5px solid var(--border-forte); border-radius:7px; background:var(--surface); color:var(--fg); max-width:160px; }
+  .campo-linha { font-size:14px; padding:6px 9px; border:1.5px solid var(--border-forte); border-radius:7px; background:var(--surface); color:var(--fg); width:100%; }
+
+  /* Estado: o que pede ação é cheio; o que está bem é só tingido. */
+  .pill { --pc: var(--off); font-size:11.5px; font-weight:800; letter-spacing:.03em; text-transform:uppercase; padding:2px 8px; border-radius:999px; white-space:nowrap;
+          border:1.5px solid var(--pc); color:var(--pc); background:color-mix(in srgb, var(--pc) 13%, var(--surface)); }
+  .pill.cheia { background:var(--pc); color:var(--tinta-solida); }
+  .s-atrasada { --pc: var(--alerta); }
+  .s-parada, .s-hoje, .s-quase, .s-voltar { --pc: var(--laranja); }
+  .s-breve { --pc: var(--meio); }
+  .s-andando, .s-emdia, .s-feita, .s-tratado, .s-ativo { --pc: var(--ok); }
+  .s-novo { --pc: var(--azul); }
+  .s-semdono { --pc: var(--meio); }
+  .s-suspensa, .s-depois, .s-ideia { --pc: var(--roxo); }
+  .s-arquivado { --pc: var(--off); }
+  .s-descartado { --pc: var(--off); }
+  .chip { font-size:12.5px; font-weight:600; padding:1px 8px; border-radius:6px; background:var(--surface-2); color:var(--fg); border:1px solid var(--border-forte); white-space:nowrap; max-width:100%; overflow:hidden; text-overflow:ellipsis; }
+  .chip.vazado { background:none; border:1.5px solid currentColor; font-weight:700; }
+  .chip.c-ti { color:var(--laranja); }
+  .chip.c-liga { color:var(--azul); }
+  .chip.c-rot { color:var(--meio); }
+
+  /* ---------- Projeto dentro da frente ---------- */
+  .projeto { --fc: var(--accent); border:1.5px solid color-mix(in srgb, var(--fc) 45%, var(--border)); border-radius:10px; overflow:hidden; flex:none; }
+  /* O cabeçalho do projeto tem dois botões: o que recolhe/expande e o que entra no projeto. */
+  .projeto-cab { display:flex; align-items:stretch; border-left:6px solid var(--fc); background:color-mix(in srgb, var(--fc) 13%, var(--surface)); }
+  .projeto-dobra { flex:1; min-width:0; display:flex; gap:6px 12px; align-items:baseline; flex-wrap:wrap; padding:9px 12px; border:0; background:none; text-align:left; cursor:pointer; color:inherit; }
+  .projeto-dobra:hover .projeto-nome { text-decoration:underline; }
+  .projeto-dobra .seta { flex:none; width:20px; font-size:22px; line-height:1; font-weight:800; color:var(--fc); align-self:center; }
+  .projeto-nome { font-size:16px; font-weight:800; flex:1 1 200px; }
+  .projeto-conta { font-size:13px; color:var(--fg-muted); font-weight:600; }
+  .projeto-conta b { color:var(--alerta); font-weight:800; }
+  .projeto-abrir { flex:none; border:0; background:none; cursor:pointer; padding:9px 12px; font-size:13px; font-weight:800; color:var(--fc); white-space:nowrap; }
+  .projeto-abrir:hover { text-decoration:underline; }
+  a.projeto-abrir { text-decoration:none; align-self:center; }
+  .banda a.link { text-decoration:none; }
+  .banda a.link:hover { text-decoration:underline; }
+  .projeto-corpo { border-top:1px solid var(--border); background:var(--border); display:flex; flex-direction:column; gap:1px; }
+  .nova-linha { display:flex; gap:8px; padding:8px 12px; background:var(--surface); }
+  .nova-linha input { flex:1; min-width:0; font-size:14px; padding:6px 10px; border:1.5px dashed var(--border-forte); border-radius:7px; background:var(--surface); color:var(--fg); }
+  .nova-linha.solta { padding:0; }
+
+  /* ---------- Painel ---------- */
+  .casco2 { flex:1; min-height:0; display:grid; grid-template-columns:minmax(0,1fr) 440px; gap:12px; padding-block:10px 12px; }
+  @media (max-width: 1020px) { .casco2 { display:flex; flex-direction:column; } }
+  .secao { margin-top:16px; }
+  .tab { width:100%; border-collapse:collapse; background:var(--surface); font-size:14px; }
+  .tab th, .tab td { padding:8px 12px; text-align:left; border-bottom:1px solid var(--border); }
+  .tab th { font-size:12.5px; font-weight:800; letter-spacing:.03em; text-transform:uppercase; color:var(--fg-muted); background:var(--surface-2); }
+  .tab td.n, .tab th.n { text-align:right; font-variant-numeric:tabular-nums; }
+  .tab tr:last-child td { border-bottom:0; }
+  .tab td.ruim { color:var(--alerta); font-weight:800; }
+  .tab .ponto { display:inline-block; width:10px; height:10px; border-radius:3px; margin-right:7px; }
+  .tab-rolo { overflow-x:auto; }
+  .duas { display:grid; grid-template-columns:repeat(auto-fit,minmax(min(100%,440px),1fr)); gap:0 14px; }
+
+  /* ---------- Fichas ---------- */
+  dialog.ficha { width:min(640px, calc(100% - 24px)); border:1.5px solid var(--border-forte); border-radius:14px; padding:0; background:var(--surface); color:var(--fg); box-shadow:var(--sombra); }
+  dialog.ficha::backdrop { background:rgb(15 23 42 / 60%); }
+  .ficha-topo { display:flex; gap:8px; align-items:center; flex-wrap:wrap; padding:12px 18px; border-bottom:1px solid var(--border); }
+  .ficha-topo .fechar { margin-left:auto; border:0; background:none; color:var(--fg-muted); font-size:24px; line-height:1; cursor:pointer; padding:4px 8px; border-radius:6px; }
+  .ficha-topo .fechar:hover { background:var(--surface-2); }
+  .ficha-corpo { padding:16px 18px; display:flex; flex-direction:column; gap:14px; }
+  .ficha-texto { font-size:18px; font-weight:800; overflow-wrap:anywhere; }
+  .ficha-texto.solto { font-weight:500; font-size:15.5px; }
+  .dados { display:grid; grid-template-columns:repeat(auto-fit,minmax(min(100%,180px),1fr)); gap:10px 18px; padding-block:12px; border-block:1px solid var(--border); margin:0; }
+  .dados div { display:flex; flex-direction:column; gap:3px; min-width:0; }
+  .dados dt { font-size:12.5px; font-weight:800; letter-spacing:.03em; text-transform:uppercase; color:var(--fg-muted); }
+  .dados dd { margin:0; font-size:14.5px; overflow-wrap:break-word; }
+  .dados select, .dados input, .campo input, .campo select { font-size:14.5px; padding:6px 9px; border:1.5px solid var(--border-forte); border-radius:7px; background:var(--surface); color:var(--fg); width:100%; }
+  .campo { display:flex; flex-direction:column; gap:5px; font-size:13px; font-weight:700; color:var(--fg-muted); }
+  .grupo { display:flex; flex-direction:column; gap:8px; }
+  .grupo > span { font-size:13px; font-weight:700; color:var(--fg-muted); }
+  .grupo-linha { display:flex; gap:8px; flex-wrap:wrap; align-items:center; }
+  .notas { display:flex; flex-direction:column; gap:1px; background:var(--border); border:1.5px solid var(--border-forte); border-radius:9px; overflow:hidden; }
+  .notas > div { background:var(--surface); padding:8px 11px; font-size:14px; display:flex; flex-direction:column; gap:2px; }
+  .notas time { font-family:var(--fonte-codigo); font-size:12.5px; color:var(--fg-muted); }
+  .nota-nova { display:flex; gap:8px; padding:8px 11px; background:var(--surface-2) !important; flex-direction:row !important; }
+  .nota-nova input { flex:1; min-width:0; }
+  .historico { font-size:13px; color:var(--fg-muted); display:flex; flex-direction:column; gap:4px; }
+  .historico b { color:var(--fg); font-weight:700; }
+  .historico time { font-family:var(--fonte-codigo); font-size:12.5px; }
+
+  /* ---------- Todo mês: Petrvs e frequência ---------- */
+  .mes-tab td { vertical-align:middle; padding-block:10px; }
+  .mes-tab td.pessoa { font-size:15px; font-weight:800; white-space:nowrap; }
+  .mes-tab tr.eu-linha td { background:color-mix(in srgb, var(--mes) 11%, var(--surface)); }
+  .mes-tab tr.eu-linha td.pessoa { box-shadow:inset 5px 0 0 var(--mes); }
+  .cel { display:flex; gap:6px 8px; align-items:center; flex-wrap:wrap; }
+  .link.fino { font-size:13px; font-weight:600; }
+  .s-falta { --pc: var(--alerta); }
+  .s-avencer { --pc: var(--meio); }
+  .s-assinar { --pc: var(--azul); }
+  .s-fechado { --pc: var(--ok); }
+  .lembrete-texto { white-space:pre-wrap; font-size:14.5px; line-height:1.5; padding:12px 14px; border:1.5px solid var(--border-forte); border-radius:9px; background:var(--surface-2); user-select:all; -webkit-user-select:all; }
+
+  /* ---------- Quadro de avisos: à esquerda, embaixo das frentes ---------- */
+  .col-esq > * { flex:none; }
+  .aviso-item { display:flex; gap:4px 6px; align-items:flex-start; padding:8px 8px 8px 12px; background:var(--surface); }
+  .aviso-item .txt { flex:1; min-width:0; display:flex; flex-direction:column; gap:2px; font-size:14.5px; font-weight:700; overflow-wrap:anywhere; }
+  .aviso-item .txt small { font-size:12.5px; font-weight:500; color:var(--fg-muted); }
+  .aviso-novo { display:flex; flex-direction:column; gap:6px; padding:8px 10px 10px; background:var(--surface-2); }
+  .aviso-novo input { font-size:14px; padding:6px 9px; border:1.5px dashed var(--border-forte); border-radius:7px; background:var(--surface); color:var(--fg); }
+  .aviso-novo input[type="text"] { width:100%; }
+  .aviso-novo label { display:flex; gap:6px; align-items:center; font-size:12.5px; font-weight:600; color:var(--fg-muted); }
+  /* (regras da faixa antiga, mantidas só pelo botão de tirar) */
+  .avisos { flex:none; }
+  .avisos .interno { padding-block:8px 0; }
+  .avisos .interno:empty { padding:0; }
+  .quadro { display:flex; flex-direction:column; gap:1px; border:1.5px solid color-mix(in srgb, var(--marca-3) 75%, var(--border)); border-left:8px solid var(--marca-3); border-radius:9px; overflow:hidden; background:var(--border); }
+  .quadro-linha { display:flex; gap:4px 10px; align-items:center; flex-wrap:wrap; padding:6px 12px; background:color-mix(in srgb, var(--marca-3) 15%, var(--surface)); font-size:14.5px; }
+  .quadro-linha .rot { font-size:12.5px; font-weight:800; letter-spacing:.05em; text-transform:uppercase; }
+  .quadro-linha .txt { flex:1 1 300px; min-width:0; font-weight:700; overflow-wrap:anywhere; }
+  .quadro-linha input { font-size:14px; padding:4px 8px; border:1.5px dashed var(--border-forte); border-radius:7px; background:var(--surface); color:var(--fg); }
+  .quadro-linha input[type="text"] { flex:1 1 260px; min-width:0; }
+  .tirar { border:0; background:none; color:var(--fg-muted); font-size:19px; line-height:1; cursor:pointer; padding:2px 7px; border-radius:6px; }
+  .tirar:hover { background:var(--surface-2); color:var(--alerta); }
+  .assina .link { font-size:13px; }
+
+  .volta { display:flex; gap:8px; align-items:center; flex-wrap:wrap; font-size:13.5px; font-weight:700; color:var(--fg-muted); }
+  .volta input { font-size:14px; padding:5px 8px; border:1.5px solid var(--border-forte); border-radius:7px; background:var(--surface); color:var(--fg); }
+  .volta small { font-size:12.5px; font-weight:500; }
+
+  /* ====================================================================
+     PALETA CALMA — versão 20
+     As cores brigavam e não se via um padrão. O padrão passa a ser um só, e
+     vale para a tela inteira:
+       · cor CHEIA só em dois casos — o alarme (vermelho: atrasado, falta) e
+         o botão principal (azul-marinho);
+       · todo o resto é fundo claro tingido, com um FILETE da cor à esquerda;
+       · etiqueta tem quatro tons: vermelho (alarme), âmbar (pede atenção),
+         verde (em ordem), azul ou cinza (só informa).
+     ==================================================================== */
+  /* Cabeçalho de bloco: tingido, com filete; o texto é escuro. */
+  .bloco { border-color:color-mix(in srgb, var(--bc) 28%, var(--border)); }
+  .bloco-cab { background:color-mix(in srgb, var(--bc) 12%, var(--surface)); color:var(--fg);
+               border-left:6px solid var(--bc); border-bottom:1px solid color-mix(in srgb, var(--bc) 28%, var(--border)); }
+  .bloco-cab small { opacity:1; color:var(--fg-muted); }
+  .bloco-cab .n { color:var(--fg-muted); }
+  .bloco-cab .abre { color:var(--accent); }
+  /* Cartões do alto: brancos; a cor fica no número e no filete. */
+  .tile { background:var(--surface); border:1px solid var(--border); border-left:5px solid var(--tc); }
+  .tile.zero { border-left-color:var(--border-forte); }
+  .tile[aria-current="true"] { background:color-mix(in srgb, var(--tc) 11%, var(--surface)); border-color:var(--tc); box-shadow:inset 0 0 0 1px var(--tc); }
+  /* Etiquetas: tingidas. Cheia, só a vermelha. */
+  .pill { border:1.5px solid color-mix(in srgb, var(--pc) 42%, var(--surface)); color:color-mix(in srgb, var(--pc) 80%, var(--fg));
+          background:color-mix(in srgb, var(--pc) 10%, var(--surface)); }
+  .pill.cheia { border-color:var(--pc); background:color-mix(in srgb, var(--pc) 19%, var(--surface)); color:color-mix(in srgb, var(--pc) 72%, var(--fg)); }
+  .pill.cheia.s-atrasada, .pill.cheia.s-falta { background:var(--pc); color:var(--tinta-solida); }
+  .s-parada, .s-hoje, .s-quase, .s-voltar, .s-breve, .s-semdono, .s-avencer { --pc: var(--meio); }
+  .s-suspensa, .s-depois, .s-ideia, .s-descartado, .s-arquivado { --pc: var(--off); }
+  .s-novo, .s-assinar { --pc: var(--azul); }
+  /* Marcas pequenas: neutras. */
+  .chip.vazado, .chip.c-ti, .chip.c-liga, .chip.c-rot { color:var(--fg); border:1.5px solid var(--border-forte); background:none; font-weight:600; }
+  /* "Concluir" deixa de ser um bloco verde cheio em cada linha. */
+  .bt.verde { background:var(--surface); color:var(--ok); border-color:var(--ok); }
+  .bt.verde:hover { background:color-mix(in srgb, var(--ok) 12%, var(--surface)); color:var(--ok); border-color:var(--ok); }
+  .pediu { background:color-mix(in srgb, var(--meio) 10%, var(--surface)); border-color:color-mix(in srgb, var(--meio) 55%, var(--surface)); }
+  .banda { border-left-width:6px; border-color:color-mix(in srgb, var(--fc) 32%, var(--border)); border-left-color:var(--fc); background:color-mix(in srgb, var(--fc) 9%, var(--surface)); }
+  .projeto { border-color:color-mix(in srgb, var(--fc) 28%, var(--border)); }
+  .projeto-cab { background:color-mix(in srgb, var(--fc) 9%, var(--surface)); }
+
+  .validar ol { margin:0; padding:12px 14px 12px 34px; display:grid; gap:10px; font-size:14.5px; background:var(--surface); }
+  .validar li::marker { color:var(--fg-muted); font-family:var(--fonte-codigo); font-size:13px; }
+</style>
+
+<div style="flex:none;background:#7c2d12;color:#fff;font:700 14px/1.4 system-ui,sans-serif;padding:7px 16px;text-align:center">PROTÓTIPO — os dados são de exemplo, nada aqui é real e nada fica gravado. Troque o "vendo como" para ver a tela de cada pessoa.</div>
+<header class="topo">
+  <div class="interno">
+    <span class="marca">
+      <span class="marca-texto">
+        <span class="marca-nome"><b>Escritório de Processos</b></span>
+        <span class="marca-autoria">CGGES</span>
+      </span>
+      <span class="marca-barras" aria-hidden="true">
+        <i style="height:8px;background:var(--marca-1)"></i>
+        <i style="height:13px;background:var(--marca-2)"></i>
+        <i style="height:18px;background:var(--marca-3)"></i>
+        <i style="height:12px;background:var(--marca-4)"></i>
+        <i style="height:6px;background:var(--marca-1)"></i>
+      </span>
+    </span>
+    <div class="modulo">
+      <strong id="mod-titulo">Área de trabalho</strong>
+      <span id="mod-sub">O trabalho da equipe, por frente</span>
+    </div>
+    <div class="topo-dir">
+      <label class="quem" title="Só existe no protótipo: no sistema, é quem fez login.">vendo como
+        <select id="eu"></select>
+      </label>
+      <button type="button" class="ir" id="ir" data-acao="ir"></button>
+      <a class="mem-topo" href="home.html" target="_blank" rel="noopener" title="A página do Escritório de Processos, com o link de todas as ferramentas">Ferramentas do Escritório <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a>
+    </div>
+  </div>
+</header>
+
+<div class="faixa" id="faixa"><div class="interno" id="resumo"></div></div>
+
+<main class="casco interno" id="tela-trabalho">
+  <div class="col col-esq">
+    <nav id="menu" aria-label="Frentes de trabalho"></nav>
+    <section id="avisos" aria-label="Quadro de avisos"></section>
+    <p class="assina" id="pe"></p>
+  </div>
+  <section class="col col-meio" id="meio" aria-live="polite"></section>
+  <aside class="col col-dir estreita" id="comigo" aria-label="O seu trabalho"></aside>
+</main>
+
+<main class="casco2 interno" id="tela-painel" hidden>
+  <section class="col col-meio" id="p-meio" aria-live="polite"></section>
+  <aside class="col estreita" id="p-lado" aria-label="Resumo"></aside>
+</main>
+
+<dialog class="ficha" id="ficha-t">
+  <div class="ficha-topo">
+    <span class="pill" id="ft-estado"></span>
+    <button type="button" class="fechar" data-acao="fechar" data-id="ficha-t" aria-label="Fechar">×</button>
+  </div>
+  <div class="ficha-corpo">
+    <div class="banda" id="ft-banda">
+      <span class="sobre" id="ft-frente"></span>
+      <h2 id="ft-projeto"></h2>
+    </div>
+    <p class="ficha-texto" id="ft-titulo"></p>
+    <dl class="dados">
+      <div><dt>Com quem está</dt><dd><select id="ft-resp" aria-label="Com quem está"></select></dd></div>
+      <div><dt>Prazo</dt><dd><input type="date" id="ft-prazo" aria-label="Prazo"></dd></div>
+      <div id="ft-origem-caixa"><dt>Nasceu de</dt><dd id="ft-origem"></dd></div>
+      <div id="ft-devido-caixa"><dt>Devemos a</dt><dd id="ft-devido"></dd></div>
+    </dl>
+    <div class="grupo">
+      <span>Observações — cada uma fica com a data; não é obrigatório</span>
+      <div class="notas" id="ft-notas"></div>
+    </div>
+    <p class="aviso" id="ft-andamento-txt" hidden></p>
+    <div class="grupo" id="ft-g-aberta">
+      <div class="grupo-linha">
+        <button type="button" class="bt pri" data-acao="f-concluir">Concluir tarefa</button>
+        <button type="button" class="bt" data-acao="f-andamento" id="ft-andamento">Pedir andamento</button>
+      </div>
+      <span>Paralisar, porque</span>
+      <label class="volta">voltar a olhar em <input type="date" id="ft-volta" aria-label="Voltar a olhar em">
+        <small>opcional — escolha antes de dizer o motivo</small></label>
+      <div class="grupo-linha">
+        <button type="button" class="bt" data-acao="f-suspender" data-motivo="aguardando">está aguardando o retorno de outra área</button>
+        <button type="button" class="bt" data-acao="f-suspender" data-motivo="prioridades">entraram outras prioridades</button>
+      </div>
+    </div>
+    <div class="grupo" id="ft-g-suspensa" hidden>
+      <span id="ft-volta-txt"></span>
+      <div class="grupo-linha"><button type="button" class="bt pri" data-acao="f-retomar">Retomar</button>
+        <label class="volta">voltar a olhar em <input type="date" id="ft-volta2" aria-label="Voltar a olhar em"></label></div>
+    </div>
+    <div class="grupo" id="ft-g-feita" hidden>
+      <div class="grupo-linha"><button type="button" class="bt pri" data-acao="f-reabrir">Reabrir — não estava concluída</button></div>
+    </div>
+    <div class="historico" id="ft-hist"></div>
+  </div>
+</dialog>
+
+<dialog class="ficha" id="dlg-spu">
+  <div class="ficha-topo"><span class="pill cheia s-feita">mapeamento concluído</span></div>
+  <div class="ficha-corpo">
+    <p class="ficha-texto">O SPUProcessos já foi atualizado?</p>
+    <p class="mt-pe" id="spu-qual"></p>
+    <div class="grupo-linha">
+      <button type="button" class="bt pri" data-acao="spu" data-resposta="sim">Sim, o fluxo novo já está lá</button>
+      <button type="button" class="bt" data-acao="spu" data-resposta="nao">Não, falta subir</button>
+    </div>
+  </div>
+</dialog>
+
+<dialog class="ficha" id="ficha-r">
+  <div class="ficha-topo">
+    <span id="fr-topo" class="item-topo"></span>
+    <button type="button" class="fechar" data-acao="fechar" data-id="ficha-r" aria-label="Fechar">×</button>
+  </div>
+  <div class="ficha-corpo" id="fr-corpo"></div>
+</dialog>
+
+<dialog class="ficha" id="dlg-lembrete">
+  <div class="ficha-topo">
+    <span class="pill cheia s-assinar">lembrete</span>
+    <button type="button" class="fechar" data-acao="fechar" data-id="dlg-lembrete" aria-label="Fechar">×</button>
+  </div>
+  <div class="ficha-corpo">
+    <p class="ficha-texto">Quem falta já está avisado na própria tela</p>
+    <p class="mt-pe">O aviso aparece no alto da coluna de cada pessoa que ainda não preencheu o Petrvs. Para
+      alcançar quem não abriu a área hoje, cole este texto no Teams.</p>
+    <p class="lembrete-texto" id="lb-texto"></p>
+    <div class="grupo-linha">
+      <button type="button" class="bt pri" data-acao="mes-copiar">Copiar o texto</button>
+      <span class="mt-pe" id="lb-copiado"></span>
+    </div>
+  </div>
+</dialog>
+
+<dialog class="ficha" id="ficha-p">
+  <div class="ficha-topo">
+    <span class="pill" id="fp-situacao"></span>
+    <span class="chip" id="fp-ferramenta"></span>
+    <span class="chip" id="fp-tipo"></span>
+    <button type="button" class="fechar" data-acao="fechar" data-id="ficha-p" aria-label="Fechar">×</button>
+  </div>
+  <div class="ficha-corpo">
+    <p class="ficha-texto solto" id="fp-texto"></p>
+    <dl class="dados">
+      <div><dt>De</dt><dd id="fp-de"></dd></div>
+      <div><dt>Quando</dt><dd id="fp-quando"></dd></div>
+      <div><dt>O que foi feito</dt><dd id="fp-desfecho"></dd></div>
+    </dl>
+    <div class="grupo" id="fp-acoes">
+      <div class="grupo-linha">
+        <button type="button" class="bt pri" data-acao="p-virar" id="fp-virar">Virar tarefa</button>
+        <button type="button" class="bt" data-acao="p-fechar" data-como="tratado">Já foi tratado</button>
+        <button type="button" class="bt" data-acao="p-fechar" data-como="aprendizado">Guardar como aprendizado</button>
+        <button type="button" class="bt" data-acao="p-fechar" data-como="descartado">Descartar</button>
+      </div>
+    </div>
+    <div class="historico" id="fp-hist"></div>
+  </div>
+</dialog>
+
+<dialog class="ficha" id="dlg-nova">
+  <div class="ficha-topo">
+    <span class="chip" id="dn-origem"></span>
+    <button type="button" class="fechar" data-acao="fechar" data-id="dlg-nova" aria-label="Fechar">×</button>
+  </div>
+  <div class="ficha-corpo">
+    <label class="campo" for="dn-como">Abrir como
+      <select id="dn-como">
+        <option value="tarefa">uma tarefa</option>
+        <option value="projeto">um projeto novo — vai ter várias tarefas</option>
+      </select>
+    </label>
+    <label class="campo" for="dn-titulo">Que trabalho é
+      <input type="text" id="dn-titulo">
+    </label>
+    <label class="campo" for="dn-frente">Em qual frente
+      <select id="dn-frente"></select>
+    </label>
+    <label class="campo" for="dn-projeto" id="dn-projeto-caixa">Em qual projeto
+      <select id="dn-projeto"></select>
+    </label>
+    <label class="campo" for="dn-resp" id="dn-resp-caixa">Com quem fica
+      <select id="dn-resp"></select>
+    </label>
+    <div class="grupo-linha">
+      <button type="button" class="bt pri" data-acao="dn-salvar">Abrir</button>
+      <button type="button" class="bt" data-acao="fechar" data-id="dlg-nova">Cancelar</button>
+    </div>
+  </div>
+</dialog>
+
+<script>
+(() => {
+  "use strict";
+
+  const $ = s => document.querySelector(s);
+  const DIA = 86400000;
+
+  // ======================================================================
+  //  QUEM, AS FRENTES E OS PROJETOS
+  // ======================================================================
+  const CHEFE = "Juarez";
+  const EQUIPE = ["Juarez", "Eder", "Fábio",
+                  "Fernando", "Karin",
+                  "Luiz", "Vinícius"];
+  const curto = n => n ? n.split(" ")[0] : "ninguém";
+
+  // As frentes da EQUIPE, definidas pela chefia em 12/11/2026. O que é pessoal dela —
+  // Indexador, normativos, regimento, Desenho Organizacional — não entra.
+  // Cada frente tem a sua cor (--f1 … --f9): é ela que orienta o olho.
+  const FRENTES = [
+    { id:"ferramentas",  nome:"Ferramentas de TI",                sub:"Sites, sisteminhas e painéis que a equipe constrói, publica e mantém. Cada ferramenta é um projeto." },
+    { id:"servicos",     nome:"Serviços",                         sub:"CentralGov e Portal de Serviços — os formulários eletrônicos." },
+    { id:"mapeamento",   nome:"Mapeamento de processos",          sub:"Acionada pelos donos de processo. Cada mapeamento é um projeto." },
+    { id:"criticidade",  nome:"Criticidade de processos",         sub:"O questionário de maturidade e criticidade." },
+    { id:"conformidade", nome:"Conformidade",                     sub:"A posteriori, nos processos de destinação." },
+    { id:"artefatos",    nome:"Artefatos de melhoria processual", sub:"POPs, manuais interativos e modelos de documento." },
+    { id:"prototipacao", nome:"Prototipação de sistemas",         sub:"A prévia do sistema que outro vai construir, feita com a área finalística antes da TI." },
+    { id:"instrucao",    nome:"Módulo de Instrução de Destinação", sub:"As tarefas da vez, e o que a equipe deve à TI." },
+    { id:"curadoria",    nome:"Curadoria",                        sub:"Coleção Fluxos e Procedimentos e o catálogo do SPUProcessos." }
+  ].map((f, i) => ({ ...f, cor:`var(--f${i + 1})` }));
+  const frente = id => FRENTES.find(f => f.id === id);
+  const corDe = x => `style="--fc:${frente(x.frente).cor}"`;
+
+  // Frente → (projeto) → tarefa. O projeto é opcional: há frente só de tarefas.
+  // estado: ativo · depois (paralisado, com motivo) · concluido · arquivado
+  // url: o endereço da ferramenta publicada, quando o projeto é uma. O Aplicativo CGLEP
+  // é Power Apps e não tem endereço público: fica sem link.
+  const PROJETOS = [
+    { id:"p-spup",   frente:"ferramentas",  nome:"SPUProcessos",
+      url:"https://spu-projetoseprocessos.github.io/SPUProcessos/" },
+    { id:"p-cade",   frente:"ferramentas",  nome:"Cadê?",
+      url:"https://spu-projetoseprocessos.github.io/cade-catalogo-solucoes-spu/" },
+    { id:"p-gov",    frente:"ferramentas",  nome:"Governança da Destinação",
+      url:"https://spu-projetoseprocessos.github.io/simulador-competencia-spu/" },
+    { id:"p-tax",    frente:"ferramentas",  nome:"Tabelas Taxonômicas",
+      url:"https://spu-projetoseprocessos.github.io/tabelas-taxonomicas-spu/" },
+    { id:"p-org",    frente:"ferramentas",  nome:"SPUOrganograma",
+      url:"https://spu-projetoseprocessos.github.io/SPUProcessos/organograma/" },
+    { id:"p-cglep",  frente:"ferramentas",  nome:"Aplicativo CGLEP" },
+    { id:"p-cgov",   frente:"servicos",     nome:"CentralGov" },
+    { id:"p-portal", frente:"servicos",     nome:"Portal de Serviços" },
+    { id:"p-m1",     frente:"mapeamento",   nome:"Mapeamento da Inscrição de Ocupação" },
+    { id:"p-m2",     frente:"mapeamento",   nome:"Mapeamento da Autorização de Obras" },
+    { id:"p-manual", frente:"artefatos",    nome:"Manual interativo da instrução de Cessão de Uso",
+      estado:"depois", motivo:"prioridades" },
+    { id:"p-diag",   frente:"prototipacao", nome:"Diagnóstico Patrimonial do Imóvel" },
+    { id:"p-spunet", frente:"prototipacao", nome:"Alteração SPUnet Cadastro",
+      estado:"depois", motivo:"aguardando" },
+    { id:"p-col",    frente:"curadoria",    nome:"Coleção Fluxos e Procedimentos" },
+    { id:"p-cat",    frente:"curadoria",    nome:"Catálogo do SPUProcessos" }
+  ].map(p => ({ estado:"ativo", motivo:null, mexido:null, ...p }));
+  const projeto = id => PROJETOS.find(p => p.id === id);
+
+  // O pedido guarda o código da ferramenta; aqui ele acha o projeto dela.
+  const PROJETO_DA_FERRAMENTA = { spuprocessos:"p-spup", cade:"p-cade", simulador:"p-gov",
+                                  taxonomias:"p-tax", organograma:"p-org" };
+
+  // Dois motivos, por decisão de 12/11/2026.
+  const MOTIVO = { aguardando:"aguardando o retorno de outra área",
+                   prioridades:"entraram outras prioridades" };
+  const AVISO_ANTES = 4;      // dias antes de parar em que o dono é avisado
+  const LIMITE_PARADO = 14;   // dias sem movimento — confirmado em 12/11/2026
+
+  // ======================================================================
+  //  DATAS
+  // ======================================================================
+  const SEMANA = [
+    { n:"domingo", f:false }, { n:"segunda-feira", f:true }, { n:"terça-feira", f:true },
+    { n:"quarta-feira", f:true }, { n:"quinta-feira", f:true }, { n:"sexta-feira", f:true },
+    { n:"sábado", f:false }
+  ];
+  const ORD_F = ["", "primeira", "segunda", "terceira", "quarta", "última"];
+  const ORD_M = ["", "primeiro", "segundo", "terceiro", "quarto", "último"];
+  const MESES = ["janeiro","fevereiro","março","abril","maio","junho","julho",
+                 "agosto","setembro","outubro","novembro","dezembro"];
+  const CADA = { mensal:"todo mês", bimestral:"a cada dois meses",
+                 trimestral:"a cada três meses", semestral:"a cada seis meses" };
+  const PASSO_MES = { mensal:1, bimestral:2, trimestral:3, semestral:6, anual:12 };
+
+  const dData = iso => { const [a,m,d] = iso.split("-").map(Number); return new Date(a, m-1, d); };
+  const dISO  = d => `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`;
+  const dBR   = d => d.toLocaleDateString("pt-BR");
+  const hoje  = (() => { const h = new Date(); return new Date(h.getFullYear(), h.getMonth(), h.getDate()); })();
+  const maisDias = (d, n) => new Date(d.getFullYear(), d.getMonth(), d.getDate() + n);
+  const emDias = d => Math.round((d - hoje) / DIA);
+  const ha  = n => dISO(maisDias(hoje, -n));
+  const em  = n => dISO(maisDias(hoje, n));
+  const mesPassado = n => dISO(new Date(hoje.getFullYear(), hoje.getMonth() - 1, n));
+  const quando = iso => { const d = -emDias(dData(iso));
+    return d < 1 ? "hoje" : d === 1 ? "ontem" : `há ${d} dias`; };
+
+  // ======================================================================
+  //  DADOS DE EXEMPLO
+  //  Só a carga do SPUOrganograma é real (levantamento de 11/11/2026).
+  // ======================================================================
+  let seq = 100;
+  const T = (frenteId, titulo, o = {}) => ({
+    id:"t" + (++seq), frente:frenteId, projeto:null, titulo, responsavel:null, estado:"aberta",
+    motivo:null, volta:null, prazo:null, mexido:ha(2), origem:null, devido_a:null, notas:[], andamento:null,
+    concluida_em:null,
+    hist:[], ...o
+  });
+
+  const TAREFAS = [
+    T("ferramentas", "Conferir a TT-02 contra a Resolução 5",
+      { projeto:"p-tax", responsavel:"Fábio", prazo:em(2), mexido:ha(1),
+        origem:{ tipo:"pedido" } }),
+    T("ferramentas", "Expor o filtro por superintendência",
+      { projeto:"p-spup", responsavel:"Vinícius", mexido:ha(20) }),
+    T("ferramentas", "Validar a tela de consulta com a área",
+      { projeto:"p-cglep", responsavel:"Fábio", prazo:ha(3), mexido:ha(7) }),
+    T("ferramentas", "Migrar os repositórios da conta pessoal para a organização", { mexido:ha(6) }),
+
+    T("servicos", "Modelo de formulário do serviço de certidão",
+      { projeto:"p-cgov", responsavel:"Karin", prazo:em(6), mexido:ha(1) }),
+    T("servicos", "Revisar a linguagem dos requerimentos",
+      { projeto:"p-portal", responsavel:"Eder", estado:"suspensa", motivo:"aguardando",
+        mexido:ha(11),
+        notas:[{ quando:ha(11), quem:"Eder", texto:"aguardando a DEDES devolver a lista de serviços" }],
+        hist:[{ quando:ha(11), quem:"Eder", o:"paralisou — aguardando o retorno de outra área" }] }),
+
+    T("mapeamento", "Entrevistar a equipe da área",
+      { projeto:"p-m1", responsavel:"Luiz", mexido:ha(11),
+        notas:[{ quando:ha(11), quem:"Luiz", texto:"reunião realizada com a CGIPA" }] }),
+    T("mapeamento", "Desenhar o fluxo no Bizagi",
+      { projeto:"p-m1", responsavel:"Fernando", mexido:ha(4) }),
+    T("mapeamento", "Validar o fluxo com o dono do processo", { projeto:"p-m1", mexido:ha(4) }),
+    T("mapeamento", "Marcar a primeira reunião com o dono do processo",
+      { projeto:"p-m2", mexido:ha(3), origem:{ tipo:"pedido" } }),
+
+    T("criticidade", "Aplicar o questionário ao processo de Cessão de Uso",
+      { responsavel:"Fernando", mexido:ha(4) }),
+
+    T("conformidade", "Definir o tamanho e o critério da amostra",
+      { responsavel:"Juarez", mexido:ha(5) }),
+
+    T("artefatos", "Roteirizar as telas do manual",
+      { projeto:"p-manual", responsavel:"Vinícius", mexido:ha(25) }),
+    T("artefatos", "POP de recebimento de requerimento", { mexido:ha(8) }),
+
+    T("prototipacao", "Validar com a área a terceira rodada",
+      { projeto:"p-diag", responsavel:"Luiz", mexido:ha(3) }),
+    T("prototipacao", "Ajustar a tela de pendências depois da rodada", { projeto:"p-diag", mexido:ha(3) }),
+    T("prototipacao", "Aplicar a taxonomia depois da contagem do SERPRO",
+      { projeto:"p-spunet", responsavel:"Fernando", mexido:ha(30) }),
+
+    T("instrucao", "Entregar a especificação da tela de diagnóstico",
+      { responsavel:"Karin", prazo:em(4), mexido:ha(2), devido_a:"TI" }),
+    T("instrucao", "Responder as dúvidas sobre as regras de validação",
+      { responsavel:"Juarez", mexido:ha(16), devido_a:"TI" }),
+    T("instrucao", "Desenhar o fluxo do despacho saneador", { mexido:ha(1) }),
+
+    // Paralisada com data de volta, e a data é hoje: reaparece para a dona.
+    T("servicos", "Ajustar o formulário de segunda via",
+      { projeto:"p-cgov", responsavel:"Karin", estado:"suspensa", motivo:"aguardando", volta:ha(0), mexido:ha(8),
+        hist:[{ quando:ha(8), quem:"Karin", o:"paralisou — aguardando o retorno de outra área, até " + dBR(hoje) }] }),
+    T("curadoria", "Inserir o POP de avaliação de imóveis",
+      { projeto:"p-col", responsavel:"Eder", mexido:ha(2) })
+  ];
+  // Concluídas no mês que se fecha agora: é o que cada um tem para pôr no Petrvs.
+  [["instrucao", "Fechar com a TI o escopo da primeira entrega", "Juarez", 14, { devido_a:"TI" }],
+   ["curadoria", "Inserir o POP de vistoria na coleção", "Eder", 8, { projeto:"p-col" }],
+   ["conformidade", "Montar o roteiro da análise de conformidade", "Eder", 22, {}],
+   ["servicos", "Revisar o texto do serviço de certidão", "Karin", 20, { projeto:"p-cgov" }],
+   ["mapeamento", "Levantar os documentos do processo", "Luiz", 16, { projeto:"p-m1" }],
+   ["criticidade", "Aplicar o questionário ao processo de Aforamento", "Fernando", 27, {}],
+   ["ferramentas", "Corrigir a busca por sigla", "Vinícius", 9, { projeto:"p-spup" }]
+  ].forEach(([f, titulo, quem, dia, o]) => TAREFAS.push(T(f, titulo, { responsavel:quem, estado:"concluida",
+      concluida_em:mesPassado(dia), mexido:mesPassado(dia),
+      hist:[{ quando:mesPassado(dia), quem, o:"concluiu" }], ...o })));
+  projeto("p-manual").mexido = ha(25);
+  projeto("p-spunet").mexido = ha(30);
+  projeto("p-spunet").volta = em(10);
+
+  // natureza: "olhar" é a rotina como foi definida — dar uma olhada para
+  // saber se há o que fazer. "fazer" é a rotina que já é o próprio trabalho.
+  const ROTINAS = [
+    { id:"r1", frente:"ferramentas", projeto:"p-org", natureza:"fazer", real:true,
+      titulo:"Recarregar os dados de pessoas",
+      periodicidade:"mensal", modo:"dia_mes", dia_mes:11, inicio_em:"2026-11-11",
+      responsavel:"Juarez",
+      ocorrencias:[{ vencimento:"2026-11-11", feita_em:"2026-11-11", quem:"Juarez", desfecho:"feita" }] },
+    { id:"r2", frente:"curadoria", projeto:"p-col", natureza:"olhar",
+      titulo:"Ver se há documento novo para a coleção",
+      periodicidade:"semanal", dia_semana:2, inicio_em:"2026-10-05",
+      responsavel:"Eder", ocorrencias:[] },
+    { id:"r3", frente:"conformidade", projeto:null, natureza:"fazer",
+      titulo:"Analisar a amostra de processos de destinação do mês",
+      periodicidade:"mensal", modo:"dia_mes", dia_mes:5, inicio_em:"2026-11-01",
+      responsavel:"Eder", ocorrencias:[] },
+    { id:"r4", frente:"servicos", projeto:"p-cgov", natureza:"olhar",
+      titulo:"Olhar a fila de ajustes pedidos",
+      periodicidade:"semanal", dia_semana:hoje.getDay() + 1, inicio_em:"2026-10-01",
+      responsavel:"Karin", ocorrencias:[] },
+    { id:"r5", frente:"criticidade", projeto:null, natureza:"olhar",
+      titulo:"Ver quais processos mapeados ainda não têm criticidade",
+      periodicidade:"trimestral", modo:"dia_mes", dia_mes:1, inicio_em:"2026-12-01",
+      responsavel:"Fernando", ocorrencias:[] },
+    { id:"r6", frente:"mapeamento", projeto:null, natureza:"olhar",
+      titulo:"Revisar os processos mapeados com os donos",
+      periodicidade:"anual", dia_mes:2, inicio_em:"2027-03-02",
+      responsavel:"Luiz", ocorrencias:[] },
+    // Rotina do grupo: sem responsável. Quem fizer a rodada, marca.
+    { id:"r7", frente:"ferramentas", projeto:null, natureza:"olhar",
+      titulo:"Conferir se as ferramentas publicadas estão no ar",
+      periodicidade:"semanal", dia_semana:2, inicio_em:"2026-10-05",
+      responsavel:null, ocorrencias:[] }
+  ];
+
+  // Ideias: o que ainda não é trabalho. Moram na caixa "Não iniciado".
+  const IDEIAS = [
+    { id:"i1", texto:"Apresentar o SPUProcessos numa reunião de superintendentes",
+      frente:"ferramentas", quem:"Juarez", quando:ha(12) },
+    { id:"i2", texto:"Manual interativo do requerimento de regularização",
+      frente:"artefatos", quem:"Karin", quando:ha(4) }
+  ];
+
+  const ROTULO_FERRAMENTA = {
+    spuprocessos:"SPUProcessos", cade:"Cadê?", taxonomias:"Tabelas Taxonômicas",
+    simulador:"Governança da Destinação", organograma:"SPUOrganograma", outra:"outra"
+  };
+  const ROTULO_TIPO = { erro:"erro", duvida:"dúvida", melhoria:"melhoria",
+                        sugestao_solucao:"sugestão de solução", mapeamento:"pedido de mapeamento" };
+  const ROTULO_SITUACAO = { novo:"novo", tratado:"tratado", descartado:"descartado" };
+
+  const PEDIDOS = [
+    { id:"a1", ferramenta:"cade", tipo:"sugestao_solucao", situacao:"novo",
+      texto:"Falta o Sistema de Gestão de Contratos (MGC) na lista. Uso todo dia e não achei aqui.",
+      contato:"marina.alves@exemplo.gov.br", criado:ha(0), hist:[] },
+    { id:"a2", ferramenta:"spuprocessos", tipo:"erro", situacao:"novo",
+      texto:"O fluxo de Cessão de Uso abre uma página do Bizagi em branco. Testei no Chrome e no Edge, mesma coisa.",
+      contato:"roberto.nunes@exemplo.gov.br", criado:ha(1), hist:[] },
+    { id:"a10", ferramenta:"spuprocessos", tipo:"mapeamento", situacao:"novo",
+      texto:"Somos donos do processo de Demarcação de Terrenos de Marinha e queremos mapear. Quem procuramos?",
+      contato:"helena.prado@exemplo.gov.br", criado:ha(1), hist:[] },
+    { id:"a3", ferramenta:"simulador", tipo:"duvida", situacao:"novo",
+      texto:"No regime de entrega para aquicultura, a ferramenta diz que não há manifestação prévia. Isso mudou com a portaria de dezembro?",
+      contato:"karin.beck@exemplo.gov.br", criado:ha(3), hist:[] },
+    { id:"a7", ferramenta:"organograma", tipo:"duvida", situacao:"novo",
+      texto:"Preciso montar a lista de e-mails da DECIP para um ofício circular. O organograma vai ter os e-mails?",
+      contato:"sergio.matos@exemplo.gov.br", criado:ha(2), hist:[] },
+    { id:"a4", ferramenta:"taxonomias", tipo:"erro", situacao:"tratado", virou:"tarefa",
+      texto:"A TT-02 mostra 62 registros, mas a Resolução 5 que baixei tem 63. Pode ser erro de transcrição.",
+      contato:"andre.lima@exemplo.gov.br", criado:ha(8),
+      hist:[{ quando:ha(7), quem:"Juarez", o:"virou tarefa: Conferir a TT-02 contra a Resolução 5" }] },
+    { id:"a9", ferramenta:"spuprocessos", tipo:"mapeamento", situacao:"tratado", virou:"projeto",
+      texto:"Gostaríamos de mapear o processo de Autorização de Obras em imóvel da União.",
+      contato:"paulo.reis@exemplo.gov.br", criado:ha(5),
+      hist:[{ quando:ha(3), quem:"Juarez", o:"virou projeto: Mapeamento da Autorização de Obras" }] },
+    { id:"a6", ferramenta:"cade", tipo:"erro", situacao:"tratado", aprendizado:true,
+      texto:"Busquei por 'imóveis' e não veio nada, mas 'imóvel' traz um resultado. A busca parece não entender plural.",
+      contato:"patricia.gomes@exemplo.gov.br", criado:ha(18),
+      hist:[{ quando:ha(5), quem:"Juarez", o:"guardou como aprendizado" }] },
+    { id:"a8", ferramenta:"outra", tipo:"duvida", situacao:"descartado",
+      texto:"Como faço para trocar a senha do meu e-mail institucional?",
+      contato:"luciana.ferraz@exemplo.gov.br", criado:ha(21),
+      hist:[{ quando:ha(20), quem:"Karin", o:"descartou" }] }
+  ];
+
+  // ======================================================================
+  //  ESTADO DA TELA
+  // ======================================================================
+  let eu = CHEFE;
+  let tela = "trabalho";
+  let vista = { tipo:"caixa", id:"chegou" };
+  let avisoMsg = "";
+  let verOlhados = false;
+  let tAtual = null, pAtual = null, novaCtx = null, spuCtx = null;
+  let mesVer = null;      // { quem, mes } da lista de concluídos aberta em "Todo mês"
+  let verArquivados = false, verAvisos = false, novoAviso = false;
+  let painelVista = null; // o que o campo principal do painel mostra
+  const dobras = {};      // projeto → aberto ou recolhido, quando a pessoa mexeu
+  // Quadro de avisos: qualquer pessoa da equipe escreve, todo mundo lê. Aviso com
+  // `para` é pessoal: nasce quando alguém passa uma tarefa, e só o destinatário vê.
+  const AVISOS = [
+    { id:"av3", texto:"Petrvs de outubro: quem ainda não preencheu, preencha até sexta.",
+      quem:CHEFE, quando:ha(0), ate:null },
+    { id:"av1", texto:"Reunião da equipe na quinta-feira, às 10h. Tragam o que está parado.",
+      quem:CHEFE, quando:ha(1), ate:null },
+    { id:"av2", texto:"Subi no SPUProcessos a versão nova do fluxo de Cessão de Uso.",
+      quem:"Luiz", quando:ha(3), ate:null }
+  ];
+
+  // ======================================================================
+  //  REGRAS
+  // ======================================================================
+  function mexer(t, o) {
+    t.mexido = dISO(hoje);
+    t.hist.push({ quando: dISO(hoje), quem: eu, o });
+  }
+
+  // Tarefa de projeto guardado some das filas junto com o projeto.
+  const noAr = t => !t.projeto || projeto(t.projeto).estado === "ativo";
+  const aberta = t => t.estado === "aberta" && noAr(t);
+  const ondeDe = x => x.projeto ? `${frente(x.frente).nome} › ${projeto(x.projeto).nome}` : frente(x.frente).nome;
+
+  function estadoTarefa(t) {
+    if (t.estado === "concluida") return { chave:"feita", rotulo:"concluída", parada:false };
+    if (t.estado === "suspensa") {
+      // Paralisar com data de volta: chegado o dia, a tarefa reaparece para o dono.
+      if (!t.volta) return { chave:"suspensa", rotulo:"paralisada", parada:false };
+      const v = emDias(dData(t.volta));
+      if (v > 0) return { chave:"suspensa", rotulo:`paralisada até ${ddmm(t.volta)}`, parada:false };
+      return { chave:"voltar", cheia:true, parada: v < 0, dias:-v,
+               rotulo: v === 0 ? "hora de voltar" : `devia ter voltado há ${-v} ${v === -1 ? "dia" : "dias"}`,
+               porque:`a data de volta era ${dBR(dData(t.volta))} e ela não foi retomada` };
+    }
+    const sem = -emDias(dData(t.mexido));
+    if (t.prazo) {
+      const d = emDias(dData(t.prazo));
+      if (d < 0) return { chave:"atrasada", parada:true, dias:-d, cheia:true,
+                          rotulo: d === -1 ? "atrasada 1 dia" : `atrasada ${-d} dias`,
+                          porque:`o prazo venceu em ${dBR(dData(t.prazo))}` };
+      if (d === 0) return { chave:"hoje", rotulo:"o prazo é hoje", parada:false, cheia:true };
+      if (d <= 7 && sem < LIMITE_PARADO)
+        return { chave:"breve", rotulo: d === 1 ? "prazo amanhã" : `prazo em ${d} dias`, parada:false };
+    }
+    if (sem >= LIMITE_PARADO)
+      return { chave:"parada", parada:true, dias:sem, cheia:true, rotulo:`parada há ${sem} dias`,
+               porque:`sem movimento há ${sem} dias` };
+    // Aviso antes de parar: quem está com a tarefa sabe quatro dias antes do chefe.
+    if (t.responsavel && sem >= LIMITE_PARADO - AVISO_ANTES) {
+      const n = LIMITE_PARADO - sem;
+      return { chave:"quase", rotulo: n === 1 ? "para amanhã" : `para em ${n} dias`, parada:false };
+    }
+    return t.responsavel
+      ? { chave:"andando", rotulo:"em andamento", parada:false }
+      : { chave:"semdono", rotulo:"sem dono", parada:false, cheia:true };
+  }
+  const pill = st => `<span class="pill s-${st.chave}${st.cheia ? " cheia" : ""}">${st.rotulo}</span>`;
+  const PESO = { atrasada:0, hoje:1, voltar:2, parada:3, quase:4, breve:5, andando:6, semdono:7, suspensa:8, feita:9 };
+  const voltou = t => t.estado === "suspensa" && !!t.volta && dData(t.volta) <= hoje && noAr(t);
+  const porUrgencia = (a, b) => PESO[estadoTarefa(a).chave] - PESO[estadoTarefa(b).chave];
+
+  function novaTarefa(frenteId, titulo, o = {}) {
+    const t = T(frenteId, titulo, { mexido: dISO(hoje), ...o });
+    t.hist.push({ quando: dISO(hoje), quem: eu, o: "abriu a tarefa" });
+    TAREFAS.push(t);
+    return t;
+  }
+  function concluir(t, como = "concluiu") { t.estado = "concluida"; t.concluida_em = dISO(hoje); mexer(t, como); }
+  function reabrir(t) { t.estado = "aberta"; t.motivo = null; t.concluida_em = null; mexer(t, "reabriu — não estava concluída"); }
+  function suspender(t, motivo, volta = null) {
+    t.estado = "suspensa"; t.motivo = motivo; t.volta = volta;
+    mexer(t, "paralisou — " + MOTIVO[motivo] + (volta ? ", até " + dBR(dData(volta)) : ""));
+  }
+  function retomar(t) { t.estado = "aberta"; t.motivo = null; t.volta = null; mexer(t, "retomou"); }
+  function passar(t, para) {
+    const de = t.responsavel;
+    if ((de || "") === (para || "")) return;
+    t.responsavel = para || null;
+    mexer(t, !de ? (para === eu ? "pegou" : `atribuiu a ${curto(para)}`)
+               : !para ? `devolveu para os sem dono (estava com ${curto(de)})`
+               : `passou de ${curto(de)} para ${curto(para)}`);
+    avisarQuemRecebeu(t);
+  }
+  // Aviso pessoal: só quem recebeu a tarefa o vê, no próprio quadro de avisos.
+  function avisarQuemRecebeu(t) {
+    if (!t.responsavel || t.responsavel === eu) return;
+    AVISOS.unshift({ id:"av" + (++seq), texto:`${curto(eu)} passou para você: ${t.titulo}`,
+                     quem:eu, quando:dISO(hoje), ate:null, para:t.responsavel, tarefa:t.id });
+  }
+  // Observação: empilha, com data. Vira um pequeno diário da tarefa.
+  function anotar(t, texto) {
+    t.notas.push({ quando: dISO(hoje), quem: eu, texto });
+    mexer(t, `anotou: “${texto}”`);
+  }
+  const andamentoPendente = t => t.andamento && !t.andamento.resposta;
+  function pedirAndamento(t) {
+    t.andamento = { pedido: dISO(hoje), resposta: null, respondido: null };
+    t.hist.push({ quando: dISO(hoje), quem: eu, o: "pediu andamento" });
+  }
+
+  // ---------- Projeto ----------
+  const tarefasDo = id => TAREFAS.filter(t => t.projeto === id);
+  function resumoProjeto(p) {
+    const ts = tarefasDo(p.id), ab = ts.filter(t => t.estado === "aberta");
+    return { abertas: ab, feitas: ts.filter(t => t.estado === "concluida"),
+             guardadas: ts.filter(t => t.estado === "suspensa"),
+             paradas: p.estado === "ativo" ? ab.filter(t => estadoTarefa(t).parada).length : 0,
+             semDono: ab.filter(t => !t.responsavel).length,
+             pessoas: [...new Set(ab.map(t => t.responsavel).filter(Boolean))] };
+  }
+  function contaProjeto(r) {
+    return [
+      `${r.abertas.length} ${r.abertas.length === 1 ? "aberta" : "abertas"}`,
+      r.paradas ? `<b>${r.paradas} ${r.paradas === 1 ? "parada" : "paradas"}</b>` : "",
+      r.semDono ? `${r.semDono} sem dono` : "",
+      r.pessoas.length ? r.pessoas.map(curto).join(", ") : ""
+    ].filter(Boolean).join(" · ");
+  }
+
+  // ---------- Rotina ----------
+  function dataNoMes(r, ano, mes) {
+    const ultimo = new Date(ano, mes + 1, 0).getDate();
+    if (r.modo === "semana_mes") {
+      const salto = (r.dia_semana - 1 - new Date(ano, mes, 1).getDay() + 7) % 7;
+      let dia = 1 + salto + (r.semana_mes - 1) * 7;
+      while (dia > ultimo) dia -= 7;
+      return new Date(ano, mes, dia);
+    }
+    return new Date(ano, mes, Math.min(r.dia_mes, ultimo));
+  }
+  function vencimentos(r, ate) {
+    const fora = [];
+    const ini = dData(r.inicio_em);
+    if (r.periodicidade === "semanal" || r.periodicidade === "quinzenal") {
+      const passo = r.periodicidade === "semanal" ? 7 : 14;
+      const d = new Date(ini);
+      while (d.getDay() !== r.dia_semana - 1) d.setDate(d.getDate() + 1);
+      while (d <= ate) { fora.push(new Date(d)); d.setDate(d.getDate() + passo); }
+      return fora;
+    }
+    let ano = ini.getFullYear(), mes = ini.getMonth(), guarda = 0;
+    while (guarda++ < 600) {
+      const d = dataNoMes(r, ano, mes);
+      if (d > ate) break;
+      if (d >= ini) fora.push(d);
+      mes += PASSO_MES[r.periodicidade];
+      while (mes > 11) { mes -= 12; ano += 1; }
+    }
+    return fora;
+  }
+  function descricao(r) {
+    const s = SEMANA[(r.dia_semana || 1) - 1];
+    if (r.periodicidade === "semanal")   return `${s.f ? "toda" : "todo"} ${s.n}`;
+    if (r.periodicidade === "quinzenal") return `a cada duas semanas, ${s.f ? "na" : "no"} ${s.n}`;
+    if (r.periodicidade === "anual")
+      return `todo dia ${r.dia_mes} de ${MESES[dData(r.inicio_em).getMonth()]}`;
+    const q = r.modo === "semana_mes"
+      ? `${s.f ? "na" : "no"} ${(s.f ? ORD_F : ORD_M)[r.semana_mes]} ${s.n}`
+      : `no dia ${r.dia_mes}`;
+    return `${CADA[r.periodicidade]}, ${q}`;
+  }
+  // Só a rodada corrente conta: ninguém refaz em novembro a rodada de agosto.
+  function estadoRotina(r) {
+    const feitas = new Set(r.ocorrencias.map(o => o.vencimento));
+    const todos = vencimentos(r, maisDias(hoje, 400));
+    const passados = todos.filter(d => d <= hoje);
+    const corrente = passados.length ? passados[passados.length - 1] : null;
+    const pendente = corrente && !feitas.has(dISO(corrente)) ? corrente : null;
+    const proxima = todos.find(d => d > hoje) || null;
+    if (pendente) {
+      const d = -emDias(pendente);
+      return d === 0
+        ? { chave:"hoje", rotulo:"vence hoje", aberta:true, pendente, proxima, parada:false, cheia:true }
+        : { chave:"atrasada", rotulo: d === 1 ? "atrasada 1 dia" : `atrasada ${d} dias`, cheia:true,
+            aberta:true, pendente, proxima, parada:true, dias:d,
+            porque:`a rodada de ${dBR(pendente)} não foi feita` };
+    }
+    return { chave:"emdia", rotulo:"em dia", aberta:false, pendente:null, proxima, parada:false };
+  }
+  function fecharRodada(r, desfecho) {
+    const st = estadoRotina(r);
+    r.ocorrencias.push({ vencimento: dISO(st.pendente || hoje), feita_em: dISO(hoje),
+                         quem: eu, desfecho });
+  }
+
+  // ======================================================================
+  //  TODO MÊS — PETRVS E FREQUÊNCIA
+  //  Não é frente nem tarefa: é a obrigação mensal de cada pessoa, que o chefe
+  //  acompanha para saber o que já pode assinar. Fecha-se o mês ANTERIOR até o
+  //  5º dia útil do mês corrente. Como nas rotinas, o atraso é calculado:
+  //  guarda-se só a marca de quem fez, e quando.
+  // ======================================================================
+  function pascoa(ano) {
+    const a = ano % 19, b = Math.floor(ano / 100), c = ano % 100, d = Math.floor(b / 4), e = b % 4,
+          f = Math.floor((b + 8) / 25), g = Math.floor((b - f + 1) / 3),
+          h = (19 * a + b - d - g + 15) % 30, i = Math.floor(c / 4), k = c % 4,
+          l = (32 + 2 * e + 2 * i - h - k) % 7, m = Math.floor((a + 11 * h + 22 * l) / 451),
+          x = h + l - 7 * m + 114;
+    return new Date(ano, Math.floor(x / 31) - 1, (x % 31) + 1);
+  }
+  // Feriados nacionais, mais Carnaval (segunda e terça), Sexta-feira Santa e
+  // Corpus Christi. Ponto facultativo de portaria anual e feriado local NÃO
+  // estão aqui: no sistema isso é uma tabelinha, não uma fórmula.
+  const FERIADOS_FIXOS = ["01-01", "04-21", "05-01", "09-07", "10-12", "11-02", "11-15", "11-20", "12-25"];
+  const feriadosDoAno = {};
+  function feriados(ano) {
+    if (!feriadosDoAno[ano]) {
+      const p = pascoa(ano);
+      feriadosDoAno[ano] = new Set([...FERIADOS_FIXOS.map(md => `${ano}-${md}`),
+                                    ...[-48, -47, -2, 60].map(n => dISO(maisDias(p, n)))]);
+    }
+    return feriadosDoAno[ano];
+  }
+  const diaUtil = d => d.getDay() !== 0 && d.getDay() !== 6 && !feriados(d.getFullYear()).has(dISO(d));
+  function quintoDiaUtil(ano, mes) {
+    let d = new Date(ano, mes, 1), n = 0;
+    for (;;) { if (diaUtil(d) && ++n === 5) return d; d = maisDias(d, 1); }
+  }
+  // Dias úteis depois de `a` até `b`, contando `b`.
+  function diasUteis(a, b) {
+    let n = 0;
+    for (let d = maisDias(a, 1); d <= b; d = maisDias(d, 1)) if (diaUtil(d)) n++;
+    return n;
+  }
+
+  const mesDe = d => MESES[d.getMonth()];
+  const ddmm = iso => iso.slice(8) + "/" + iso.slice(5, 7);
+  // Exemplo: as marcas caem em dias do mês corrente, nunca depois de hoje.
+  const noMes = n => dISO(new Date(Math.min(new Date(hoje.getFullYear(), hoje.getMonth(), n), hoje)));
+
+  // Um mês de fechamento. comp = o mês que se fecha; prazo = 5º dia útil do
+  // mês seguinte. Por pessoa guardam-se quatro datas:
+  //   petrvs   — a pessoa preencheu (é a única marca dela)
+  //   assinado — o chefe assinou o Petrvs dela
+  //   freq     — o chefe aprovou a frequência dela no SouGov
+  //   cobrado  — o chefe cobrou
+  function novoMes(atras) {
+    const comp = new Date(hoje.getFullYear(), hoje.getMonth() - atras, 1);
+    const m = { id: dISO(comp).slice(0, 7), comp, lembrado:null, marcas:{},
+                prazo: quintoDiaUtil(comp.getFullYear(), comp.getMonth() + 1) };
+    EQUIPE.forEach(n => { m.marcas[n] = { petrvs:null, assinado:null, freq:null, cobrado:null }; });
+    return m;
+  }
+  const MES_ANTIGO = novoMes(2), MES_ATUAL = novoMes(1);
+  const MESES_FECH = [MES_ANTIGO, MES_ATUAL];
+  // O mês antigo fechou para todos, menos para o Vinícius, que não preencheu.
+  EQUIPE.forEach(n => Object.assign(MES_ANTIGO.marcas[n], { petrvs:mesPassado(3),
+      assinado: n === CHEFE ? null : mesPassado(6), freq: n === CHEFE ? null : mesPassado(5) }));
+  Object.assign(MES_ANTIGO.marcas["Vinícius"], { petrvs:null, assinado:null });
+  //  [pessoa, preencheu o Petrvs, foi assinado, frequência aprovada]
+  [["Juarez", 3, null, null], ["Eder", 3, 5, 5],
+   ["Fernando", 6, null, 5], ["Karin", 4, null, null],
+   ["Luiz", 9, null, null], ["Vinícius", null, null, 5]
+  ].forEach(([n, p, a, f]) => Object.assign(MES_ATUAL.marcas[n],
+      { petrvs: p && noMes(p), assinado: a && noMes(a), freq: f && noMes(f) }));
+
+  const mesFech = id => MESES_FECH.find(m => m.id === id);
+  const nomeMes = m => `${mesDe(m.comp)} de ${m.comp.getFullYear()}`;
+  function prazoDe(m) {
+    if (hoje > m.prazo) {
+      const n = Math.max(1, diasUteis(m.prazo, hoje));
+      return { chave:"falta", cheia:true, atrasado:true,
+               rotulo: n === 1 ? "atrasado 1 dia útil" : `atrasado ${n} dias úteis` };
+    }
+    const n = diasUteis(hoje, m.prazo);
+    return n === 0
+      ? { chave:"hoje", cheia:true, atrasado:false, rotulo:"fecha hoje" }
+      : { chave:"avencer", cheia:false, atrasado:false,
+          rotulo: n === 1 ? "falta 1 dia útil" : `faltam ${n} dias úteis` };
+  }
+  // Fechado: Petrvs preenchido, assinado, e frequência aprovada. O do chefe é
+  // assinado e aprovado pela chefia dele, fora desta tela.
+  const fechouEm = (m, n) => { const x = m.marcas[n];
+    return n === CHEFE ? !!x.petrvs : !!(x.petrvs && x.assinado && x.freq); };
+  const mesFechado = m => EQUIPE.every(n => fechouEm(m, n));
+  // O mês continua cobrando até fechar: o corrente aparece sempre; o antigo,
+  // enquanto tiver pendência.
+  const mesesNaTela = () => MESES_FECH.filter(m => m === MES_ATUAL || !mesFechado(m));
+  const semPetrvs = m => EQUIPE.filter(n => !m.marcas[n].petrvs);
+  const aAssinar = m => EQUIPE.filter(n => n !== CHEFE && m.marcas[n].petrvs && !m.marcas[n].assinado);
+  const aAprovar = m => EQUIPE.filter(n => n !== CHEFE && !m.marcas[n].freq);
+  const podeMarcar = nome => nome === eu || eu === CHEFE;
+  // O que cada um enxerga como pendência: o chefe, as linhas abertas de todos;
+  // cada pessoa, só o próprio Petrvs.
+  const pendenciasMes = () => eu === CHEFE
+    ? mesesNaTela().reduce((s, m) => s + EQUIPE.filter(n => !fechouEm(m, n)).length, 0)
+    : mesesNaTela().filter(m => !m.marcas[eu].petrvs).length;
+  const atrasadasMes = () => mesesNaTela().filter(m => prazoDe(m).atrasado)
+    .reduce((s, m) => s + (eu === CHEFE ? semPetrvs(m).length : (m.marcas[eu].petrvs ? 0 : 1)), 0);
+  function concluidoNoMes(nome, m) {
+    const no = iso => !!iso && iso.slice(0, 7) === m.id;
+    const fora = TAREFAS.filter(t => t.estado === "concluida" && t.responsavel === nome && no(t.concluida_em))
+      .map(t => ({ titulo:t.titulo, onde:ondeDe(t), frente:t.frente, quando:t.concluida_em, rotina:false }));
+    ROTINAS.forEach(r => r.ocorrencias.forEach(o => {
+      if (o.quem === nome && no(o.feita_em))
+        fora.push({ titulo:r.titulo, onde:ondeDe(r), frente:r.frente, quando:o.feita_em, rotina:true });
+    }));
+    return fora.sort((a, b) => a.quando < b.quando ? -1 : 1);
+  }
+  const linhasConcluido = xs => xs.map(x => `
+    <div class="linha" style="--fc:${frente(x.frente).cor}">
+      <div class="linha-corpo" style="cursor:default">
+        <span class="mt-nome">${x.titulo}</span>
+        <span class="mt-onde">${x.onde}</span>
+        <span class="mt-pe">${x.rotina ? "rotina feita" : "concluída"} em ${ddmm(x.quando)}</span>
+      </div>
+    </div>`).join("");
+
+  // ---- a tabela, que só o chefe vê ----
+  const desfaz = (acao, at) => `<button type="button" class="link fino" data-acao="${acao}" ${at}>desfazer</button>`;
+  function celPetrvs(m, nome) {
+    const x = m.marcas[nome], at = `data-mes="${m.id}" data-quem="${nome}"`;
+    if (x.petrvs) return `<div class="cel"><span class="pill s-fechado">✓ ${ddmm(x.petrvs)}</span>${x.assinado ? "" : desfaz("mes-desmarcar", at)}</div>`;
+    const pz = prazoDe(m);
+    const cobrar = nome === eu ? ""
+      : x.cobrado === dISO(hoje) ? '<span class="mt-pe">cobrado hoje</span>'
+      : `<button type="button" class="bt" data-acao="mes-cobrar" ${at}>${x.cobrado ? "Cobrar de novo" : "Cobrar"}</button>`;
+    return `<div class="cel"><span class="pill s-${pz.chave}${pz.cheia ? " cheia" : ""}">falta</span>
+      <button type="button" class="bt${nome === eu ? " pri" : ""}" data-acao="mes-marcar" ${at}>${nome === eu ? "Preenchi o Petrvs" : "Marcar"}</button>${cobrar}</div>`;
+  }
+  function celAssina(m, nome) {
+    const x = m.marcas[nome], at = `data-mes="${m.id}" data-quem="${nome}"`;
+    if (nome === CHEFE) return '<span class="mt-pe">fora desta tela</span>';
+    if (x.assinado) return `<div class="cel"><span class="pill s-fechado">✓ ${ddmm(x.assinado)}</span>${desfaz("mes-desassinar", at)}</div>`;
+    if (!x.petrvs) return '<span class="mt-pe">aguarda o Petrvs</span>';
+    return `<div class="cel"><button type="button" class="bt pri" data-acao="mes-assinar" ${at}>Assinar</button></div>`;
+  }
+  function celFreq(m, nome) {
+    const x = m.marcas[nome], at = `data-mes="${m.id}" data-quem="${nome}"`;
+    if (nome === CHEFE) return '<span class="mt-pe">fora desta tela</span>';
+    if (x.freq) return `<div class="cel"><span class="pill s-fechado">✓ ${ddmm(x.freq)}</span>${desfaz("mes-desaprovar", at)}</div>`;
+    return `<div class="cel"><button type="button" class="bt pri" data-acao="mes-aprovar" ${at}>Aprovar</button></div>`;
+  }
+  function tabelaMes(m, soAbertos) {
+    const gente = EQUIPE.filter(n => !soAbertos || !fechouEm(m, n));
+    return `<table class="tab mes-tab">
+      <thead><tr><th>Pessoa</th><th>Petrvs</th><th>Sua assinatura</th><th>Frequência no SouGov</th>
+        <th>Concluiu em ${mesDe(m.comp)}</th></tr></thead>
+      <tbody>${gente.map(n => {
+        const c = concluidoNoMes(n, m).length;
+        return `<tr class="${n === eu ? "eu-linha" : ""}">
+          <td class="pessoa" title="${n}">${curto(n)}${n === CHEFE ? ' <span class="mt-pe">chefe</span>' : ""}</td>
+          <td>${celPetrvs(m, n)}</td><td>${celAssina(m, n)}</td><td>${celFreq(m, n)}</td>
+          <td>${c ? `<button type="button" class="link" data-acao="mes-ver" data-mes="${m.id}" data-quem="${n}">${c} ${c === 1 ? "trabalho" : "trabalhos"}</button>`
+                  : '<span class="mt-pe">nada registrado</span>'}</td></tr>`;
+      }).join("")}</tbody></table>`;
+  }
+  // ---- o cartão de cada pessoa: só o que é dela ----
+  const chipMes = m => `<span class="chip">${mesDe(m.comp)}</span>`;
+  function linhaMeuPetrvs(m, comMes) {
+    const x = m.marcas[eu], pz = prazoDe(m), chefe = eu === CHEFE, at = `data-mes="${m.id}" data-quem="${eu}"`;
+    const cobr = x.cobrado ? `${curto(CHEFE)} cobrou ${quando(x.cobrado)}.`
+               : m.lembrado ? `${curto(CHEFE)} lembrou ${quando(m.lembrado)}.` : "";
+    const topo = (comMes ? chipMes(m) : "") + (x.petrvs ? "" : `<span class="pill s-${pz.chave}${pz.cheia ? " cheia" : ""}">${pz.rotulo}</span>`);
+    return `
+      <div class="linha">
+        <div class="linha-corpo" style="cursor:default">
+          ${topo ? `<span class="item-topo">${topo}</span>` : ""}
+          <span class="mt-nome">${x.petrvs ? `Petrvs preenchido em ${ddmm(x.petrvs)}` : "Falta preencher o Petrvs"}</span>
+          ${x.petrvs ? "" : `<span class="mt-pe">O prazo é o 5º dia útil, ${dBR(m.prazo)}.${!chefe && cobr ? ` <b style="color:var(--fg)">${cobr}</b>` : ""}</span>`}
+          ${chefe ? "" : `
+          <span class="mt-pe">${x.assinado ? `<b style="color:var(--ok)">${curto(CHEFE)} já assinou</b>, em ${ddmm(x.assinado)}`
+            : x.petrvs ? "O seu Petrvs ainda não foi assinado" : "A assinatura vem depois do preenchimento"}</span>
+          <span class="mt-pe">${x.freq ? `Frequência aprovada em ${ddmm(x.freq)}` : "A sua frequência ainda não foi aprovada"}</span>`}
+        </div>
+        <div class="linha-acoes">${x.petrvs ? (x.assinado ? "" : desfaz("mes-desmarcar", at))
+          : `<button type="button" class="bt pri" data-acao="mes-marcar" ${at}>Preenchi o Petrvs</button>`}</div>
+      </div>`;
+  }
+  // O bloco do Petrvs é sempre verde: quem dá o alerta são as etiquetas de dentro.
+  const corMeuPetrvs = () => "var(--mes)";
+  // No centro, um bloco por mês.
+  function meuPetrvs(m) { return bloco(corMeuPetrvs([m]), `Petrvs — ${mesDe(m.comp)}`, "", linhaMeuPetrvs(m)); }
+  // Na coluna da direita, um bloco SÓ, com todos os meses abertos dentro. Para o
+  // chefe é aviso: o resumo de cada mês; assinar e aprovar se faz na tela.
+  function petrvsDaDireita(abre) {
+    const ms = mesesNaTela();
+    if (eu !== CHEFE) {
+      const meus = ms.filter(m => m === MES_ATUAL || !fechouEm(m, eu));
+      return bloco(corMeuPetrvs(meus), "Petrvs e frequência", "", meus.map(m => linhaMeuPetrvs(m, true)).join(""), "", "", abre ? "mes" : "");
+    }
+    const haAcao = ms.some(m => aAssinar(m).length || aAprovar(m).length);
+    const corpo = ms.map(m => {
+      const sem = semPetrvs(m), as = aAssinar(m), ap = aAprovar(m), pz = prazoDe(m), falto = !m.marcas[eu].petrvs;
+      const resumo = [sem.length ? `${sem.length} sem Petrvs` : "", as.length ? `${as.length} para assinar` : "",
+                      ap.length ? `${ap.length} ${ap.length === 1 ? "frequência" : "frequências"} para aprovar` : ""].filter(Boolean).join(" · ");
+      return `
+        <div class="linha">
+          <div class="linha-corpo" style="cursor:default">
+            <span class="item-topo">${chipMes(m)}${m !== MES_ATUAL ? '<span class="pill cheia s-falta">ainda aberto</span>'
+              : sem.length ? `<span class="pill s-${pz.chave}${pz.cheia ? " cheia" : ""}">${pz.rotulo}</span>` : ""}</span>
+            <span class="mt-nome">${resumo || "Tudo fechado"}</span>
+            ${falto ? '<span class="mt-pe">O seu Petrvs também falta.</span>' : ""}
+          </div>
+          ${falto ? `<div class="linha-acoes"><button type="button" class="bt pri" data-acao="mes-marcar" data-mes="${m.id}" data-quem="${eu}">Preenchi o Petrvs</button></div>` : ""}
+        </div>`;
+    }).join("") + (haAcao ? `
+        <div class="linha"><div class="linha-corpo" style="cursor:default">
+          <span class="mt-pe">Para assinar e aprovar, abra pelo título deste bloco.</span></div></div>` : "");
+    return bloco("var(--mes)", "Petrvs e frequência", pendenciasMes(), corpo, "", "", abre ? "mes" : "");
+  }
+  function textoLembrete() {
+    const ms = mesesNaTela(), pz = prazoDe(MES_ATUAL);
+    const prazo = pz.atrasado ? `fechou em ${dBR(MES_ATUAL.prazo)} — ${pz.rotulo}`
+      : pz.chave === "hoje" ? `fecha hoje, ${dBR(MES_ATUAL.prazo)}`
+      : `fecha em ${dBR(MES_ATUAL.prazo)} — ${pz.rotulo}`;
+    const falta = EQUIPE.filter(n => n !== eu)
+      .map(n => ({ n, meses: ms.filter(m => !m.marcas[n].petrvs).map(m => mesDe(m.comp)) }))
+      .filter(x => x.meses.length);
+    return `Pessoal, lembrete do Petrvs.\n` +
+      `O registro de ${nomeMes(MES_ATUAL)} tem prazo no 5º dia útil: ${prazo}.\n\nFalta preencher:\n` +
+      falta.map(x => `• ${curto(x.n)} — ${x.meses.join(" e ")}`).join("\n") +
+      `\n\nQuem já preencheu, é só marcar na Área da Equipe.`;
+  }
+  function abrirLembrete() {
+    $("#lb-texto").textContent = textoLembrete();
+    $("#lb-copiado").textContent = "";
+    $("#dlg-lembrete").showModal();
+  }
+  function copiarLembrete() {
+    const naMao = () => { $("#lb-copiado").textContent = "Clique no texto para selecionar e copie com Ctrl+C."; };
+    try {
+      navigator.clipboard.writeText($("#lb-texto").textContent)
+        .then(() => { $("#lb-copiado").textContent = "Copiado. É só colar no Teams."; }, naMao);
+    } catch (e) { naMao(); }
+  }
+
+  // ---------- Recortes ----------
+  // As minhas: as abertas e as paralisadas cuja data de volta chegou.
+  const minhasTarefas = () => TAREFAS.filter(t => (aberta(t) || voltou(t)) && t.responsavel === eu).sort(porUrgencia);
+  const rotinasDe = quem => ROTINAS.filter(r => (r.responsavel || null) === quem)
+    .sort((a, b) => estadoRotina(b).aberta - estadoRotina(a).aberta);    // as vencidas primeiro
+  const minhasRotinas = () => rotinasDe(eu).filter(r => estadoRotina(r).aberta);   // as que pedem ação
+  const rotinasDoGrupo = () => rotinasDe(null);
+  const semDono = () => TAREFAS.filter(t => aberta(t) && !t.responsavel).sort(porUrgencia);
+  const suspensas = () => TAREFAS.filter(t => t.estado === "suspensa" && noAr(t));
+  const guardados = () => PROJETOS.filter(p => p.estado === "depois");
+  const arquivados = () => PROJETOS.filter(p => p.estado === "arquivado");
+  const novos = () => PEDIDOS.filter(p => p.situacao === "novo");
+  const pedidosDo = id => PEDIDOS.filter(x => PROJETO_DA_FERRAMENTA[x.ferramenta] === id);
+  function parados() {
+    const de = [];
+    TAREFAS.filter(t => aberta(t) || voltou(t)).forEach(t => {
+      const st = estadoTarefa(t);
+      if (st.parada) de.push({ tipo:"tarefa", item:t, st, quem:t.responsavel, dias:st.dias });
+    });
+    ROTINAS.forEach(r => {
+      const st = estadoRotina(r);
+      if (st.parada) de.push({ tipo:"rotina", item:r, st, quem:r.responsavel, dias:st.dias });
+    });
+    return de.sort((a, b) => b.dias - a.dias);
+  }
+  // O chefe vê os parados de todos; cada pessoa, só os dela.
+  const paradosMeus = () => eu === CHEFE ? parados() : parados().filter(x => x.quem === eu);
+
+  // ======================================================================
+  //  PEDAÇOS DE TELA
+  // ======================================================================
+  const chipPessoa = n => `<span class="chip">${n ? curto(n) : "sem dono"}</span>`;
+  const ORIGEM = { pedido:"veio de um pedido", rotina:"veio de uma rotina",
+                   projeto:"veio de um projeto concluído", ideia:"era uma ideia" };
+  function chipsOrigem(t) {
+    let h = "";
+    if (t.devido_a) h += `<span class="chip vazado c-ti">devemos à ${t.devido_a}</span>`;
+    if (t.origem) h += `<span class="chip vazado c-liga">${ORIGEM[t.origem.tipo]}</span>`;
+    return h;
+  }
+  const opcoesEquipe = (sel, vazio = "sem dono") => `<option value="">${vazio}</option>` +
+    EQUIPE.map(n => `<option value="${n}"${n === sel ? " selected" : ""}>${n}</option>`).join("");
+  const ultimaNota = t => { if (!t.notas.length) return "";
+    const n = t.notas[t.notas.length - 1];
+    return `<span class="mt-pe">obs. de ${dBR(dData(n.quando))}: ${n.texto}${t.notas.length > 1 ? ` <b>(+${t.notas.length - 1})</b>` : ""}</span>`; };
+
+  // `mostra` diz o que o contexto ainda não disse: onde (frente › projeto, na
+  // cor da frente, com a barra lateral) e pessoa.
+  function linhaTarefa(t, mostra = {}) {
+    const st = estadoTarefa(t);
+    let botoes = "";
+    if (t.estado === "aberta") {
+      if (!t.responsavel) {
+        botoes = `<button type="button" class="bt pri" data-acao="pegar" data-id="${t.id}">Pegar</button>`;
+        if (eu === CHEFE && mostra.atribuir)
+          botoes += `<select class="mini" data-atribuir="${t.id}" aria-label="Atribuir a alguém">${opcoesEquipe("", "atribuir a…")}</select>`;
+      } else if (t.responsavel === eu) {
+        botoes = `<button type="button" class="bt verde" data-acao="concluir" data-id="${t.id}">Concluir tarefa</button>`;
+      }
+    } else if (t.estado === "suspensa") {
+      botoes = `<button type="button" class="bt" data-acao="retomar" data-id="${t.id}">Retomar</button>`;
+    } else {
+      botoes = `<button type="button" class="bt" data-acao="reabrir" data-id="${t.id}">Reabrir</button>`;
+    }
+    const pediu = andamentoPendente(t) && t.responsavel === eu && t.estado === "aberta" ? `
+      <div class="pediu">
+        <span><b>${curto(CHEFE)} pediu uma atualização.</b> Como está isto?</span>
+        <div>
+          <input type="text" class="campo-linha" id="and-${t.id}" data-nova="andamento" data-id="${t.id}" maxlength="200"
+                 placeholder="uma linha basta" aria-label="Responder ao pedido de andamento">
+          <button type="button" class="bt pri" data-acao="responder" data-id="${t.id}">Responder</button>
+        </div>
+      </div>` : "";
+    return `
+      <div class="linha" ${mostra.onde ? corDe(t) : ""}>
+        <button type="button" class="linha-corpo" data-acao="abrir-t" data-id="${t.id}">
+          <span class="item-topo">
+            ${pill(st)}
+            ${t.estado === "suspensa" ? `<span class="chip">${MOTIVO[t.motivo]}</span>` : ""}
+            ${mostra.pessoa && (t.responsavel || st.chave !== "semdono") ? chipPessoa(t.responsavel) : ""}
+            ${chipsOrigem(t)}
+          </span>
+          <span class="mt-nome">${t.titulo}</span>
+          ${mostra.onde ? `<span class="mt-onde">${ondeDe(t)}</span>` : ""}
+          ${ultimaNota(t)}
+        </button>
+        <div class="linha-acoes">${botoes}</div>
+        ${pediu}
+      </div>`;
+  }
+
+  // Os botões da rodada: os mesmos na linha e na ficha.
+  function botoesRotina(r, st) {
+    if (!st.aberta) return "";
+    return r.natureza === "olhar"
+      ? `<button type="button" class="bt" data-acao="rot-nada" data-id="${r.id}">Ciente, não há nada a fazer</button>
+         <button type="button" class="bt pri" data-acao="rot-trabalho" data-id="${r.id}">Ciente, há trabalho a fazer</button>`
+      : `<button type="button" class="bt verde" data-acao="rot-feita" data-id="${r.id}">Concluir rodada</button>`;
+  }
+  function linhaRotina(r, mostra = {}) {
+    const st = estadoRotina(r);
+    const botoes = botoesRotina(r, st);
+    return `
+      <div class="linha" ${mostra.onde ? corDe(r) : ""}>
+        <button type="button" class="linha-corpo" data-acao="abrir-r" data-id="${r.id}">
+          <span class="item-topo">
+            ${pill(st)}
+            <span class="chip vazado c-rot">rotina · ${descricao(r)}</span>
+            ${mostra.pessoa ? `<span class="chip">${r.responsavel ? curto(r.responsavel) : "do grupo"}</span>` : ""}
+          </span>
+          <span class="mt-nome">${r.titulo}</span>
+          ${mostra.onde ? `<span class="mt-onde">${ondeDe(r)}</span>` : ""}
+          ${st.aberta ? "" : `<span class="mt-pe">próxima em ${st.proxima ? dBR(st.proxima) : "—"}</span>`}
+        </button>
+        <div class="linha-acoes">${botoes}</div>
+      </div>`;
+  }
+
+  // `semEtiqueta`: dentro do bloco "Novos" a etiqueta "novo" só repetia o título.
+  function linhaPedido(p, semEtiqueta) {
+    const marca = p.virou ? `<span class="chip vazado c-liga">virou ${p.virou}</span>`
+      : p.aprendizado ? '<span class="chip vazado c-rot">aprendizado</span>' : "";
+    return `
+      <div class="linha" style="--fc:${p.situacao === "novo" ? "var(--azul)" : "transparent"}">
+        <button type="button" class="linha-corpo" data-acao="abrir-p" data-id="${p.id}">
+          <span class="item-topo">
+            ${semEtiqueta ? "" : `<span class="pill s-${p.situacao}${p.situacao === "novo" ? " cheia" : ""}">${ROTULO_SITUACAO[p.situacao]}</span>`}
+            <span class="chip">${ROTULO_FERRAMENTA[p.ferramenta]}</span>
+            <span class="chip">${ROTULO_TIPO[p.tipo]}</span>
+            ${marca}
+          </span>
+          <span class="mt-nome" style="font-weight:600">${p.texto}</span>
+          <span class="mt-pe">${p.contato} · ${quando(p.criado)}</span>
+        </button>
+      </div>`;
+  }
+
+  // Parado: com quem está e por quê. A rotina vencida leva os próprios botões.
+  function linhaParado({ tipo, item, st, quem }) {
+    if (tipo === "rotina") return linhaRotina(item, { onde:true, pessoa:true });
+    let botao = "";
+    if (eu === CHEFE && quem && quem !== eu) {
+      botao = andamentoPendente(item)
+        ? `<span class="mt-pe"><b>andamento pedido ${quando(item.andamento.pedido)}</b></span>`
+        : `<button type="button" class="bt pri" data-acao="andamento" data-id="${item.id}">Pedir andamento</button>`;
+    }
+    return `
+      <div class="linha" ${corDe(item)}>
+        <button type="button" class="linha-corpo" data-acao="abrir-t" data-id="${item.id}">
+          <span class="item-topo">${pill(st)}${chipsOrigem(item)}</span>
+          <span class="mt-nome">${item.titulo}</span>
+          <span class="mt-onde">${ondeDe(item)}</span>
+          <span class="mt-pe"><b style="color:var(--fg)">${quem ? "Com " + quem : "Com ninguém — está sem dono"}</b> · ${st.porque}</span>
+          ${ultimaNota(item)}
+        </button>
+        <div class="linha-acoes">${botao}</div>
+      </div>`;
+  }
+
+  // Bloco: fronteira + faixa de título colorida. É a resposta ao "parece que é
+  // tudo a mesma coisa": cada grupo se vê antes de se ler.
+  const bloco = (cor, titulo, n, corpo, vazio, sub = "", abre = "") => {
+    const aberto = abre && tela === "trabalho" && vista.tipo === "caixa" && vista.id === abre;
+    const dentro = `${titulo}${sub ? ` <small>— ${sub}</small>` : ""}${abre ? `<span class="abre">${aberto ? "aberto ao lado" : "abrir →"}</span>` : ""}${n === "" ? "" : `<span class="n">${n}</span>`}`;
+    return `
+    <div class="bloco" style="--bc:${cor}">
+      ${abre ? `<button type="button" class="bloco-cab" data-acao="vista" data-tipo="caixa" data-id="${abre}">${dentro}</button>`
+             : `<p class="bloco-cab">${dentro}</p>`}
+      <div class="bloco-corpo">${corpo || (vazio ? `<p class="vazio">${vazio}</p>` : "")}</div>
+    </div>`;
+  };
+  const banda = (cor, sobre, titulo, texto, extra = "") => `
+    <div class="banda" style="--fc:${cor}">
+      <span class="sobre">${sobre}</span><h2>${titulo}</h2>${texto ? `<p>${texto}</p>` : ""}${extra}
+    </div>`;
+  // Anotar uma tarefa própria sem passar pela frente: escreve, Enter, escolhe a frente.
+  const campoMinha = () => `
+    <div class="nova-linha"><input type="text" data-nova="minha" maxlength="160"
+      placeholder="Anotar uma tarefa minha — escreva e dê Enter" aria-label="Anotar uma tarefa minha"></div>`;
+  const frenteProvavel = () => {
+    if (vista.tipo === "frente") return vista.id;
+    if (vista.tipo === "projeto") return projeto(vista.id).frente;
+    const conta = {}; minhasTarefas().forEach(t => { conta[t.frente] = (conta[t.frente] || 0) + 1; });
+    return Object.keys(conta).sort((a, b) => conta[b] - conta[a])[0] || FRENTES[0].id;
+  };
+  const campoNova = (tipo, f, p, texto) => `
+    <div class="nova-linha"><input type="text" data-nova="${tipo}" data-frente="${f}" data-projeto="${p || ""}"
+      placeholder="${texto}" aria-label="${texto}"></div>`;
+
+  // ======================================================================
+  //  TELA 1 — O COCKPIT
+  // ======================================================================
+  // Todo contador abre alguma coisa, e fica aceso enquanto ela está aberta.
+  function desenharFaixa() {
+    $("#resumo").innerHTML = [
+      ["minhas",     minhasTarefas().length + minhasRotinas().length, "minhas tarefas", "var(--accent)"],
+      ["parados",    paradosMeus().length,                    "parados",        "var(--alerta)"],
+      ["semdono",    semDono().length,                        "sem dono",       "var(--meio)"],
+      ["chegou",     novos().length,                          "pedidos novos",  "var(--azul)"],
+      ["ideias",     IDEIAS.length,                           "não iniciado",   "var(--off)"],
+      ["paralisado", guardados().length + suspensas().length, "paralisados",    "var(--roxo)"],
+      ["feitas",     TAREFAS.filter(t => t.estado === "concluida").length, "concluídas", "var(--ok)"]
+    ].map(([id, n, rot, cor]) =>
+      `<button type="button" class="tile ${n ? "" : "zero"}" style="--tc:${cor}" data-acao="vista" data-tipo="caixa" data-id="${id}" aria-current="${vista.tipo === "caixa" && vista.id === id}"><b>${n}</b><span>${rot}</span></button>`
+    ).join("");
+  }
+
+  // Quadro de avisos: uma faixa fina. Sem aviso, e sem ser chefe, ela nem aparece.
+  const avisosValidos = () => AVISOS.filter(a => (!a.ate || dData(a.ate) >= hoje) && (!a.para || a.para === eu));
+  // Os três últimos ficam sempre à vista; o resto, a um clique. Qualquer pessoa
+  // escreve; tira o aviso quem escreveu, ou o chefe.
+  function desenharAvisos() {
+    const av = avisosValidos();
+    const item = a => `
+      <div class="aviso-item">
+        <span class="txt">${a.para
+          ? `<span class="item-topo"><span class="pill cheia s-novo">para você</span></span><button type="button" class="link" data-acao="abrir-t" data-id="${a.tarefa}">${a.texto}</button>`
+          : a.texto}<small>${curto(a.quem)}, ${quando(a.quando)}${a.ate ? ` · vale até ${ddmm(a.ate)}` : ""}</small></span>
+        ${eu === CHEFE || a.quem === eu || a.para === eu ? `<button type="button" class="tirar" data-acao="aviso-tirar" data-id="${a.id}" aria-label="Tirar este aviso" title="Tirar este aviso">×</button>` : ""}
+      </div>`;
+    $("#avisos").innerHTML = bloco("var(--aviso)", "Quadro de avisos", av.length,
+      (verAvisos ? av : av.slice(0, 3)).map(item).join("") +
+      (av.length ? "" : '<p class="vazio">Nenhum aviso para a equipe.</p>') +
+      (av.length > 3 ? `<div class="aviso-item"><button type="button" class="link fino" data-acao="aviso-ver">${verAvisos ? "mostrar só os 3 últimos" : `ver os ${av.length} avisos`}</button></div>` : "") + `
+      <div class="aviso-novo">
+        <input type="text" data-nova="aviso" maxlength="200" placeholder="Novo aviso para todos — escreva e dê Enter" aria-label="Novo aviso para a equipe">
+        <label>vale até <input type="date" id="aviso-ate" aria-label="O aviso vale até"></label>
+      </div>`);
+  }
+
+  // À esquerda, só as frentes. As caixas são os cartões de cima; o Petrvs e as
+  // rotinas se abrem pelo título dos blocos da direita.
+  function desenharMenu() {
+    const par = parados();
+    $("#menu").innerHTML = `
+      <div class="bloco" style="--bc:var(--f9)">
+        <p class="bloco-cab">Frentes de trabalho</p>
+        <div class="bloco-corpo">
+          ${FRENTES.map(f => {
+            const atual = (vista.tipo === "frente" && vista.id === f.id)
+              || (vista.tipo === "projeto" && projeto(vista.id).frente === f.id);
+            const ruim = par.filter(x => x.item.frente === f.id).length;
+            return `<button type="button" class="nav" style="--nc:${f.cor}" data-acao="vista" data-tipo="frente" data-id="${f.id}" aria-current="${atual}">
+              <i class="ponto"></i><span>${f.nome}</span>${ruim ? `<b class="n ruim" title="paradas">${ruim}</b>` : ""}<b class="n">${TAREFAS.filter(t => t.frente === f.id && aberta(t)).length}</b></button>`;
+          }).join("")}
+        </div>
+      </div>`;
+    $("#pe").innerHTML = `<b>CGGES</b> — Escritório de Processos da SPU.
+        <span class="versao">Home EPP · área logada · protótipo de 13/11/2026 · dados de exemplo</span>`;
+  }
+
+  // Na frente os projetos vêm recolhidos. Abre sozinho só o que tem alerta: tarefa
+  // parada ou atrasada, ou rotina vencida. Quem clica muda, e a escolha fica.
+  const alertaNoProjeto = p => resumoProjeto(p).paradas > 0
+    || ROTINAS.some(x => x.projeto === p.id && estadoRotina(x).aberta);
+  const projetoAberto = p => p.id in dobras ? dobras[p.id] : alertaNoProjeto(p);
+  function vistaFrente(f) {
+    const pjs = PROJETOS.filter(p => p.frente === f.id && p.estado === "ativo");
+    const rotSoltas = ROTINAS.filter(r => r.frente === f.id && !r.projeto);
+    const soltas = TAREFAS.filter(t => t.frente === f.id && !t.projeto && t.estado === "aberta").sort(porUrgencia);
+    const grupos = pjs.map(p => {
+      const r = resumoProjeto(p);
+      const rots = ROTINAS.filter(x => x.projeto === p.id);
+      const nPed = pedidosDo(p.id).filter(x => x.situacao === "novo").length;
+      const aberto = projetoAberto(p);
+      return `
+        <div class="projeto" style="--fc:${f.cor}">
+          <div class="projeto-cab">
+          <button type="button" class="projeto-dobra" data-acao="pj-dobrar" data-id="${p.id}" aria-expanded="${aberto}" title="${aberto ? "Recolher" : "Expandir"}">
+            <span class="seta" aria-hidden="true">${aberto ? "▾" : "▸"}</span>
+            <span class="projeto-nome">${p.nome}</span>
+            <span class="projeto-conta">${contaProjeto(r)}${nPed ? ` · <span style="color:var(--azul);font-weight:800">${nPed} ${nPed === 1 ? "pedido novo" : "pedidos novos"}</span>` : ""}</span>
+          </button>
+          ${linkFerramenta(p, true)}
+          <button type="button" class="projeto-abrir" data-acao="vista" data-tipo="projeto" data-id="${p.id}">abrir o projeto →</button>
+          </div>
+          ${aberto ? `<div class="projeto-corpo">
+            ${rots.map(x => linhaRotina(x, { pessoa:true })).join("")}
+            ${r.abertas.sort(porUrgencia).map(t => linhaTarefa(t, { pessoa:true, atribuir:true })).join("")}
+            ${campoNova("tarefa", f.id, p.id, "Nova tarefa neste projeto — escreva e dê Enter")}
+          </div>` : ""}
+        </div>`;
+    }).join("");
+    const guardadosAqui = PROJETOS.filter(p => p.frente === f.id && p.estado === "depois").length;
+    return `
+      ${banda(f.cor, "Frente de trabalho", f.nome, f.sub)}
+      ${pjs.length ? `<p class="mt-pe">Os projetos vêm recolhidos. Abrem sozinhos os que têm algo parado ou atrasado; clique no nome para abrir ou recolher.</p>` + grupos : ""}
+      <div class="nova-linha solta">
+        <input type="text" data-nova="projeto" data-frente="${f.id}"
+               placeholder="Novo projeto nesta frente — escreva o nome e dê Enter" aria-label="Novo projeto em ${f.nome}">
+      </div>
+      ${bloco(f.cor, pjs.length ? "Tarefas soltas" : "Tarefas", rotSoltas.length + soltas.length,
+          rotSoltas.map(r => linhaRotina(r, { pessoa:true })).join("") +
+          soltas.map(t => linhaTarefa(t, { pessoa:true, atribuir:true })).join("") +
+          campoNova("tarefa", f.id, "", "Nova tarefa nesta frente — escreva e dê Enter"),
+          "", pjs.length ? "as que não são de projeto nenhum" : "")}
+      ${guardadosAqui ? `<button type="button" class="link" data-acao="vista" data-tipo="caixa" data-id="paralisado">${guardadosAqui} ${guardadosAqui === 1 ? "projeto desta frente está paralisado" : "projetos desta frente estão paralisados"} →</button>` : ""}`;
+  }
+
+  // O link para a ferramenta em si, para quem está trabalhando nela.
+  const linkFerramenta = (p, curto_) => !p.url ? ""
+    : `<a class="${curto_ ? "projeto-abrir" : "link"}" href="${p.url}" target="_blank" rel="noopener" title="Abrir ${p.nome} em outra aba">${curto_ ? "ferramenta ↗" : `Abrir ${p.nome} ↗`}</a>`;
+  // A data de volta do projeto paralisado: chip enquanto não chega, etiqueta cheia quando chega.
+  const voltaProjeto = p => !p.volta ? ""
+    : dData(p.volta) <= hoje ? '<span class="pill cheia s-voltar">hora de voltar</span>'
+    : `<span class="chip">volta em ${ddmm(p.volta)}</span>`;
+  // O projeto é uma tela: dá para entrar nele, ver o que está sendo feito,
+  // abrir tarefa, distribuir, concluir, paralisar ou arquivar. E é nele que
+  // ficam guardados os pedidos que chegaram pela ferramenta.
+  function vistaProjeto(p) {
+    const f = frente(p.frente), r = resumoProjeto(p);
+    const rots = ROTINAS.filter(x => x.projeto === p.id);
+    const peds = pedidosDo(p.id).sort((a, b) => (b.situacao === "novo") - (a.situacao === "novo"));
+    const acoes = p.estado === "ativo" ? `
+        <div class="grupo-linha">
+          <button type="button" class="bt verde" data-acao="pj-concluir" data-id="${p.id}">Concluir o projeto</button>
+          <span class="mt-pe" style="font-weight:700">ou paralisar, porque</span>
+          <button type="button" class="bt" data-acao="pj-depois" data-id="${p.id}" data-motivo="aguardando">está aguardando o retorno de outra área</button>
+          <button type="button" class="bt" data-acao="pj-depois" data-id="${p.id}" data-motivo="prioridades">entraram outras prioridades</button>
+        </div>
+        <label class="volta">voltar a olhar em <input type="date" id="pj-volta" aria-label="Voltar a olhar o projeto em">
+          <small>opcional — escolha antes de dizer o motivo</small></label>`
+      : p.estado === "depois" ? `
+        <div class="grupo-linha"><span class="pill cheia s-depois">paralisado — ${MOTIVO[p.motivo]}</span>${voltaProjeto(p)}
+          <button type="button" class="bt pri" data-acao="pj-retomar" data-id="${p.id}">Retomar o projeto</button>
+          <button type="button" class="bt" data-acao="pj-arquivar" data-id="${p.id}">Arquivar</button></div>`
+      : p.estado === "arquivado" ? `
+        <div class="grupo-linha"><span class="pill cheia s-arquivado">arquivado</span>
+          <button type="button" class="bt" data-acao="pj-desarquivar" data-id="${p.id}">Desarquivar</button></div>`
+      : `<div class="grupo-linha"><span class="pill cheia s-feita">concluído</span>
+          <button type="button" class="bt" data-acao="pj-reabrir" data-id="${p.id}">Reabrir o projeto</button></div>`;
+    const resumo = [contaProjeto(r).replace(/<\/?b>/g, ""), r.feitas.length ? `${r.feitas.length} concluídas` : ""]
+      .filter(Boolean).join(" · ");
+    return `
+      <button type="button" class="link" data-acao="vista" data-tipo="frente" data-id="${f.id}">← ${f.nome}</button>
+      ${banda(f.cor, "Projeto · " + f.nome, p.nome, resumo, linkFerramenta(p) + acoes)}
+      ${rots.length ? bloco(f.cor, "Rotinas do projeto", rots.length, rots.map(x => linhaRotina(x, { pessoa:true })).join("")) : ""}
+      ${bloco(f.cor, "Tarefas abertas", r.abertas.length,
+          r.abertas.sort(porUrgencia).map(t => linhaTarefa(t, { pessoa:true, atribuir:true })).join("") +
+          (p.estado === "ativo" ? campoNova("tarefa", f.id, p.id, "Nova tarefa neste projeto — escreva e dê Enter") : ""),
+          p.estado === "ativo" ? "" : "Nenhuma tarefa aberta.")}
+      ${r.guardadas.length ? bloco("var(--roxo)", "Tarefas paralisadas", r.guardadas.length,
+          r.guardadas.map(t => linhaTarefa(t, { pessoa:true })).join("")) : ""}
+      ${peds.length ? bloco("var(--azul)", "Pedidos recebidos", peds.length, peds.map(x => linhaPedido(x)).join(""),
+          "", "o que chegou pelo canal da ferramenta, e o que cada um virou") : ""}
+      ${r.feitas.length ? bloco("var(--ok)", "Concluídas", r.feitas.length,
+          r.feitas.map(t => linhaTarefa(t, { pessoa:true })).join("")) : ""}`;
+  }
+
+  function vistaCaixa(id) {
+    const chefe = eu === CHEFE;
+    if (id === "minhas") {
+      const mt = minhasTarefas(), pedem = mt.filter(andamentoPendente);
+      const sus = suspensas().filter(t => t.responsavel === eu);
+      const porFrente = FRENTES.map(f => {
+        const ts = mt.filter(t => t.frente === f.id && !andamentoPendente(t));
+        const rs = rotinasDe(eu).filter(r => r.frente === f.id);
+        return ts.length + rs.length ? bloco(f.cor, f.nome, ts.length + rs.length,
+          ts.map(t => linhaTarefa(t, { onde:true })).join("") + rs.map(r => linhaRotina(r, { onde:true })).join("")) : "";
+      }).join("");
+      return `
+        ${banda("var(--accent)", "Caixa", "Minhas tarefas", "Tudo o que está no seu nome, separado por frente: as tarefas abertas e as rotinas.")}
+        ${pedem.length ? bloco("var(--meio)", "Pediram andamento", pedem.length, pedem.map(t => linhaTarefa(t, { onde:true })).join("")) : ""}
+        ${bloco("var(--accent)", "Anotar", "", campoMinha(), "", "uma tarefa sua; depois você diz a frente")}
+        ${porFrente || '<p class="vazio"><b>Nada no seu nome.</b> Dê uma olhada nos sem dono.</p>'}
+        ${sus.length ? bloco("var(--roxo)", "Paralisadas comigo", sus.length, sus.map(t => linhaTarefa(t, { onde:true })).join("")) : ""}`;
+    }
+    if (id === "parados") {
+      const par = paradosMeus();
+      return `
+        ${banda("var(--alerta)", "Caixa", "Parados", chefe
+            ? "Prazo vencido, ou catorze dias sem movimento: com quem está, e por quê."
+            : "O que está no seu nome com prazo vencido, ou há catorze dias sem movimento.")}
+        ${bloco("var(--alerta)", chefe ? "O que está parado" : "Parado com você", par.length, par.map(linhaParado).join(""),
+            "<b>Nada parado.</b> Tudo o que está aberto andou nas últimas duas semanas.")}`;
+    }
+    if (id === "mes") {
+      const ms = mesesNaTela(), antigos = ms.filter(m => m !== MES_ATUAL), m = MES_ATUAL, pz = prazoDe(m);
+      const ver = mesVer || { quem: eu, mes: m.id }, mVer = mesFech(ver.mes), feito = concluidoNoMes(ver.quem, mVer);
+      const concluiu = bloco("var(--ok)", `O que ${ver.quem === eu ? "você" : curto(ver.quem)} concluiu em ${mesDe(mVer.comp)}`, feito.length,
+          linhasConcluido(feito),
+          `Nada concluído em ${mesDe(mVer.comp)} ${ver.quem === eu ? "no seu nome" : "no nome de " + curto(ver.quem)}.`,
+          "para ajudar a preencher o Petrvs");
+      if (!chefe) {
+        return `
+          ${banda("var(--mes)", "Todo mês", `O seu Petrvs — ${nomeMes(m)}`,
+              `O prazo é o 5º dia útil: <b style="color:var(--fg)">${dBR(m.prazo)}</b>, ${SEMANA[m.prazo.getDay()].n}. A frequência é aprovada pela chefia no SouGov: você não precisa informar nada.`)}
+          ${antigos.filter(a => !fechouEm(a, eu)).map(a => meuPetrvs(a).replace("Petrvs — ", "Ainda aberto — ")).join("")}
+          ${meuPetrvs(m)}
+          ${concluiu}`;
+      }
+      const sem = ms.reduce((s, x) => s + semPetrvs(x).length, 0);
+      const as = ms.reduce((s, x) => s + aAssinar(x).length, 0), ap = ms.reduce((s, x) => s + aAprovar(x).length, 0);
+      const faltaOutro = ms.some(x => semPetrvs(x).some(n => n !== eu));
+      const situacao = [
+        sem ? `<span class="pill s-${pz.chave}${pz.cheia ? " cheia" : ""}">${pz.rotulo}</span> ${sem} sem Petrvs` : "Todo mundo já preencheu o Petrvs",
+        as ? `${as} para assinar` : "", ap ? `${ap} ${ap === 1 ? "frequência" : "frequências"} para aprovar` : ""
+      ].filter(Boolean).join(" · ");
+      const botoes = `
+        <div class="grupo-linha">
+          ${faltaOutro ? `<button type="button" class="bt pri" data-acao="mes-lembrar">Lembrar quem falta</button>` : ""}
+          ${aAprovar(m).length ? `<button type="button" class="bt" data-acao="mes-aprovar-todos" data-mes="${m.id}">Aprovar a frequência de todos</button>` : ""}
+          ${m.lembrado ? `<span class="mt-pe">você lembrou ${quando(m.lembrado)}</span>` : ""}
+        </div>`;
+      return `
+        ${banda("var(--mes)", "Todo mês", `Petrvs e frequência — ${nomeMes(m)}`,
+            `Fecha no 5º dia útil: <b style="color:var(--fg)">${dBR(m.prazo)}</b>, ${SEMANA[m.prazo.getDay()].n}. ${situacao}.`, botoes)}
+        ${antigos.map(a => `
+        <div class="bloco" style="--bc:var(--mes)">
+          <p class="bloco-cab">Ainda aberto — ${nomeMes(a)} <small>— o prazo era ${dBR(a.prazo)}; continua cobrando até fechar</small></p>
+          <div class="tab-rolo">${tabelaMes(a, true)}</div>
+        </div>`).join("")}
+        <div class="bloco" style="--bc:var(--mes)">
+          <p class="bloco-cab">${nomeMes(m)} <small>— só você vê esta tabela; cada pessoa vê a própria linha</small><span class="n">${EQUIPE.filter(n => fechouEm(m, n)).length} de ${EQUIPE.length} fechados</span></p>
+          <div class="tab-rolo">${tabelaMes(m)}</div>
+        </div>
+        ${concluiu}`;
+    }
+    if (id === "rot-minhas" || id === "rot-grupo") {
+      const grupo = id === "rot-grupo", rs = grupo ? rotinasDoGrupo() : rotinasDe(eu);
+      const venc = rs.filter(r => estadoRotina(r).aberta), dia = rs.filter(r => !estadoRotina(r).aberta);
+      return `
+        ${banda("var(--rot)", "Rotinas", grupo ? "Rotinas do grupo" : "Minhas rotinas", grupo
+            ? "Não têm dono: quem fizer a rodada, marca. Cada rotina continua ligada à frente ou ao projeto dela."
+            : "O que se repete e está no seu nome — em dia ou vencido. Cada rotina continua ligada à frente ou ao projeto dela.")}
+        ${bloco("var(--alerta)", "Vencidas", venc.length, venc.map(r => linhaRotina(r, { onde:true })).join(""), "<b>Nenhuma vencida.</b>")}
+        ${bloco("var(--rot)", "Em dia", dia.length, dia.map(r => linhaRotina(r, { onde:true })).join(""), "Nenhuma rotina em dia.", "com a data da próxima rodada")}`;
+    }
+    if (id === "chegou") {
+      const nv = novos(), olhados = PEDIDOS.filter(p => p.situacao !== "novo");
+      return `
+        ${banda("var(--azul)", "Caixa", "Pedidos das ferramentas", "O que as pessoas mandaram pelo canal de cada ferramenta e ninguém olhou ainda. É registro, não atendimento: ninguém recebe resposta. Depois de olhado, o pedido fica guardado no projeto da ferramenta.")}
+        ${bloco("var(--azul)", "Novos", nv.length, nv.map(p => linhaPedido(p, true)).join(""), "<b>Nada novo.</b> Todos os pedidos já foram olhados.")}
+        ${olhados.length ? `<button type="button" class="link" data-acao="alternar-olhados">${verOlhados ? "esconder os já olhados" : `ver todos os ${olhados.length} já olhados, de todas as ferramentas`}</button>` : ""}
+        ${verOlhados ? bloco("var(--off)", "Já olhados", olhados.length, olhados.map(p => linhaPedido(p)).join("")) : ""}`;
+    }
+    if (id === "semdono") {
+      const sd = semDono();
+      return `
+        ${banda("var(--meio)", "Caixa", "Sem dono", "Trabalho que ninguém pegou ainda. Quem puder, pega.")}
+        ${bloco("var(--meio)", "Esperando alguém", sd.length,
+            sd.map(t => linhaTarefa(t, { onde:true, atribuir:true })).join(""),
+            "<b>Nada sem dono.</b> Tudo o que está aberto tem alguém.")}`;
+    }
+    if (id === "ideias") {
+      return `
+        ${banda("var(--off)", "Caixa", "Não iniciado", "Ideias: o que ainda não virou trabalho. Para desenvolver, ou para agregar a um projeto.")}
+        ${bloco("var(--off)", "Ideias", IDEIAS.length, IDEIAS.map(i => `
+            <div class="linha" style="--fc:${i.frente ? frente(i.frente).cor : "transparent"}">
+              <div class="linha-corpo" style="cursor:default">
+                <span class="mt-nome">${i.texto}</span>
+                ${i.frente ? `<span class="mt-onde">${frente(i.frente).nome}</span>` : ""}
+                <span class="mt-pe">de ${curto(i.quem)}, ${quando(i.quando)}</span>
+              </div>
+              <div class="linha-acoes">
+                <button type="button" class="bt pri" data-acao="ideia-virar" data-id="${i.id}">Virar trabalho</button>
+                <button type="button" class="bt" data-acao="ideia-descartar" data-id="${i.id}">Descartar</button>
+              </div>
+            </div>`).join("") +
+            `<div class="nova-linha"><input type="text" data-nova="ideia" placeholder="Anotar uma ideia — escreva e dê Enter" aria-label="Anotar uma ideia"></div>`)}`;
+    }
+    if (id === "paralisado") {
+      const gs = guardados(), sus = suspensas(), arq = arquivados();
+      return `
+        ${banda("var(--roxo)", "Caixa", "Paralisado", "O que alguém decidiu deixar parado, e por quê. É diferente de Parados, que é o que deveria estar andando.")}
+        ${bloco("var(--roxo)", "Projetos paralisados", gs.length, gs.map(p => `
+            <div class="linha" ${corDe(p)}>
+              <button type="button" class="linha-corpo" data-acao="vista" data-tipo="projeto" data-id="${p.id}">
+                <span class="item-topo"><span class="pill cheia s-depois">${MOTIVO[p.motivo]}</span>${voltaProjeto(p)}</span>
+                <span class="mt-nome">${p.nome}</span>
+                <span class="mt-onde">${frente(p.frente).nome}</span>
+                <span class="mt-pe">paralisado ${quando(p.mexido)} · ${resumoProjeto(p).abertas.length} tarefas esperando com ele</span>
+              </button>
+              <div class="linha-acoes">
+                <button type="button" class="bt" data-acao="pj-retomar" data-id="${p.id}">Retomar</button>
+                <button type="button" class="bt" data-acao="pj-arquivar" data-id="${p.id}">Arquivar</button>
+              </div>
+            </div>`).join(""), "Nenhum projeto paralisado.")}
+        ${bloco("var(--roxo)", "Tarefas paralisadas", sus.length,
+            sus.map(t => linhaTarefa(t, { onde:true, pessoa:true })).join(""), "Nenhuma tarefa paralisada.", "uma tarefa só, em compasso de espera")}
+        ${arq.length ? `<button type="button" class="link" data-acao="alternar-arquivados">${verArquivados ? "esconder os arquivados" : `ver ${arq.length === 1 ? "o projeto arquivado" : `os ${arq.length} projetos arquivados`}`}</button>` : ""}
+        ${verArquivados && arq.length ? bloco("var(--off)", "Arquivados", arq.length, arq.map(p => `
+            <div class="linha" ${corDe(p)}>
+              <button type="button" class="linha-corpo" data-acao="vista" data-tipo="projeto" data-id="${p.id}">
+                <span class="mt-nome">${p.nome}</span>
+                <span class="mt-onde">${frente(p.frente).nome}</span>
+                <span class="mt-pe">arquivado ${quando(p.mexido)}</span>
+              </button>
+              <div class="linha-acoes"><button type="button" class="bt" data-acao="pj-desarquivar" data-id="${p.id}">Desarquivar</button></div>
+            </div>`).join(""), "", "o que não vai ser feito; nada foi apagado") : ""}`;
+    }
+    if (id === "feitas") {
+      const fs = TAREFAS.filter(t => t.estado === "concluida");
+      const ps = PROJETOS.filter(p => p.estado === "concluido");
+      return `
+        ${banda("var(--ok)", "Caixa", "Concluídas", "O que a equipe já fechou. Concluiu por engano? Reabra — a tarefa volta para quem estava com ela.")}
+        ${ps.length ? bloco("var(--ok)", "Projetos concluídos", ps.length, ps.map(p => `
+            <div class="linha" ${corDe(p)}>
+              <button type="button" class="linha-corpo" data-acao="vista" data-tipo="projeto" data-id="${p.id}">
+                <span class="mt-nome">${p.nome}</span><span class="mt-onde">${frente(p.frente).nome}</span>
+              </button>
+              <div class="linha-acoes"><button type="button" class="bt" data-acao="pj-reabrir" data-id="${p.id}">Reabrir</button></div>
+            </div>`).join("")) : ""}
+        ${bloco("var(--ok)", "Tarefas concluídas", fs.length,
+            fs.map(t => linhaTarefa(t, { onde:true, pessoa:true })).join(""), "Nada concluído ainda.")}`;
+    }
+    return `
+      ${banda("var(--off)", "Protótipo", "Para validar", "Não faz parte da tela final. É o que as suas catorze observações viraram, e o que eu decidi por conta própria para você confirmar.")}
+      <div class="bloco validar"><ol><li>Notas de revisão retiradas da versão publicada.</li></ol></div>`;
+  }
+
+  // A coluna da direita é o que é de quem está logado — e é a única porta do
+  // Petrvs e das rotinas: o título de cada bloco abre a tela dele no centro.
+  // Para o chefe o bloco do Petrvs é só um aviso: assinar e aprovar se faz na tela.
+  function desenharComigo() {
+    const mt = minhasTarefas();
+    const pedem = mt.filter(andamentoPendente), resto = mt.filter(t => !andamentoPendente(t));
+    const rs = rotinasDe(eu), rgTodas = rotinasDoGrupo(), rg = rgTodas.filter(r => estadoRotina(r).aberta);
+    const mes = petrvsDaDireita(true);
+    $("#comigo").innerHTML = mes +
+      (pedem.length ? bloco("var(--meio)", "Pediram andamento", pedem.length, pedem.map(t => linhaTarefa(t, { onde:true })).join("")) : "") +
+      bloco("var(--accent)", "Minhas tarefas", resto.length, resto.map(t => linhaTarefa(t, { onde:true })).join("") +
+            (resto.length ? "" : '<p class="vazio"><b>Nada no seu nome.</b> Dê uma olhada nos sem dono.</p>') + campoMinha(),
+            "", "", "minhas") +
+      bloco("var(--rot)", "Minhas rotinas", rs.length, rs.map(r => linhaRotina(r, { onde:true })).join(""),
+            "Nenhuma rotina no seu nome.", "", "rot-minhas") +
+      bloco("var(--rot)", "Rotinas do grupo", rgTodas.length, rg.map(r => linhaRotina(r, { onde:true })).join(""),
+            `<b>Nenhuma vencida.</b> ${rgTodas.length === 1 ? "A rotina do grupo está em dia." : `As ${rgTodas.length} rotinas do grupo estão em dia.`}`,
+            "", "rot-grupo");
+  }
+
+  function desenharTrabalho() {
+    desenharFaixa(); desenharMenu(); desenharComigo();
+    $("#meio").innerHTML =
+      (avisoMsg ? `<p class="aviso">${avisoMsg}</p>` : "") +
+      (vista.tipo === "frente" ? vistaFrente(frente(vista.id))
+       : vista.tipo === "projeto" ? vistaProjeto(projeto(vista.id))
+       : vistaCaixa(vista.id));
+  }
+
+  // ======================================================================
+  //  TELA 2 — O PAINEL
+  //  Duas visões. A do chefe mostra o trabalho de todos; a de cada pessoa
+  //  ("Meu painel") mostra só o que é dela. Em cockpit: a página não rola, e
+  //  cada contador escolhe o que o campo principal mostra.
+  // ======================================================================
+  function desenharPainel() {
+    const chefe = eu === CHEFE;
+    const meu = t => chefe || t.responsavel === eu;
+    const abertasT = TAREFAS.filter(aberta), ab = abertasT.filter(meu).sort(porUrgencia);
+    const par = paradosMeus(), sus = suspensas().filter(meu), gs = chefe ? guardados() : [];
+    const sd = abertasT.filter(t => !t.responsavel);
+    const ativos = PROJETOS.filter(p => p.estado === "ativo");
+    const feitas = concluidoNoMes(eu, MES_ATUAL);
+    const tiles = chefe ? [
+      ["parados",     par.length,              "parados",          "var(--alerta)"],
+      ["abertas",     ab.length,               "tarefas abertas",  "var(--accent)"],
+      ["projetos",    ativos.length,           "projetos ativos",  "var(--f2)"],
+      ["semdono",     sd.length,               "sem dono",         "var(--meio)"],
+      ["paralisados", sus.length + gs.length,  "paralisados",      "var(--roxo)"],
+      ["petrvs",      pendenciasMes(),         "petrvs em aberto", "var(--mes)"]
+    ] : [
+      ["abertas",     ab.length,               "abertas comigo",   "var(--accent)"],
+      ["parados",     par.length,              "paradas ou atrasadas", "var(--alerta)"],
+      ["paralisados", sus.length,              "paralisadas",      "var(--roxo)"],
+      ["rotinas",     rotinasDe(eu).length,    "minhas rotinas",   "var(--rot)"],
+      ["feitas",      feitas.length,           `concluí em ${mesDe(MES_ATUAL.comp)}`, "var(--ok)"]
+    ];
+    if (!tiles.some(t => t[0] === painelVista)) painelVista = chefe ? "parados" : "abertas";
+    $("#resumo").innerHTML = tiles.map(([id, n, rot, cor]) =>
+      `<button type="button" class="tile ${n ? "" : "zero"}" style="--tc:${cor}" data-acao="painel" data-id="${id}" aria-current="${painelVista === id}"><b>${n}</b><span>${rot}</span></button>`).join("");
+
+    let meio = "";
+    if (painelVista === "parados") {
+      meio = bloco("var(--alerta)", chefe ? "O que está parado" : "Parado ou atrasado com você", par.length,
+        par.map(linhaParado).join(""), "<b>Nada parado.</b> Tudo o que está aberto andou nas últimas duas semanas.",
+        "prazo vencido, ou catorze dias sem movimento");
+    } else if (painelVista === "abertas") {
+      meio = chefe
+        ? EQUIPE.map(p => { const ts = ab.filter(t => t.responsavel === p);
+            return ts.length ? bloco("var(--accent)", p, ts.length, ts.map(t => linhaTarefa(t, { onde:true })).join("")) : ""; }).join("")
+        : bloco("var(--accent)", "Abertas com você", ab.length, ab.map(t => linhaTarefa(t, { onde:true })).join(""),
+                "<b>Nada aberto no seu nome.</b>");
+    } else if (painelVista === "projetos") {
+      meio = FRENTES.map(f => { const pjs = ativos.filter(p => p.frente === f.id);
+        return pjs.length ? bloco(f.cor, f.nome, pjs.length, pjs.map(p => `
+          <div class="linha" ${corDe(p)}>
+            <button type="button" class="linha-corpo" data-acao="vista" data-tipo="projeto" data-id="${p.id}">
+              <span class="mt-nome">${p.nome}</span>
+              <span class="mt-pe">${contaProjeto(resumoProjeto(p))}</span>
+            </button>
+          </div>`).join("")) : ""; }).join("");
+    } else if (painelVista === "semdono") {
+      meio = bloco("var(--meio)", "Sem dono", sd.length, sd.sort(porUrgencia).map(t => linhaTarefa(t, { onde:true, atribuir:true })).join(""),
+        "<b>Nada sem dono.</b> Tudo o que está aberto tem alguém.");
+    } else if (painelVista === "paralisados") {
+      meio = (chefe ? bloco("var(--roxo)", "Projetos paralisados", gs.length, gs.map(p => `
+          <div class="linha" ${corDe(p)}>
+            <button type="button" class="linha-corpo" data-acao="vista" data-tipo="projeto" data-id="${p.id}">
+              <span class="item-topo"><span class="pill cheia s-depois">${MOTIVO[p.motivo]}</span></span>
+              <span class="mt-nome">${p.nome}</span>
+              <span class="mt-onde">${frente(p.frente).nome}</span>
+              <span class="mt-pe">paralisado ${quando(p.mexido)}</span>
+            </button>
+          </div>`).join(""), "Nenhum projeto paralisado.") : "") +
+        bloco("var(--roxo)", chefe ? "Tarefas paralisadas" : "Paralisadas com você", sus.length,
+          sus.map(t => linhaTarefa(t, { onde:true, pessoa:chefe })).join(""), "Nenhuma tarefa paralisada.");
+    } else if (painelVista === "petrvs") {
+      meio = mesesNaTela().map(m => `
+        <div class="bloco" style="--bc:var(--mes)">
+          <p class="bloco-cab">${m === MES_ATUAL ? "Petrvs e frequência" : "Ainda aberto"} — ${nomeMes(m)} <small>— 5º dia útil em ${dBR(m.prazo)}</small><span class="n">${EQUIPE.filter(n => fechouEm(m, n)).length} de ${EQUIPE.length} fechados</span></p>
+          <div class="tab-rolo">${tabelaMes(m, m !== MES_ATUAL)}</div>
+        </div>`).join("");
+    } else if (painelVista === "rotinas") {
+      const rs = rotinasDe(eu);
+      meio = bloco("var(--rot)", "Minhas rotinas", rs.length, rs.map(r => linhaRotina(r, { onde:true })).join(""), "Nenhuma rotina no seu nome.");
+    } else {
+      meio = bloco("var(--ok)", `O que você concluiu em ${mesDe(MES_ATUAL.comp)}`, feitas.length, linhasConcluido(feitas),
+        `Nada concluído em ${mesDe(MES_ATUAL.comp)} no seu nome.`);
+    }
+    $("#p-meio").innerHTML = (avisoMsg ? `<p class="aviso">${avisoMsg}</p>` : "") + meio;
+
+    if (!chefe) {
+      const pedem = ab.filter(andamentoPendente);
+      $("#p-lado").innerHTML =
+        petrvsDaDireita(false) +
+        bloco("var(--meio)", "Pediram andamento", pedem.length, pedem.map(t => linhaTarefa(t, { onde:true })).join(""),
+              "Ninguém pediu andamento de nada seu.");
+      return;
+    }
+    const resp = TAREFAS.filter(t => t.andamento && t.andamento.resposta);
+    const todosPar = parados(), todasSus = suspensas();
+    $("#p-lado").innerHTML = `
+      <div class="bloco" style="--bc:var(--accent)">
+        <p class="bloco-cab">Com quem está</p>
+        <div class="tab-rolo"><table class="tab">
+          <thead><tr><th>Pessoa</th><th class="n">Abertas</th><th class="n">Paradas</th>
+            <th class="n">Paralis.</th><th class="n">Rotinas</th></tr></thead>
+          <tbody>${[...EQUIPE, null].map(p => {
+            const ts = abertasT.filter(t => (t.responsavel || null) === p);
+            const nPar = todosPar.filter(x => (x.quem || null) === p).length;
+            const nSus = todasSus.filter(t => (t.responsavel || null) === p).length;
+            const nRot = ROTINAS.filter(r => (r.responsavel || null) === p).length;
+            if (!p && !ts.length && !nSus && !nRot) return "";
+            return `<tr><td title="${p || ""}">${p ? curto(p) : "<i>sem dono</i>"}</td><td class="n">${ts.length}</td>
+              <td class="n ${nPar ? "ruim" : ""}">${nPar}</td><td class="n">${nSus}</td><td class="n">${nRot}</td></tr>`;
+          }).join("")}</tbody></table></div>
+      </div>
+      <div class="bloco" style="--bc:var(--f9)">
+        <p class="bloco-cab">Por frente</p>
+        <div class="tab-rolo"><table class="tab">
+          <thead><tr><th>Frente</th><th class="n">Proj.</th><th class="n">Abertas</th>
+            <th class="n">Paradas</th><th class="n">Sem dono</th></tr></thead>
+          <tbody>${FRENTES.map(f => {
+            const ts = abertasT.filter(t => t.frente === f.id);
+            const nPar = todosPar.filter(x => x.item.frente === f.id).length;
+            return `<tr><td><i class="ponto" style="background:${f.cor}"></i>${f.nome}</td>
+              <td class="n">${ativos.filter(p => p.frente === f.id).length}</td>
+              <td class="n">${ts.length}</td><td class="n ${nPar ? "ruim" : ""}">${nPar}</td>
+              <td class="n">${ts.filter(t => !t.responsavel).length}</td></tr>`; }).join("")}</tbody></table></div>
+      </div>
+      ${bloco("var(--meio)", "Andamentos respondidos", resp.length, resp.map(t => `
+        <div class="linha" ${corDe(t)}>
+          <button type="button" class="linha-corpo" data-acao="abrir-t" data-id="${t.id}">
+            <span class="mt-nome">“${t.andamento.resposta}”</span>
+            <span class="mt-pe"><b style="color:var(--fg)">${t.responsavel || "sem dono"}</b>, ${quando(t.andamento.respondido)} · sobre: ${t.titulo}</span>
+            <span class="mt-onde">${ondeDe(t)}</span>
+          </button>
+        </div>`).join(""), "Nenhuma resposta ainda.")}`;
+  }
+
+  function desenhar() {
+    const chefe = eu === CHEFE, noTrabalho = tela === "trabalho";
+    $("#tela-trabalho").hidden = !noTrabalho;
+    $("#tela-painel").hidden = noTrabalho;
+    $("#mod-titulo").textContent = noTrabalho ? "Área de trabalho" : chefe ? "Painel dos trabalhos" : "Meu painel";
+    $("#mod-sub").textContent = noTrabalho ? "O trabalho da equipe, por frente"
+      : chefe ? "O que está parado, com quem e por quê" : "O que está com você, e como está";
+    $("#ir").textContent = noTrabalho ? (chefe ? "Painel dos trabalhos →" : "Meu painel →") : "← Área de trabalho";
+    desenharAvisos();
+    if (noTrabalho) desenharTrabalho(); else desenharPainel();
+  }
+
+  // ======================================================================
+  //  FICHAS
+  // ======================================================================
+  function abrirTarefa(id) {
+    const t = TAREFAS.find(x => x.id === id);
+    if (!t) return;
+    tAtual = t;
+    const st = estadoTarefa(t), f = frente(t.frente);
+    $("#ft-estado").className = "pill s-" + st.chave + (st.cheia || t.estado !== "aberta" ? " cheia" : "");
+    $("#ft-estado").textContent = t.estado === "suspensa" && st.chave !== "voltar" ? "paralisada — " + MOTIVO[t.motivo] : st.rotulo;
+    if (!$("#ficha-t").open) $("#ft-volta").value = "";
+    $("#ft-volta2").value = t.volta || "";
+    $("#ft-volta-txt").textContent = t.estado !== "suspensa" ? ""
+      : !t.volta ? "Paralisada — " + MOTIVO[t.motivo] + ". Sem data de volta: só retorna quando alguém retomar."
+      : voltou(t) ? "A data de volta chegou (" + dBR(dData(t.volta)) + "). Retome, ou marque outra data."
+      : "Paralisada — " + MOTIVO[t.motivo] + ". Volta para as tarefas de quem está com ela em " + dBR(dData(t.volta)) + ".";
+    $("#ft-banda").style = "--fc:" + f.cor;
+    $("#ft-frente").textContent = t.projeto ? "Projeto · " + f.nome : "Frente de trabalho";
+    $("#ft-projeto").textContent = t.projeto ? projeto(t.projeto).nome : f.nome;
+    $("#ft-titulo").textContent = t.titulo;
+    $("#ft-resp").innerHTML = opcoesEquipe(t.responsavel);
+    $("#ft-resp").value = t.responsavel || "";
+    $("#ft-prazo").value = t.prazo || "";
+    $("#ft-origem-caixa").hidden = !t.origem;
+    $("#ft-origem").textContent = !t.origem ? ""
+      : { pedido:"um pedido que chegou por uma ferramenta",
+          rotina:"uma rotina: alguém olhou e achou trabalho",
+          projeto:"a conclusão de um projeto", ideia:"uma ideia guardada" }[t.origem.tipo];
+    $("#ft-devido-caixa").hidden = !t.devido_a;
+    $("#ft-devido").textContent = t.devido_a || "";
+    $("#ft-notas").innerHTML =
+      t.notas.slice().reverse().map(n =>
+        `<div><time>${dBR(dData(n.quando))} · ${curto(n.quem)}</time><span>${n.texto}</span></div>`).join("") +
+      `<div class="nota-nova">
+         <input type="text" class="campo-linha" id="ft-nota" data-nova="nota" maxlength="200"
+                placeholder="${t.notas.length ? "outra observação" : "estou aguardando o fulano responder"}" aria-label="Nova observação">
+         <button type="button" class="bt pri" data-acao="f-nota">Incluir observação</button>
+       </div>`;
+    $("#ft-g-aberta").hidden = t.estado !== "aberta";
+    $("#ft-g-suspensa").hidden = t.estado !== "suspensa";
+    $("#ft-g-feita").hidden = t.estado !== "concluida";
+    $("#ft-andamento").hidden = !(eu === CHEFE && t.responsavel && t.responsavel !== eu && !andamentoPendente(t));
+    const a = t.andamento;
+    $("#ft-andamento-txt").hidden = !a;
+    $("#ft-andamento-txt").innerHTML = !a ? ""
+      : a.resposta ? `<b>Andamento, ${quando(a.respondido)}:</b> “${a.resposta}”`
+      : `<b>Andamento pedido ${quando(a.pedido)}.</b> Ainda sem resposta.`;
+    $("#ft-hist").innerHTML = "<b>Histórico</b>" + (t.hist.length
+      ? t.hist.slice().reverse().map(h =>
+          `<span><time>${dBR(dData(h.quando))}</time> — ${curto(h.quem)} ${h.o}</span>`).join("")
+      : "<span>Nada registrado ainda.</span>");
+    if (!$("#ficha-t").open) $("#ficha-t").showModal();
+  }
+  // Redesenha a ficha por dentro, sem fechar. Fechar e reabrir punha o foco no
+  // "×" — e o Enter que acabara de incluir a observação fechava a ficha.
+  function abrirTarefaDeNovo() { desenhar(); abrirTarefa(tAtual.id); }
+
+  // A rotina também abre: o que é, de quem é, quando vence e o que já foi feito.
+  const DESFECHO = { nada:"olhou e não havia nada a fazer", trabalho:"olhou e abriu trabalho", feita:"fez" };
+  function abrirRotina(id) {
+    const r = rotina(id);
+    if (!r) return;
+    const st = estadoRotina(r), f = frente(r.frente), botoes = botoesRotina(r, st);
+    const feitas = r.ocorrencias.slice().sort((a, b) => a.feita_em < b.feita_em ? 1 : -1);
+    $("#fr-topo").innerHTML = `${pill(st)}<span class="chip vazado c-rot">rotina</span>`;
+    $("#fr-corpo").innerHTML = `
+      <div class="banda" style="--fc:${f.cor}">
+        <span class="sobre">${r.projeto ? "Projeto · " + f.nome : "Frente de trabalho"}</span>
+        <h2>${r.projeto ? projeto(r.projeto).nome : f.nome}</h2>
+      </div>
+      <p class="ficha-texto">${r.titulo}</p>
+      <dl class="dados">
+        <div><dt>Com quem está</dt><dd>${r.responsavel || "É do grupo: quem fizer, marca"}</dd></div>
+        <div><dt>Quando</dt><dd>${descricao(r)}</dd></div>
+        <div><dt>${st.aberta ? "Rodada em aberto" : "Próxima rodada"}</dt><dd>${st.aberta ? dBR(st.pendente) : st.proxima ? dBR(st.proxima) : "—"}</dd></div>
+        <div><dt>O que se espera</dt><dd>${r.natureza === "olhar" ? "Dar uma olhada e dizer se há trabalho a fazer" : "Fazer: a rotina já é o trabalho"}</dd></div>
+      </dl>
+      ${botoes ? `<div class="grupo"><span>${st.chave === "hoje" ? "A rodada vence hoje" : "A rodada de " + dBR(st.pendente) + " não foi feita"}</span><div class="grupo-linha">${botoes}</div></div>`
+               : '<p class="mt-pe">Está em dia. Os botões da rodada aparecem quando ela vencer.</p>'}
+      <div class="historico"><b>Rodadas já feitas</b>${feitas.length
+        ? feitas.map(o => `<span><time>${dBR(dData(o.feita_em))}</time> — ${curto(o.quem)} ${DESFECHO[o.desfecho] || "fez"} (rodada de ${dBR(dData(o.vencimento))})</span>`).join("")
+        : "<span>Nenhuma rodada registrada ainda.</span>"}</div>`;
+    if (!$("#ficha-r").open) $("#ficha-r").showModal();
+  }
+
+  function abrirPedido(id) {
+    const p = PEDIDOS.find(x => x.id === id);
+    if (!p) return;
+    pAtual = p;
+    $("#fp-situacao").className = "pill s-" + p.situacao + (p.situacao === "novo" ? " cheia" : "");
+    $("#fp-situacao").textContent = ROTULO_SITUACAO[p.situacao];
+    $("#fp-ferramenta").textContent = ROTULO_FERRAMENTA[p.ferramenta];
+    $("#fp-tipo").textContent = ROTULO_TIPO[p.tipo];
+    $("#fp-texto").textContent = p.texto;
+    $("#fp-de").textContent = p.contato;
+    $("#fp-quando").textContent = dBR(dData(p.criado));
+    $("#fp-desfecho").textContent = p.situacao === "novo" ? "nada ainda"
+      : p.virou ? "virou " + p.virou : p.aprendizado ? "guardado como aprendizado"
+      : p.situacao === "descartado" ? "descartado" : "dado por tratado";
+    $("#fp-acoes").hidden = p.situacao !== "novo";
+    $("#fp-virar").textContent = p.tipo === "mapeamento" ? "Virar projeto" : "Virar tarefa";
+    $("#fp-hist").innerHTML = "<b>Histórico</b>" + (p.hist.length
+      ? p.hist.map(h => `<span><time>${dBR(dData(h.quando))}</time> — ${curto(h.quem)} ${h.o}</span>`).join("")
+      : "<span>Ninguém olhou ainda.</span>");
+    $("#ficha-p").showModal();
+  }
+
+  // Do pedido, da rotina ou da ideia para um trabalho: o diálogo é o mesmo.
+  function ajustarNova() {
+    const como = $("#dn-como").value, f = $("#dn-frente").value;
+    const pjs = PROJETOS.filter(p => p.frente === f && p.estado === "ativo");
+    const sel = novaCtx && novaCtx.projeto && pjs.some(p => p.id === novaCtx.projeto) ? novaCtx.projeto : "";
+    $("#dn-projeto").innerHTML = `<option value="">nenhum — tarefa solta da frente</option>` +
+      pjs.map(p => `<option value="${p.id}"${p.id === sel ? " selected" : ""}>${p.nome}</option>`).join("");
+    $("#dn-projeto").value = sel;
+    $("#dn-projeto-caixa").hidden = como === "projeto";
+    $("#dn-resp-caixa").hidden = como === "projeto";
+  }
+  function pedirNova(ctx) {
+    novaCtx = ctx;
+    $("#dn-origem").textContent = ctx.rotulo;
+    $("#dn-como").value = ctx.como || "tarefa";
+    $("#dn-titulo").value = ctx.titulo || "";
+    $("#dn-frente").innerHTML = FRENTES.map(f =>
+      `<option value="${f.id}"${f.id === ctx.frente ? " selected" : ""}>${f.nome}</option>`).join("");
+    $("#dn-frente").value = ctx.frente;
+    $("#dn-resp").innerHTML = opcoesEquipe(ctx.responsavel);
+    $("#dn-resp").value = ctx.responsavel || "";
+    ajustarNova();
+    $("#dlg-nova").showModal();
+    // O foco vai para "Abrir": sem isso ele cai no "×", e um segundo Enter fecharia sem gravar.
+    $('#dlg-nova [data-acao="dn-salvar"]').focus();
+  }
+  function novoProjeto(frenteId, nome) {
+    const p = { id:"p-n" + (++seq), frente:frenteId, nome, estado:"ativo", motivo:null, mexido:dISO(hoje) };
+    PROJETOS.push(p);
+    return p;
+  }
+
+  const sugerirTitulo = texto => {
+    if (texto.length <= 70) return texto;
+    const c = texto.slice(0, 70);
+    return c.slice(0, Math.max(c.lastIndexOf(" "), 40)).trim() + "…";
+  };
+
+  // ======================================================================
+  //  AÇÕES — um ouvinte só, pela marca data-acao
+  // ======================================================================
+  const tarefa = id => TAREFAS.find(t => t.id === id);
+  const rotina = id => ROTINAS.find(r => r.id === id);
+
+  function responder(id) {
+    const t = tarefa(id), campo = $("#and-" + id);
+    const texto = (campo.value || "").trim();
+    if (!texto) { campo.focus(); return false; }
+    t.andamento.resposta = texto; t.andamento.respondido = dISO(hoje);
+    mexer(t, `respondeu ao pedido de andamento: “${texto}”`);
+  }
+  function incluirNota() {
+    const campo = $("#ft-nota"), texto = (campo.value || "").trim();
+    if (!texto) { campo.focus(); return false; }
+    anotar(tAtual, texto);
+    abrirTarefaDeNovo();
+    $("#ft-nota").focus();           // pronto para a próxima observação
+    return false;                    // a ficha já foi redesenhada por dentro
+  }
+  function estadoProjeto(id, estado, motivo = null) {
+    const p = projeto(id); p.estado = estado; p.motivo = motivo; p.mexido = dISO(hoje); return p;
+  }
+
+  const ACOES = {
+    nada()               { return false; },
+    ir()                 { tela = tela === "trabalho" ? "painel" : "trabalho"; },
+    fechar({ id })       { $("#" + id).close(); return false; },
+    vista({ tipo, id })  { tela = "trabalho"; vista = { tipo, id }; mesVer = null; },
+    "alternar-olhados"() { verOlhados = !verOlhados; },
+    "alternar-arquivados"() { verArquivados = !verArquivados; },
+    painel({ id })       { painelVista = id; },
+
+    // ---- quadro de avisos ----
+    "aviso-novo"()       { novoAviso = !novoAviso; },
+    "aviso-ver"()        { verAvisos = !verAvisos; },
+    // Tira o aviso quem o escreveu, ou o chefe.
+    "aviso-tirar"({ id }) { const k = AVISOS.findIndex(a => a.id === id);
+                            if (k >= 0 && (eu === CHEFE || AVISOS[k].quem === eu || AVISOS[k].para === eu)) AVISOS.splice(k, 1); },
+
+    // ---- tarefa, direto da linha ----
+    pegar({ id })        { passar(tarefa(id), eu); },
+    concluir({ id })     { concluir(tarefa(id)); },
+    reabrir({ id })      { reabrir(tarefa(id)); },
+    retomar({ id })      { retomar(tarefa(id)); },
+    "abrir-t"({ id })    { abrirTarefa(id); return false; },
+    responder({ id })    { return responder(id); },
+
+    // ---- tarefa, de dentro da ficha ----
+    "f-concluir"()       { concluir(tAtual); $("#ficha-t").close(); },
+    "f-reabrir"()        { reabrir(tAtual); $("#ficha-t").close(); },
+    "f-suspender"({ motivo }) { suspender(tAtual, motivo, $("#ft-volta").value || null); $("#ficha-t").close(); },
+    "f-retomar"()        { retomar(tAtual); $("#ficha-t").close(); },
+    "f-andamento"()      { pedirAndamento(tAtual); $("#ficha-t").close(); },
+    "f-nota"()           { return incluirNota(); },
+    andamento({ id })    { pedirAndamento(tarefa(id)); },
+
+    // ---- projeto ----
+    "pj-concluir"({ id }) {
+      const p = projeto(id);
+      tarefasDo(p.id).filter(t => t.estado === "aberta").forEach(t => concluir(t, "concluiu junto com o projeto"));
+      estadoProjeto(id, "concluido");
+      avisoMsg = `Projeto concluído: <b>${p.nome}</b>.`;
+      // O encadeamento virou pergunta: só abre trabalho se faltar subir.
+      if (p.frente === "mapeamento") {
+        spuCtx = p;
+        $("#spu-qual").textContent = p.nome;
+        $("#dlg-spu").showModal();
+      }
+    },
+    "pj-depois"({ id, motivo }) {
+      const p = estadoProjeto(id, "depois", motivo);
+      p.volta = $("#pj-volta").value || null;
+      avisoMsg = `<b>${p.nome}</b> foi para Paralisado, com as tarefas dele.`;
+    },
+    "pj-dobrar"({ id })  { dobras[id] = !projetoAberto(projeto(id)); },
+    "pj-retomar"({ id }) { const p = estadoProjeto(id, "ativo"); p.volta = null; avisoMsg = `<b>${p.nome}</b> voltou para a frente, com as tarefas dele.`; },
+    // Arquivar não é excluir: o projeto sai das contagens e fica em "ver os arquivados".
+    "pj-arquivar"({ id }) { const p = projeto(id); p.estado = "arquivado"; p.mexido = dISO(hoje);
+      avisoMsg = `<b>${p.nome}</b> foi arquivado, com as tarefas dele. Nada foi apagado: está em Paralisado › ver os arquivados.`; },
+    "pj-desarquivar"({ id }) { const p = projeto(id); p.estado = "depois"; p.motivo = p.motivo || "prioridades"; p.mexido = dISO(hoje);
+      avisoMsg = `<b>${p.nome}</b> voltou para Paralisado. Para trabalhar nele, retome.`; },
+    "pj-reabrir"({ id }) { const p = estadoProjeto(id, "ativo"); avisoMsg = `<b>${p.nome}</b> foi reaberto. As tarefas que foram concluídas com ele continuam concluídas; reabra as que precisar.`; },
+    spu({ resposta }) {
+      const p = spuCtx; spuCtx = null;
+      $("#dlg-spu").close();
+      if (resposta === "sim") { avisoMsg = `Projeto concluído, e o SPUProcessos já está com o fluxo novo.`; return; }
+      const t = novaTarefa("curadoria", "Subir no SPUProcessos a nova versão — " + p.nome,
+                           { projeto:"p-cat", origem:{ tipo:"projeto" } });
+      avisoMsg = `Projeto concluído. <b>Ficou aberta, sem dono, a tarefa de subir a versão</b> em ${ondeDe(t)}.`;
+    },
+
+    // ---- todo mês: Petrvs e frequência ----
+    // A pessoa só marca o Petrvs. Assinar, aprovar a frequência e cobrar são do chefe.
+    "mes-marcar"({ mes, quem })     { if (podeMarcar(quem)) mesFech(mes).marcas[quem].petrvs = dISO(hoje); },
+    "mes-desmarcar"({ mes, quem })  { const x = mesFech(mes).marcas[quem]; if (podeMarcar(quem) && !x.assinado) x.petrvs = null; },
+    "mes-assinar"({ mes, quem })    { const x = mesFech(mes).marcas[quem]; if (eu === CHEFE && x.petrvs) x.assinado = dISO(hoje); },
+    "mes-desassinar"({ mes, quem }) { if (eu === CHEFE) mesFech(mes).marcas[quem].assinado = null; },
+    "mes-aprovar"({ mes, quem })    { if (eu === CHEFE && quem !== CHEFE) mesFech(mes).marcas[quem].freq = dISO(hoje); },
+    "mes-desaprovar"({ mes, quem }) { if (eu === CHEFE) mesFech(mes).marcas[quem].freq = null; },
+    "mes-aprovar-todos"({ mes })    { if (eu !== CHEFE) return false; const m = mesFech(mes), n = aAprovar(m).length;
+                                      aAprovar(m).forEach(q => { m.marcas[q].freq = dISO(hoje); });
+                                      avisoMsg = `Frequência de ${mesDe(m.comp)} marcada como aprovada para <b>${n} ${n === 1 ? "pessoa" : "pessoas"}</b>.`; },
+    "mes-cobrar"({ mes, quem })     { if (eu !== CHEFE) return false; mesFech(mes).marcas[quem].cobrado = dISO(hoje);
+                                      avisoMsg = `<b>${curto(quem)}</b> foi cobrado: o aviso aparece no alto da tela dessa pessoa.`; },
+    "mes-ver"({ mes, quem })        { if (eu !== CHEFE) return false; tela = "trabalho"; vista = { tipo:"caixa", id:"mes" }; mesVer = { quem, mes }; },
+    "mes-lembrar"()                 { if (eu !== CHEFE) return false; mesesNaTela().forEach(m => { m.lembrado = dISO(hoje); });
+                                      desenhar(); abrirLembrete(); return false; },
+    "mes-copiar"()                  { copiarLembrete(); return false; },
+
+    // ---- rotina ----
+    "abrir-r"({ id })    { abrirRotina(id); return false; },
+    "rot-nada"({ id })   { fecharRodada(rotina(id), "nada"); $("#ficha-r").close(); },
+    "rot-feita"({ id })  { fecharRodada(rotina(id), "feita"); $("#ficha-r").close(); },
+    "rot-trabalho"({ id }) {
+      const r = rotina(id);
+      $("#ficha-r").close();
+      pedirNova({ rotulo:"vem da rotina: " + r.titulo, frente:r.frente, projeto:r.projeto, responsavel:eu,
+                  origem:{ tipo:"rotina" }, depois() { fecharRodada(r, "trabalho"); } });
+      return false;
+    },
+
+    // ---- pedido ----
+    "abrir-p"({ id })    { abrirPedido(id); return false; },
+    "p-virar"() {
+      const p = pAtual, mapa = p.tipo === "mapeamento";
+      $("#ficha-p").close();
+      pedirNova({ rotulo:"vem do pedido de " + p.contato,
+                  titulo: mapa ? "Mapeamento de " : sugerirTitulo(p.texto),
+                  como: mapa ? "projeto" : "tarefa",
+                  frente: mapa ? "mapeamento" : "ferramentas",
+                  projeto: PROJETO_DA_FERRAMENTA[p.ferramenta] || null, responsavel:null,
+                  origem:{ tipo:"pedido" },
+                  depois(x, como) { p.situacao = "tratado"; p.virou = como;
+                    p.hist.push({ quando:dISO(hoje), quem:eu, o:`virou ${como}: ${x.titulo || x.nome}` }); } });
+      return false;
+    },
+    "p-fechar"({ como }) {
+      const p = pAtual;
+      p.situacao = como === "descartado" ? "descartado" : "tratado";
+      if (como === "aprendizado") p.aprendizado = true;
+      p.hist.push({ quando:dISO(hoje), quem:eu,
+        o: { tratado:"deu por tratado", aprendizado:"guardou como aprendizado", descartado:"descartou" }[como] });
+      $("#ficha-p").close();
+    },
+
+    // ---- ideia ----
+    "ideia-virar"({ id }) {
+      const i = IDEIAS.find(x => x.id === id);
+      pedirNova({ rotulo:"era uma ideia de " + curto(i.quem), titulo:i.texto, frente:i.frente || "ferramentas",
+                  responsavel:null, origem:{ tipo:"ideia" },
+                  depois() { IDEIAS.splice(IDEIAS.indexOf(i), 1); } });
+      return false;
+    },
+    "ideia-descartar"({ id }) { const k = IDEIAS.findIndex(x => x.id === id); if (k >= 0) IDEIAS.splice(k, 1); },
+
+    // ---- diálogo de novo trabalho ----
+    "dn-salvar"() {
+      const titulo = $("#dn-titulo").value.trim();
+      if (!titulo) { $("#dn-titulo").focus(); return false; }
+      const como = $("#dn-como").value, f = $("#dn-frente").value;
+      if (como === "projeto") {
+        const p = novoProjeto(f, titulo);
+        if (novaCtx.depois) novaCtx.depois(p, "projeto");
+        avisoMsg = `Projeto aberto em <b>${frente(f).nome}</b>: ${p.nome}. Agora é abrir as tarefas dele.`;
+        vista = { tipo:"projeto", id:p.id };
+      } else {
+        const t = novaTarefa(f, titulo, { projeto: $("#dn-projeto").value || null,
+                                          responsavel: $("#dn-resp").value || null, origem: novaCtx.origem });
+        avisarQuemRecebeu(t);
+        if (novaCtx.depois) novaCtx.depois(t, "tarefa");
+        avisoMsg = `Tarefa aberta em <b>${ondeDe(t)}</b>${t.responsavel === eu ? ", no seu nome" : t.responsavel ? ", com " + curto(t.responsavel) : ", sem dono"}: ${t.titulo}.`;
+        if (!novaCtx.fica) vista = t.projeto ? { tipo:"projeto", id:t.projeto } : { tipo:"frente", id:f };
+      }
+      novaCtx = null;
+      $("#dlg-nova").close();
+    }
+  };
+
+  document.addEventListener("click", ev => {
+    const alvo = ev.target.closest && ev.target.closest("[data-acao]");
+    if (!alvo) return;
+    const fn = ACOES[alvo.dataset.acao];
+    if (!fn) return;
+    const antes = avisoMsg;
+    if (fn(alvo.dataset) === false) return;      // só abriu alguma coisa: não redesenha
+    if (avisoMsg === antes) avisoMsg = "";       // o aviso dura até a ação seguinte
+    desenhar();
+  });
+
+  // Escreve e dá Enter: é o cadastro inteiro de tarefa, projeto, ideia e nota.
+  document.addEventListener("keydown", ev => {
+    const alvo = ev.target;
+    if (ev.key !== "Enter" || !alvo || !alvo.dataset || !alvo.dataset.nova) return;
+    if (ev.preventDefault) ev.preventDefault();   // o Enter é do campo: não aciona botão nenhum
+    const texto = (alvo.value || "").trim();
+    if (!texto) return;
+    const d = alvo.dataset;
+    if (d.nova === "nota") { incluirNota(); return; }
+    if (d.nova === "minha") {      // a tarefa é de quem escreveu; falta só dizer onde ela mora
+      pedirNova({ rotulo:"uma tarefa sua", titulo:texto, frente:frenteProvavel(), responsavel:eu, fica:true });
+      return;
+    }
+    if (d.nova === "tarefa") {
+      // O chefe abre tarefa para distribuir: nasce sem dono. Os demais anotam o que vão fazer.
+      const t = novaTarefa(d.frente, texto, { projeto: d.projeto || null, responsavel: eu === CHEFE ? null : eu });
+      avisoMsg = `Tarefa aberta em <b>${ondeDe(t)}</b>, ${t.responsavel ? "no seu nome" : "sem dono"}: ${t.titulo}.`;
+    } else if (d.nova === "projeto") {
+      const p = novoProjeto(d.frente, texto);
+      avisoMsg = `Projeto aberto em <b>${frente(d.frente).nome}</b>: ${p.nome}.`;
+      vista = { tipo:"projeto", id:p.id };
+    } else if (d.nova === "ideia") {
+      IDEIAS.push({ id:"i" + (++seq), texto, frente: null, quem: eu, quando: dISO(hoje) });
+      avisoMsg = "";
+    } else if (d.nova === "aviso") {
+      AVISOS.unshift({ id:"av" + (++seq), texto, quem: eu, quando: dISO(hoje), ate: $("#aviso-ate").value || null });
+      novoAviso = false; avisoMsg = "";
+    } else if (d.nova === "andamento") {
+      if (responder(d.id) === false) return;
+      avisoMsg = "";
+    }
+    desenhar();
+  });
+
+  // Atribuir direto da linha (só o chefe vê o seletor).
+  document.addEventListener("change", ev => {
+    const alvo = ev.target;
+    if (!alvo || !alvo.dataset || !alvo.dataset.atribuir || !alvo.value) return;
+    passar(tarefa(alvo.dataset.atribuir), alvo.value);
+    avisoMsg = "";
+    desenhar();
+  });
+
+  // Dentro da ficha: mudou, gravou.
+  $("#ft-resp").addEventListener("change", ev => { passar(tAtual, ev.target.value || null); abrirTarefaDeNovo(); });
+  $("#ft-prazo").addEventListener("change", ev => {
+    tAtual.prazo = ev.target.value || null;
+    mexer(tAtual, tAtual.prazo ? `pôs prazo para ${dBR(dData(tAtual.prazo))}` : "tirou o prazo");
+    abrirTarefaDeNovo();
+  });
+  $("#ft-volta2").addEventListener("change", ev => {
+    tAtual.volta = ev.target.value || null;
+    mexer(tAtual, tAtual.volta ? `marcou a volta para ${dBR(dData(tAtual.volta))}` : "tirou a data de volta");
+    abrirTarefaDeNovo();
+  });
+  $("#dn-frente").addEventListener("change", ajustarNova);
+  $("#dn-como").addEventListener("change", ajustarNova);
+
+  $("#eu").innerHTML = EQUIPE.map(n =>
+    `<option value="${n}">${n}${n === CHEFE ? " — chefe" : ""}</option>`).join("");
+  $("#eu").value = eu;
+  $("#eu").addEventListener("change", ev => { eu = ev.target.value; avisoMsg = ""; mesVer = null; desenhar(); });
+
+  desenhar();
+})();
+</script>

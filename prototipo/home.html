@@ -1,0 +1,535 @@
+<!doctype html>
+<html lang="pt-BR">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<meta name="claude:viewport-fit-sides" content="cover">
+<title>Ferramentas — Escritório de Processos da SPU</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@500&family=Raleway:wght@400;500;600;700&display=swap">
+
+<style>
+  /* Layout: prateleira de cartões numa coluna de leitura, cada cartão com a pergunta
+     que a ferramenta responde no topo e o wordmark real dela embaixo. Tokens abaixo são
+     os do SPUProcessos, sem alteração, para a Home ser da mesma família. */
+  :root {
+    --bg: #f0f2f5; --surface: #ffffff; --surface-2: #f0f2f5; --zebra: #fbfcfd;
+    --border: #e2e6ec; --border-forte: #c4ccd6;
+    --fg: #333333; --fg-muted: #5a6068;
+    --accent: #1b2b85; --accent-escuro: #121d5e; --accent-claro: #5992ed; --accent-fg: #ffffff; --accent-soft: #e8f0ff;
+    --ok: #168821; --meio: #9a6700; --off: #6b7280; --alerta: #b3261e;
+    --marca-1: #1351b4; --marca-2: #2e9e4f; --marca-3: #f2b705; --marca-4: #e8771f;
+    --sombra: 0 1px 2px rgba(28,28,28,.05), 0 8px 24px -16px rgba(12,50,111,.35);
+    --fonte-ui: "Raleway", system-ui, -apple-system, "Segoe UI", sans-serif;
+    --fonte-titulo: "Raleway", system-ui, -apple-system, sans-serif;
+    --fonte-codigo: "IBM Plex Mono", ui-monospace, "SF Mono", Menlo, monospace;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #0f1322; --surface: #171c2e; --surface-2: #1f2639; --zebra: #1a2032;
+      --border: #2a3146; --border-forte: #3c445d;
+      --fg: #e9ecf5; --fg-muted: #99a1b8;
+      --accent: #8fb0f2; --accent-escuro: #b3c9f7; --accent-claro: #5992ed; --accent-fg: #0d1430; --accent-soft: #1a2244;
+      --ok: #2f9e3c; --meio: #b07f12; --off: #5b6572; --alerta: #e6837c;
+      --sombra: 0 1px 2px rgba(0,0,0,.45), 0 8px 24px -16px rgba(0,0,0,.85);
+      color-scheme: dark;
+    }
+  }
+  :root[data-theme="dark"] {
+    --bg: #0f1322; --surface: #171c2e; --surface-2: #1f2639; --zebra: #1a2032;
+    --border: #2a3146; --border-forte: #3c445d;
+    --fg: #e9ecf5; --fg-muted: #99a1b8;
+    --accent: #8fb0f2; --accent-escuro: #b3c9f7; --accent-claro: #5992ed; --accent-fg: #0d1430; --accent-soft: #1a2244;
+    --ok: #2f9e3c; --meio: #b07f12; --off: #5b6572; --alerta: #e6837c;
+    --sombra: 0 1px 2px rgba(0,0,0,.45), 0 8px 24px -16px rgba(0,0,0,.85);
+    color-scheme: dark;
+  }
+
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; background: var(--bg); color: var(--fg);
+    font-family: var(--fonte-ui); font-size: 15px; line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+  }
+  body::before {
+    content: ""; position: fixed; inset: 0 0 auto; height: env(safe-area-inset-top, 0px);
+    z-index: 20; background: var(--surface);
+  }
+  h1, h2, h3, p { margin: 0; }
+  h1, h2, h3 { text-wrap: balance; }
+  a { color: var(--accent); text-underline-offset: 2px; }
+
+  .interno {
+    max-width: 960px; margin-inline: auto;
+    padding-left: max(16px, env(safe-area-inset-left, 0px));
+    padding-right: max(16px, env(safe-area-inset-right, 0px));
+  }
+
+  /* ---------- Cabeçalho, igual ao das demais ferramentas ---------- */
+  .topo {
+    position: sticky; top: env(safe-area-inset-top, 0px); z-index: 15;
+    background: var(--surface); border-bottom: 1px solid var(--border);
+  }
+  .topo .interno { padding-block: 12px; display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
+  .marca { display: flex; align-items: center; gap: 11px; min-width: 0; }
+  .marca-texto { display: flex; flex-direction: column; align-items: flex-start; gap: 1px; min-width: 0; }
+  .marca-nome { font-family: var(--fonte-titulo); font-size: 23px; line-height: 1.1; letter-spacing: -.02em; white-space: nowrap; }
+  .marca-nome b { font-weight: 700; color: var(--fg); }
+  .marca-autoria { font-size: 11.5px; color: var(--fg-muted); white-space: nowrap; letter-spacing: .01em; }
+  .marca-barras { display: flex; align-items: flex-end; gap: 2px; height: 20px; flex: none; }
+  .marca-barras i { width: 3px; border-radius: 1px; display: block; }
+  .modulo { padding-left: 16px; border-left: 1px solid var(--border); min-width: 0; }
+  .modulo strong { display: block; font-size: 15px; font-weight: 600; line-height: 1.25; }
+  .modulo span { display: block; font-size: 12.5px; color: var(--fg-muted); line-height: 1.3; }
+
+  /* ---------- Abertura ---------- */
+  .abertura { padding-block: 34px 22px; max-width: 60ch; }
+  .abertura h1 { font-size: clamp(24px, 4.2vw, 32px); font-weight: 700; line-height: 1.18; letter-spacing: -.015em; }
+  .abertura p { margin-top: 10px; font-size: 16px; color: var(--fg-muted); }
+
+  /* ---------- Prateleira ---------- */
+  .prateleira {
+    list-style: none; margin: 0; padding: 0;
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 340px), 1fr)); gap: 14px;
+  }
+  .cartao {
+    height: 100%; display: flex; flex-direction: column; gap: 8px; min-width: 0;
+    padding: 16px 18px; border: 1px solid var(--border); border-radius: 10px;
+    background: var(--surface); box-shadow: var(--sombra);
+    color: inherit; text-decoration: none;
+    transition: border-color .15s, transform .15s;
+  }
+  a.cartao:hover { border-color: var(--accent-claro); transform: translateY(-2px); }
+  a.cartao:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+  .wordmark { font-family: var(--fonte-titulo); font-size: 18px; font-weight: 700; line-height: 1.15; letter-spacing: -.01em; }
+  .wordmark b { font-weight: 700; color: var(--fg); }
+  .wordmark i { font-style: normal; font-weight: 400; color: var(--accent); }
+  .descricao { font-size: 14px; color: var(--fg-muted); min-width: 0; }
+  .abrir { margin-top: auto; padding-top: 4px; font-size: 13px; font-weight: 600; color: var(--accent); display: inline-flex; align-items: center; gap: 6px; }
+  .abrir svg { width: 13px; height: 13px; flex: none; }
+
+  .cartao.futuro { border-style: dashed; border-color: var(--border-forte); box-shadow: none; background: var(--surface-2); }
+  .selo {
+    align-self: flex-start; font-size: 11px; font-weight: 600; letter-spacing: .04em; text-transform: uppercase;
+    color: var(--meio); border: 1px solid currentColor; border-radius: 999px; padding: 2px 8px;
+  }
+
+  /* ---------- Faixas de saída ---------- */
+  .saida {
+    display: flex; align-items: center; gap: 16px; flex-wrap: wrap;
+    margin-top: 14px; padding: 16px 20px; border-radius: 10px;
+    background: var(--surface); border: 1px solid var(--border-forte);
+    color: inherit; text-decoration: none;
+  }
+  .saida:hover { border-color: var(--accent-claro); }
+  .saida:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+  .saida-texto { min-width: 0; flex: 1 1 300px; display: flex; flex-direction: column; gap: 3px; }
+  .saida .titulo { font-family: var(--fonte-titulo); font-size: 17px; font-weight: 700; line-height: 1.2; }
+  .saida .descricao { font-size: 14px; }
+  .saida .abrir { margin-top: 0; padding-top: 0; }
+
+  /* O MemóriaSPU não é ferramenta do Escritório: é institucional, e leva destaque. */
+  .institucional {
+    margin-top: 26px; padding: 24px 24px; border-radius: 12px;
+    background: var(--accent); border: 1px solid var(--accent);
+    color: var(--accent-fg); text-decoration: none;
+    display: flex; align-items: center; gap: 18px; flex-wrap: wrap;
+  }
+  .institucional:hover { background: var(--accent-escuro); border-color: var(--accent-escuro); }
+  .institucional:focus-visible { outline: 2px solid var(--accent); outline-offset: 3px; }
+  .inst-texto { min-width: 0; flex: 1 1 320px; display: flex; flex-direction: column; gap: 6px; }
+  .inst-etiqueta { font-size: 11px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; opacity: .75; }
+  .inst-titulo { font-family: var(--fonte-titulo); font-size: clamp(19px, 3vw, 23px); font-weight: 700; line-height: 1.2; }
+  .inst-desc { font-size: 15px; opacity: .92; }
+  .inst-abrir { font-size: 14px; font-weight: 700; display: inline-flex; align-items: center; gap: 7px; white-space: nowrap; border: 1px solid currentColor; border-radius: 999px; padding: 8px 16px; }
+  .inst-abrir svg { width: 14px; height: 14px; flex: none; }
+
+  /* ---------- Por dentro do Escritório ---------- */
+  .dentro { margin-top: 44px; padding-top: 34px; border-top: 1px solid var(--border); }
+  .dentro > h2 { font-size: clamp(21px, 3.6vw, 27px); font-weight: 700; line-height: 1.2; }
+  .dentro > p.intro { margin-top: 12px; max-width: 64ch; font-size: 16.5px; }
+  .frentes { list-style: none; margin: 26px 0 0; padding: 0;
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr)); gap: 22px 28px; }
+  .frentes li { min-width: 0; display: flex; flex-direction: column; gap: 5px; }
+  .frentes h3 { font-size: 15.5px; font-weight: 700; display: flex; align-items: center; gap: 9px; }
+  .frentes h3::before { content: ""; width: 3px; height: 15px; border-radius: 2px; background: var(--acento-frente, var(--marca-1)); flex: none; }
+  .frentes p { font-size: 14.5px; color: var(--fg-muted); }
+  .atende { margin-top: 28px; padding: 16px 18px; border-left: 3px solid var(--border-forte); background: var(--surface); border-radius: 0 8px 8px 0; }
+  .atende p { font-size: 14.5px; color: var(--fg-muted); }
+  .atende b { color: var(--fg); }
+
+  /* ---------- Faixa de sugestões ---------- */
+  .sugerir { margin-top: 30px; padding: 20px 22px; border: 1px dashed var(--border-forte);
+    border-radius: 10px; background: var(--surface); display: flex; gap: 16px; flex-wrap: wrap; align-items: center; }
+  .sugerir-texto { min-width: 0; flex: 1 1 300px; display: flex; flex-direction: column; gap: 4px; }
+  .sugerir .titulo { font-family: var(--fonte-titulo); font-size: 17px; font-weight: 700; }
+  .sugerir p { font-size: 14.5px; color: var(--fg-muted); }
+  .btn-sugerir { font: inherit; font-size: 14px; font-weight: 600; color: var(--accent-fg);
+    background: var(--accent); border: 1px solid var(--accent); border-radius: 8px; padding: 10px 18px;
+    text-decoration: none; white-space: nowrap; }
+  .btn-sugerir:hover { background: var(--accent-escuro); color: var(--accent-fg); }
+
+  .btn-sugerir { cursor: pointer; }
+
+  /* ---------- Formulário de pedido ---------- */
+  dialog.pedido { width: min(560px, calc(100% - 24px)); border: 1px solid var(--border);
+    border-radius: 14px; padding: 0; background: var(--surface); color: var(--fg); box-shadow: var(--sombra); }
+  dialog.pedido::backdrop { background: rgb(15 23 42 / 55%); }
+  .pedido-topo { display: flex; align-items: center; gap: 12px; padding: 18px 22px; border-bottom: 1px solid var(--border); }
+  .pedido-topo .titulo { font-family: var(--fonte-titulo); font-size: 17px; font-weight: 700; flex: 1; }
+  .pedido-topo .fechar { margin: 0; border: 0; background: none; color: var(--fg-muted);
+    font: inherit; font-size: 22px; line-height: 1; cursor: pointer; padding: 2px 8px; border-radius: 6px; }
+  .pedido-topo .fechar:hover { background: var(--surface-2); }
+  .pedido-corpo { padding: 18px 22px 22px; display: flex; flex-direction: column; gap: 13px; }
+  .pedido-corpo label { display: flex; flex-direction: column; gap: 5px; font-size: 12.5px; font-weight: 600; color: var(--fg-muted); }
+  .pedido-corpo select, .pedido-corpo input, .pedido-corpo textarea { font: inherit; font-size: 15px;
+    padding: 9px 11px; border: 1px solid var(--border-forte); border-radius: 8px;
+    background: var(--surface); color: var(--fg); width: 100%; }
+  .pedido-corpo textarea { min-height: 110px; resize: vertical; }
+  .pedido-corpo .aviso { font-size: 13.5px; color: var(--fg-muted); padding: 10px 12px;
+    background: var(--surface-2); border-radius: 8px; }
+  .pedido-corpo .dica { font-size: 12.5px; color: var(--fg-muted); margin-top: -4px; }
+  .pedido-corpo .contador { font-size: 12px; color: var(--fg-muted); font-family: var(--fonte-codigo); text-align: right; margin-top: -8px; }
+  .pedido-corpo .erro { font-size: 13.5px; font-weight: 600; color: var(--alerta); }
+  .pedido-corpo .sucesso { font-size: 14.5px; font-weight: 600; color: var(--ok); }
+  .pedido-acoes { display: flex; gap: 10px; }
+
+  /* ---------- Bloco de validação, só no protótipo ---------- */
+  .validar {
+    margin-block: 44px 8px; padding: 22px 24px;
+    border: 1px dashed var(--border-forte); border-radius: 10px; background: var(--surface);
+  }
+  .validar h2 { font-size: 16px; font-weight: 700; }
+  .validar > p { margin-top: 6px; font-size: 13.5px; color: var(--fg-muted); }
+  .validar ol { margin: 14px 0 0; padding-left: 22px; display: grid; gap: 10px; font-size: 14.5px; }
+  .validar li::marker { color: var(--fg-muted); font-family: var(--fonte-codigo); font-size: 12.5px; }
+  .validar strong { font-weight: 700; }
+
+  /* ---------- Rodapé ---------- */
+  .rodape { margin-top: 36px; border-top: 1px solid var(--border); background: var(--surface); }
+  .rodape .interno { padding-block: 22px 32px; display: flex; gap: 14px 28px; flex-wrap: wrap; align-items: baseline; }
+  .rodape p { font-size: 13px; color: var(--fg-muted); }
+  .rodape .selo-versao { font-family: var(--fonte-codigo); font-size: 11.5px; }
+
+  @media (prefers-reduced-motion: reduce) {
+    a.cartao { transition: none; }
+    a.cartao:hover { transform: none; }
+  }
+</style>
+
+<div style="flex:none;background:#7c2d12;color:#fff;font:700 14px/1.4 system-ui,sans-serif;padding:7px 16px;text-align:center">PROTÓTIPO — os dados são de exemplo, nada aqui é real e nada fica gravado. O formulário ainda não envia nada.</div>
+<header class="topo">
+  <div class="interno">
+    <span class="marca">
+      <span class="marca-texto">
+        <span class="marca-nome"><b>Escritório de Processos</b></span>
+        <span class="marca-autoria">CGGES</span>
+      </span>
+      <span class="marca-barras" aria-hidden="true">
+        <i style="height:9px;background:var(--marca-1)"></i>
+        <i style="height:15px;background:var(--marca-2)"></i>
+        <i style="height:20px;background:var(--marca-3)"></i>
+        <i style="height:13px;background:var(--marca-4)"></i>
+        <i style="height:7px;background:var(--marca-1)"></i>
+      </span>
+    </span>
+    <div class="modulo">
+      <strong>Secretaria do Patrimônio da União</strong>
+    </div>
+  </div>
+</header>
+
+<main class="interno">
+
+  <section class="abertura">
+    <h1>Ferramentas</h1>
+  </section>
+
+  <ul class="prateleira">
+
+    <li>
+      <a class="cartao" href="https://spu-projetoseprocessos.github.io/SPUProcessos/">
+        <span class="wordmark"><b>SPU</b><i>Processos</i></span>
+        <p class="descricao">O catálogo dos processos de trabalho da SPU mapeados em
+          Bizagi, com o fluxo publicado e o manual de cada um.</p>
+        <span class="abrir">abrir <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h13M13 6l6 6-6 6"/></svg></span>
+      </a>
+    </li>
+
+    <li>
+      <a class="cartao" href="https://spu-projetoseprocessos.github.io/tabelas-taxonomicas-spu/">
+        <span class="wordmark"><b>Tabelas Taxonômicas</b></span>
+        <p class="descricao">Os tipos de uso imobiliário e os regimes de destinação como
+          estão nas Resoluções do ComGC, ligados ao glossário.</p>
+        <span class="abrir">abrir <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h13M13 6l6 6-6 6"/></svg></span>
+      </a>
+    </li>
+
+    <li>
+      <a class="cartao" href="https://spu-projetoseprocessos.github.io/simulador-competencia-spu/">
+        <span class="wordmark"><b>Governança da Destinação</b></span>
+        <p class="descricao">Pelo regime, pelo valor e pela finalidade, diz quem tem
+          competência para o ato e se cabe manifestação prévia. Traz também a tabela de
+          regras, a ficha de cada regime e o rito.</p>
+        <span class="abrir">abrir <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h13M13 6l6 6-6 6"/></svg></span>
+      </a>
+    </li>
+
+    <li>
+      <a class="cartao" href="https://spu-projetoseprocessos.github.io/SPUProcessos/organograma/">
+        <span class="wordmark"><b>SPU</b><i>Organograma</i></span>
+        <p class="descricao">Quem é quem na SPU: a estrutura em árvore, do Gabinete às 27
+          superintendências, com o titular de cada unidade e quem está lotado nela.</p>
+        <span class="abrir">abrir <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h13M13 6l6 6-6 6"/></svg></span>
+      </a>
+    </li>
+
+  </ul>
+
+  <a class="saida" href="https://spu-projetoseprocessos.github.io/cade-catalogo-solucoes-spu/">
+    <div class="saida-texto">
+      <p class="titulo">Procurando outro sistema da SPU?</p>
+      <p class="descricao">Está tudo no <b>Cadê?</b> — o catálogo de todas as soluções
+        digitais da SPU.</p>
+    </div>
+    <span class="abrir">abrir o Cadê? <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h13M13 6l6 6-6 6"/></svg></span>
+  </a>
+
+  <a class="institucional" href="https://memoria-spu.gestao.gov.br/">
+    <div class="inst-texto">
+      <span class="inst-etiqueta">Acervo institucional da SPU</span>
+      <span class="inst-titulo">Não deixe de conhecer o MemóriaSPU</span>
+      <span class="inst-desc">Normas, pareceres e publicações, em um lugar só. Veja
+        também o <b>Acervo Histórico</b> — história fundiária do Brasil.</span>
+    </div>
+    <span class="inst-abrir">abrir o MemóriaSPU <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h13M13 6l6 6-6 6"/></svg></span>
+  </a>
+
+  <section class="dentro">
+    <h2>Por dentro do Escritório de Processos</h2>
+    <p class="intro">O Escritório existe para auxiliar as unidades da SPU a simplificar e
+      otimizar seus processos de trabalho. Atendemos demandas de mapeamento de fluxos e
+      elaboração de manuais, especificação e prototipação de ferramentas de tecnologia da
+      informação, linguagem institucional, serviços de atendimento ao cidadão e de
+      atendimento interno — e construímos ferramentas como as desta página.</p>
+
+    <ul class="frentes">
+      <li style="--acento-frente: var(--marca-1)">
+        <h3>Processos de trabalho</h3>
+        <p>Mapeamos e redesenhamos os processos da SPU, do requerimento à decisão, e
+          elaboramos os manuais.</p>
+      </li>
+      <li style="--acento-frente: var(--marca-2)">
+        <h3>Sistemas</h3>
+        <p>Conversamos com as áreas, modelamos os sistemas e elaboramos protótipos, antes
+          de levar à DEMIN.</p>
+      </li>
+      <li style="--acento-frente: var(--marca-4)">
+        <h3>Modelagem de serviços ao cidadão</h3>
+        <p>Ajudamos as áreas a desenhar e especificar os serviços que o cidadão acessa no
+          Portal de Serviços, o Patrimônio de Todos.</p>
+      </li>
+      <li style="--acento-frente: var(--marca-4)">
+        <h3>Serviços internos</h3>
+        <p>Na CentralGov cadastramos e mantemos os serviços que o servidor da SPU usa no
+          dia a dia: recursos humanos, logística, tecnologia da informação.</p>
+      </li>
+      <li style="--acento-frente: var(--marca-3)">
+        <h3>Linguagem institucional</h3>
+        <p>Ajudamos as áreas a escrever de forma clara o que chega ao cidadão e ao
+          servidor — de um campo de formulário a um despacho.</p>
+      </li>
+      <li style="--acento-frente: var(--marca-2)">
+        <h3>Memória institucional</h3>
+        <p>Mantemos a coleção de Fluxos e Procedimentos no MemóriaSPU, onde ficam
+          publicados os fluxos dos processos de trabalho da SPU.</p>
+      </li>
+    </ul>
+
+    <div class="atende">
+      <p>Atendemos o <b>Gabinete</b>, as <b>cinco diretorias</b> e as <b>27
+        superintendências</b> da SPU.</p>
+    </div>
+
+    <div class="sugerir">
+      <div class="sugerir-texto">
+        <span class="titulo">Achou um erro, tem uma sugestão ou quer solicitar um serviço?</span>
+        <p>Dá para pedir o mapeamento de um processo, o registro de um sistema no catálogo,
+          ou avisar que alguma coisa está errada — daqui mesmo, ou pelo canal dentro de cada
+          ferramenta. Tudo chega no mesmo quadro.</p>
+      </div>
+      <button type="button" class="btn-sugerir" id="abrir-pedido">Fale com a equipe</button>
+    </div>
+  </section>
+
+  <section class="validar">
+    <h2>Para validar — não faz parte da página final</h2>
+    <p>Quatro pontos. O primeiro é a resposta à observação do chefe.</p>
+    <ol>
+      <li><strong>Por que isto não concorre com o Cadê?.</strong> O Cadê? é o
+        <em>catálogo</em> de todas as soluções digitais da SPU, de qualquer área, com
+        cadastro e busca. Esta é a <em>página institucional de uma equipe</em>. Uma página
+        de equipe não concorre com um catálogo, do mesmo jeito que a página de uma
+        coordenação não concorre com a lista telefônica — e esta manda para o Cadê? quem
+        veio procurar outro sistema, em vez de competir. O MemóriaSPU, aliás, já aponta de
+        volta para o SPUProcessos e para as soluções digitais: a citação é recíproca.</li>
+      <li><strong>A página não tem nome de produto, de propósito.</strong> Identifica-se
+        pela unidade — Escritório de Processos, CGGES. Marca própria era justamente o que
+        a fazia parecer um produto concorrendo com o catálogo. O custo é não ter um nome
+        curto para citar; se incomodar, a saída é endereço curto na intranet, não marca
+        nova.</li>
+      <li><strong>"Registrar um pedido" ainda não leva a lugar nenhum.</strong> É marcação
+        de protótipo: vai apontar para o formulário quando ele existir.</li>
+      <li><strong>Falta decidir se a página é pública ou só da equipe.</strong> O conteúdo
+        institucional e a chamada de pedidos são de página pública — ninguém escreve "o que
+        é o Escritório de Processos" para sete colegas que já sabem. Mas ficou decidido
+        antes que a página seria área logada. As duas coisas convivem: página pública, e
+        atrás de login a área da equipe com o quadro de pedidos.</li>
+    </ol>
+  </section>
+
+</main>
+
+<dialog class="pedido" id="dlg-pedido">
+  <div class="pedido-topo">
+    <span class="titulo">Fale com a equipe</span>
+    <button type="button" class="fechar" id="pd-fechar" aria-label="Fechar">×</button>
+  </div>
+  <div class="pedido-corpo">
+    <p class="aviso">A equipe lê tudo e guarda, mas não responde pedido por pedido. Se
+      precisarmos de mais detalhe, chamamos você pelo Teams.</p>
+
+    <label for="pd-ferramenta">Sobre o quê
+      <select id="pd-ferramenta">
+        <option value="">escolha…</option>
+        <option value="spuprocessos">SPUProcessos</option>
+        <option value="taxonomias">Tabelas Taxonômicas</option>
+        <option value="simulador">Governança da Destinação</option>
+        <option value="organograma">SPUOrganograma</option>
+        <option value="cade">Cadê? — catálogo de soluções</option>
+        <option value="home">esta página</option>
+        <option value="outra">outro assunto do Escritório</option>
+      </select>
+    </label>
+
+    <label for="pd-tipo">O que você quer
+      <select id="pd-tipo"><option value="">escolha a ferramenta primeiro</option></select>
+    </label>
+
+    <label for="pd-texto">Conte o que aconteceu
+      <textarea id="pd-texto" maxlength="4000" placeholder="Quanto mais detalhe, melhor: o que você fez, o que esperava e o que apareceu."></textarea>
+    </label>
+    <p class="contador" id="pd-contador">0 / 4000</p>
+
+    <label for="pd-contato">Seu e-mail institucional
+      <input type="email" id="pd-contato" placeholder="nome.sobrenome@gestao.gov.br" autocomplete="email">
+    </label>
+    <p class="dica">Obrigatório. É por ele que a equipe acha você no Teams — não para
+      responder por e-mail.</p>
+
+    <p class="erro" id="pd-erro" hidden></p>
+    <p class="sucesso" id="pd-ok" hidden></p>
+
+    <div class="pedido-acoes">
+      <button type="button" class="btn-sugerir" id="pd-enviar">Enviar</button>
+    </div>
+  </div>
+</dialog>
+
+<footer class="rodape">
+  <div class="interno">
+    <p><b>CGGES</b> — Escritório de Processos da Secretaria do Patrimônio da União.</p>
+    <p class="selo-versao">protótipo de 10/11/2026</p>
+  </div>
+</footer>
+
+<script>
+(() => {
+  "use strict";
+  // Os tipos vêm de home.tipos_pedido, no esquema `home` do projeto spuprocessos.
+  // Cópia de 11/11/2026: a tela real vai ler a tabela, não esta constante.
+  const TIPOS = {
+    spuprocessos: [
+      ["solicitar_mapeamento", "Quero solicitar o mapeamento de um processo"],
+      ["erro", "Encontrei um erro"],
+      ["duvida", "Tenho uma dúvida"],
+      ["melhoria", "Tenho uma sugestão de melhoria"]
+    ],
+    taxonomias: [
+      ["erro", "Encontrei um erro"],
+      ["duvida", "Tenho uma dúvida"],
+      ["melhoria", "Tenho uma sugestão de melhoria"]
+    ],
+    simulador: [
+      ["erro", "Encontrei um erro na resposta do simulador"],
+      ["duvida", "Tenho uma dúvida"],
+      ["melhoria", "Tenho uma sugestão de melhoria"]
+    ],
+    organograma: [
+      ["erro", "Apontar um dado errado de pessoa ou unidade"],
+      ["duvida", "Tenho uma dúvida"],
+      ["melhoria", "Tenho uma sugestão de melhoria"]
+    ],
+    cade: [
+      ["solicitar_registro", "Quero solicitar o registro de um sistema no catálogo"],
+      ["erro", "Encontrei um erro"],
+      ["duvida", "Tenho uma dúvida"],
+      ["melhoria", "Tenho uma sugestão de melhoria"]
+    ],
+    home: [
+      ["erro", "Encontrei um erro"],
+      ["duvida", "Tenho uma dúvida"],
+      ["melhoria", "Tenho uma sugestão de melhoria"]
+    ],
+    outra: [
+      ["duvida", "Tenho uma dúvida"],
+      ["melhoria", "Tenho uma sugestão"]
+    ]
+  };
+
+  const $ = s => document.querySelector(s);
+  const dlg = $("#dlg-pedido");
+  const texto = $("#pd-texto");
+  const EMAIL = /^[^@\s]+@[^@\s]+\.[^@\s]+$/;
+
+  const limpar = () => {
+    $("#pd-ferramenta").value = ""; $("#pd-texto").value = ""; $("#pd-contato").value = "";
+    $("#pd-tipo").innerHTML = '<option value="">escolha a ferramenta primeiro</option>';
+    $("#pd-contador").textContent = "0 / 4000";
+    $("#pd-erro").hidden = true; $("#pd-ok").hidden = true;
+  };
+
+  $("#abrir-pedido").addEventListener("click", () => { limpar(); dlg.showModal(); });
+  $("#pd-fechar").addEventListener("click", () => dlg.close());
+
+  $("#pd-ferramenta").addEventListener("change", e => {
+    const lista = TIPOS[e.target.value] || [];
+    $("#pd-tipo").innerHTML = lista.length
+      ? '<option value="">escolha…</option>' +
+        lista.map(([c, r]) => `<option value="${c}">${r}</option>`).join("")
+      : '<option value="">escolha a ferramenta primeiro</option>';
+  });
+
+  texto.addEventListener("input", () => {
+    $("#pd-contador").textContent = `${texto.value.length} / 4000`;
+  });
+
+  // As mensagens abaixo são as mesmas que spu_registrar_pedido devolve.
+  $("#pd-enviar").addEventListener("click", () => {
+    const erro = $("#pd-erro"), ok = $("#pd-ok");
+    ok.hidden = true; erro.hidden = true;
+    const mostrar = m => { erro.textContent = m; erro.hidden = false; };
+
+    const t = texto.value.trim();
+    const contato = $("#pd-contato").value.trim();
+    if (!$("#pd-ferramenta").value) return mostrar("Escolha sobre o que é o pedido.");
+    if (!$("#pd-tipo").value) return mostrar("Escolha o que você quer registrar.");
+    if (!t) return mostrar("Escreva o que você quer relatar antes de enviar.");
+    if (t.length > 4000) return mostrar(`O relato tem ${t.length} caracteres e o limite é 4000. Resuma um pouco.`);
+    if (!contato) return mostrar("Informe o seu e-mail institucional. Ele é obrigatório.");
+    if (!EMAIL.test(contato)) return mostrar("O e-mail informado não parece válido. Confira, por favor.");
+
+    ok.textContent = "Registrado. Obrigado — a equipe acompanha esta fila.";
+    ok.hidden = false;
+  });
+})();
+</script>

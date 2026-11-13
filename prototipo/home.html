@@ -79,6 +79,7 @@
   .marca-barras i { width: 3px; border-radius: 1px; display: block; }
   .modulo { padding-left: 16px; border-left: 1px solid var(--border); min-width: 0; }
   .modulo strong { display: block; font-size: 15px; font-weight: 600; line-height: 1.25; }
+  .topo-fale { margin-left: auto; }
   .modulo span { display: block; font-size: 12.5px; color: var(--fg-muted); line-height: 1.3; }
 
   /* ---------- Abertura ---------- */
@@ -94,6 +95,9 @@
   .oquefaz .frentes { margin-top: 20px; }
   .conheca { margin-top: 44px; padding-top: 34px; border-top: 1px solid var(--border); }
   .contato { margin-top: 14px; }
+  .conheca .prateleira { margin-top: 20px; }
+  .outras { margin-top: 26px; }
+  .outras .saida:first-child { margin-top: 0; }
   /* Dois painéis lado a lado: as ferramentas do Escritório e o MemóriaSPU. */
   .duo { margin-top: 20px; display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 360px), 1fr)); gap: 16px; align-items: stretch; }
   .painel-ferramentas { min-width: 0; padding: 22px 24px; border: 1px solid var(--border-forte); border-radius: 12px; background: var(--surface); box-shadow: var(--sombra); display: flex; flex-direction: column; gap: 12px; }
@@ -243,7 +247,7 @@
     <span class="marca">
       <span class="marca-texto">
         <span class="marca-nome"><b>Escritório de Processos</b></span>
-        <span class="marca-autoria">CGGES</span>
+        <span class="marca-autoria">EPP · CGGES</span>
       </span>
       <span class="marca-barras" aria-hidden="true">
         <i style="height:9px;background:var(--marca-1)"></i>
@@ -256,6 +260,7 @@
     <div class="modulo">
       <strong>Secretaria do Patrimônio da União</strong>
     </div>
+    <button type="button" class="btn-sugerir topo-fale" data-abrir-pedido>Fale com a equipe</button>
   </div>
 </header>
 
@@ -266,8 +271,7 @@
     <p class="intro">O Escritório existe para auxiliar as unidades da SPU a simplificar e
       otimizar seus processos de trabalho. Atendemos demandas de mapeamento de fluxos e
       elaboração de manuais, especificação e prototipação de ferramentas de tecnologia da
-      informação, linguagem institucional, serviços de atendimento ao cidadão e de
-      atendimento interno.</p>
+      informação, serviços de atendimento ao cidadão e de atendimento interno.</p>
   </section>
 
   <section class="oquefaz">
@@ -305,46 +309,48 @@
       </li>
     </ul>
 
-    <div class="atende">
-      <p>Atendemos o <b>Gabinete</b>, as <b>cinco diretorias</b> e as <b>27
-        superintendências</b> da SPU.</p>
-    </div>
   </section>
 
   <section class="conheca">
     <h2>Conheça nossas ferramentas</h2>
-    <div class="duo">
-      <div class="painel-ferramentas">
-        <span class="painel-etiqueta">Ferramentas do Escritório de Processos</span>
-        <ul class="lista-ferramentas">
-          <li><a href="https://spu-projetoseprocessos.github.io/SPUProcessos/">
-            <span class="wordmark"><b>SPU</b><i>Processos</i></span>
-            <span class="descricao">O catálogo dos processos de trabalho da SPU mapeados em Bizagi, com o fluxo publicado e o manual de cada um.</span>
-          </a></li>
-          <li><a href="https://spu-projetoseprocessos.github.io/tabelas-taxonomicas-spu/">
-            <span class="wordmark"><b>Tabelas Taxonômicas</b></span>
-            <span class="descricao">Os tipos de uso imobiliário e os regimes de destinação como estão nas Resoluções do ComGC, ligados ao glossário.</span>
-          </a></li>
-          <li><a href="https://spu-projetoseprocessos.github.io/simulador-competencia-spu/">
-            <span class="wordmark"><b>Governança da Destinação</b></span>
-            <span class="descricao">Pelo regime, pelo valor e pela finalidade, diz quem tem competência para o ato e se cabe manifestação prévia. Traz também a tabela de regras, a ficha de cada regime e o rito.</span>
-          </a></li>
-          <li><a href="https://spu-projetoseprocessos.github.io/SPUProcessos/organograma/">
-            <span class="wordmark"><b>SPU</b><i>Organograma</i></span>
-            <span class="descricao">Quem é quem na SPU: a estrutura em árvore, do Gabinete às 27 superintendências, com o titular de cada unidade e quem está lotado nela.</span>
-          </a></li>
-        </ul>
-      </div>
-      <a class="institucional" href="https://memoria-spu.gestao.gov.br/">
-    <div class="inst-texto">
-      <span class="inst-etiqueta">Acervo institucional da SPU</span>
-      <span class="inst-titulo">Não deixe de conhecer o MemóriaSPU</span>
-      <span class="inst-desc">Normas, pareceres e publicações, em um lugar só. Veja
-        também o <b>Acervo Histórico</b> — história fundiária do Brasil.</span>
-    </div>
-    <span class="inst-abrir">abrir o MemóriaSPU <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h13M13 6l6 6-6 6"/></svg></span>
-  </a>
-    </div>
+    <ul class="prateleira">
+
+    <li>
+      <a class="cartao" href="https://spu-projetoseprocessos.github.io/SPUProcessos/">
+        <span class="wordmark"><b>SPU</b><i>Processos</i></span>
+        <p class="descricao">O catálogo dos processos de trabalho da SPU mapeados em Bizagi, com o fluxo publicado e o manual de cada um.</p>
+        <span class="abrir">abrir <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h13M13 6l6 6-6 6"/></svg></span>
+      </a>
+    </li>
+
+    <li>
+      <a class="cartao" href="https://spu-projetoseprocessos.github.io/tabelas-taxonomicas-spu/">
+        <span class="wordmark"><b>Tabelas Taxonômicas</b></span>
+        <p class="descricao">Os tipos de uso imobiliário e os regimes de destinação como estão nas Resoluções do ComGC, ligados ao glossário.</p>
+        <span class="abrir">abrir <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h13M13 6l6 6-6 6"/></svg></span>
+      </a>
+    </li>
+
+    <li>
+      <a class="cartao" href="https://spu-projetoseprocessos.github.io/simulador-competencia-spu/">
+        <span class="wordmark"><b>Governança da Destinação</b></span>
+        <p class="descricao">Pelo regime, pelo valor e pela finalidade, diz quem tem competência para o ato e se cabe manifestação prévia. Traz também a tabela de regras, a ficha de cada regime e o rito.</p>
+        <span class="abrir">abrir <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h13M13 6l6 6-6 6"/></svg></span>
+      </a>
+    </li>
+
+    <li>
+      <a class="cartao" href="https://spu-projetoseprocessos.github.io/SPUProcessos/organograma/">
+        <span class="wordmark"><b>SPU</b><i>Organograma</i></span>
+        <p class="descricao">Quem é quem na SPU: a estrutura em árvore, do Gabinete às 27 superintendências, com o titular de cada unidade e quem está lotado nela.</p>
+        <span class="abrir">abrir <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h13M13 6l6 6-6 6"/></svg></span>
+      </a>
+    </li>
+
+    </ul>
+  </section>
+
+  <section class="outras">
   <a class="saida" href="https://spu-projetoseprocessos.github.io/cade-catalogo-solucoes-spu/">
     <div class="saida-texto">
       <p class="titulo">Procurando outro sistema da SPU?</p>
@@ -352,6 +358,13 @@
         digitais da SPU.</p>
     </div>
     <span class="abrir">abrir o Cadê? <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h13M13 6l6 6-6 6"/></svg></span>
+  </a>
+  <a class="saida" href="https://memoria-spu.gestao.gov.br/">
+    <div class="saida-texto">
+      <p class="titulo">Não deixe de conhecer o MemóriaSPU</p>
+      <p class="descricao">Normas, pareceres e publicações, em um lugar só. Veja também o <b>Acervo Histórico</b> — história fundiária do Brasil.</p>
+    </div>
+    <span class="abrir">abrir o MemóriaSPU <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h13M13 6l6 6-6 6"/></svg></span>
   </a>
   </section>
 
@@ -363,7 +376,7 @@
           ou avisar que alguma coisa está errada — daqui mesmo, ou pelo canal dentro de cada
           ferramenta. Tudo chega no mesmo quadro.</p>
       </div>
-      <button type="button" class="btn-sugerir" id="abrir-pedido">Fale com a equipe</button>
+      <button type="button" class="btn-sugerir" id="abrir-pedido" data-abrir-pedido>Fale com a equipe</button>
     </div>
   </section>
 
@@ -478,7 +491,9 @@
     $("#pd-erro").hidden = true; $("#pd-ok").hidden = true;
   };
 
-  $("#abrir-pedido").addEventListener("click", () => { limpar(); dlg.showModal(); });
+  // Dois botões abrem a mesma ficha: o do cabeçalho e o do fim da página.
+  document.querySelectorAll("[data-abrir-pedido]").forEach(b =>
+    b.addEventListener("click", () => { limpar(); dlg.showModal(); }));
   $("#pd-fechar").addEventListener("click", () => dlg.close());
 
   $("#pd-ferramenta").addEventListener("change", e => {

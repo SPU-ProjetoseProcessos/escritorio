@@ -1,12 +1,12 @@
 # Escritório de Processos da SPU
 
-Página do Escritório de Processos (CGGES) e área de trabalho da equipe.
+Página do Escritório de Processos (EPP · CGGES), da Secretaria do Patrimônio da União.
 
-Por enquanto há só o **protótipo**, em `prototipo/`, com dados de exemplo:
+- `index.html` — a página de acesso livre: o que o Escritório faz, as ferramentas, e o
+  "Fale com a equipe".
+- `prototipo/` — protótipo da área de trabalho da equipe, com dados de exemplo. Nada ali é
+  real, e nada fica gravado.
 
-- `prototipo/` — a área da equipe
-- `prototipo/home.html` — a página de acesso livre
-
-Nada no protótipo é real, e nada fica gravado.
+Os arquivos são gerados; não edite aqui.
 
 CGGES — Escritório de Processos

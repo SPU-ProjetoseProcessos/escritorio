@@ -86,14 +86,16 @@
   .foca { margin: 20px 0 0; }
   .foca img { display: block; width: 100%; height: auto; border-radius: 12px; }
 
-  .abertura { padding-block: 34px 6px; max-width: 68ch; }
-  .abertura h1 { font-size: clamp(24px, 4.2vw, 32px); font-weight: 700; line-height: 1.18; letter-spacing: -.015em; }
-  .abertura p { margin-top: 12px; font-size: 16.5px; }
+  /* O título e o parágrafo de abertura saíram em 13/11/2026: a faixa da
+     foca e o cabeçalho já dizem de quem é a página. O título continua no código, invisível,
+     para leitor de tela e buscador — toda página precisa de um. */
+  .so-leitor { position: absolute; width: 1px; height: 1px; margin: -1px; padding: 0; overflow: hidden;
+               clip: rect(0 0 0 0); white-space: nowrap; border: 0; }
 
   /* ---------- A ordem da página, de 13/11/2026: primeiro o Escritório, depois as
      ferramentas. Com as ferramentas em primeiro plano a página se confundia com o
      catálogo de soluções. ---------- */
-  .oquefaz { margin-top: 26px; }
+  .oquefaz { margin-top: 32px; }
   .oquefaz > h2, .conheca > h2 { font-size: clamp(21px, 3.6vw, 27px); font-weight: 700; line-height: 1.2; }
   .oquefaz .frentes { margin-top: 20px; }
   .conheca { margin-top: 44px; padding-top: 34px; border-top: 1px solid var(--border); }
@@ -270,13 +272,7 @@
 
   <figure class="foca"><img src="foca-fina.jpg" width="1860" height="315" alt="Uma foca de óculos deitada sobre o desenho de um fluxo de processo, com um balão laranja que diz “foca no fluxo!”."></figure>
 
-  <section class="abertura">
-    <h1>Escritório de Processos</h1>
-    <p class="intro">O Escritório existe para auxiliar as unidades da SPU a simplificar e
-      otimizar seus processos de trabalho. Atendemos demandas de mapeamento de fluxos e
-      elaboração de manuais, especificação e prototipação de ferramentas de tecnologia da
-      informação, serviços de atendimento ao cidadão e de atendimento interno.</p>
-  </section>
+  <h1 class="so-leitor">Escritório de Processos</h1>
 
   <section class="oquefaz">
     <h2>O que fazemos</h2>

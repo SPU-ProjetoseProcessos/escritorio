@@ -1320,9 +1320,9 @@
     EQUIPE.forEach(n => { m.marcas[n] = { petrvs:null, assinado:null, freq:null, cobrado:null }; });
     return m;
   }
-  // Na versão de verdade, o primeiro mês cobrado é dezembro de 2026, cobrado em janeiro
-  // (decidido em 18/11/2026). Até lá, o mês que aparece é dezembro, com o prazo dele.
-  const PRIMEIRO_MES = new Date(2026, 11, 1);
+  // Na versão de verdade, o primeiro mês cobrado é novembro de 2026, informado no Petrvs em
+  // dezembro, até o 5º dia útil (corrigido por ele em 18/11/2026; antes estava dezembro).
+  const PRIMEIRO_MES = new Date(2026, 10, 1);
   function mesesDoBanco() {
     let ult = new Date(hoje.getFullYear(), hoje.getMonth() - 1, 1);
     if (ult < PRIMEIRO_MES) ult = PRIMEIRO_MES;

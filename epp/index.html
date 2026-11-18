@@ -223,6 +223,10 @@
   .nova-prazo { display:flex; gap:6px; align-items:center; font-size:13px; font-weight:600; color:var(--fg-muted); }
   .nova-linha .nova-prazo input { flex:0 0 auto; border-style:solid; }
   div.linha-corpo { cursor:default; }
+  /* Versão 30: as linhas do plano de trabalho. */
+  .pl-campos { display:grid; grid-template-columns:minmax(0,1.2fr) minmax(0,2fr) 90px; gap:10px; }
+  @media (max-width: 760px) { .pl-campos { grid-template-columns:1fr; } }
+  .pl-nova { border-top:1.5px dashed var(--border-forte); }
   /* Versão 29: outros responsáveis na ficha. */
   .outros-escolha { display:flex; flex-wrap:wrap; gap:6px 14px; }
   .outros-escolha .outro { display:inline-flex; align-items:center; gap:5px; font-size:14.5px; font-weight:600; color:var(--fg); }
@@ -371,7 +375,7 @@
   .pill.cheia { border-color:var(--pc); background:color-mix(in srgb, var(--pc) 19%, var(--surface)); color:color-mix(in srgb, var(--pc) 72%, var(--fg)); }
   .pill.cheia.s-atrasada, .pill.cheia.s-falta { background:var(--pc); color:var(--tinta-solida); }
   .s-parada, .s-hoje, .s-quase, .s-voltar, .s-breve, .s-semdono, .s-avencer { --pc: var(--meio); }
-  .s-suspensa, .s-depois, .s-ideia, .s-descartado, .s-arquivado { --pc: var(--off); }
+  .s-suspensa, .s-depois, .s-ideia, .s-descartado, .s-arquivado, .s-off { --pc: var(--off); }
   .s-novo, .s-assinar { --pc: var(--azul); }
   /* Marcas pequenas: neutras. */
   .chip.vazado, .chip.c-ti, .chip.c-liga, .chip.c-rot { color:var(--fg); border:1.5px solid var(--border-forte); background:none; font-weight:600; }
@@ -1361,6 +1365,7 @@ window.iniciarArea = () => {
   let trocandoPlano = false;            // o campo para subir o plano de entregas está aberto
   let verArquivados = false, verAvisos = false, novoAviso = false;
   let editandoFrente = null, verFrentesArq = false;   // versão 27: a tela das frentes
+  let planoEditando = null;                           // versão 30: { quem, i } da linha do plano aberta
   const avisoAberto = {};                // versão 24: os avisos longos que a pessoa expandiu
   let paralisando = false, pjParalisando = null;   // versão 25: os campos de paralisar abertos
   if (!REAL) PEDIDOS.find(p => p.id === "a2").responsavel = "Vinícius";   // o chefe já atribuiu este
@@ -1733,9 +1738,14 @@ window.iniciarArea = () => {
   const lugar = x => x.projeto ? projeto(x.projeto).nome : frente(x.frente).nome;
   const entregaDe = x => x.entrega || (x.projeto && projeto(x.projeto).entrega) || ENTREGA_DA_FRENTE[x.frente];
   // A linha do plano onde o trabalho entra: a escolhida à mão, ou a da entrega da frente.
+  // Versão 30: enquanto a pessoa não cadastra as linhas do próprio plano de trabalho, o
+  // rascunho sai organizado pelas entregas da unidade, uma por grupo.
+  const temPlanoProprio = nome => !!(PLANOS[nome] && PLANOS[nome].length);
+  const linhasDoPlano = nome => temPlanoProprio(nome) ? PLANOS[nome]
+    : Object.keys(ENTREGAS).map(k => ({ entrega:k, trabalho:null, pct:null }));
   function linhaDe(nome, x) {
     if (x.linhaPetrvs && x.linhaPetrvs.quem === nome) return x.linhaPetrvs.i;
-    return (PLANOS[nome] || []).findIndex(l => l.entrega && l.entrega === entregaDe(x));
+    return linhasDoPlano(nome).findIndex(l => l.entrega && l.entrega === entregaDe(x));
   }
   function mesDoRascunho() {
     if (!ptCorrente) return { id: MES_ATUAL.id, nome: nomeMes(MES_ATUAL), ate: null };
@@ -1743,7 +1753,7 @@ window.iniciarArea = () => {
   }
   function montarRascunho(nome) {
     const mes = mesDoRascunho(), no = iso => !!iso && iso.slice(0, 7) === mes.id;
-    const linhas = (PLANOS[nome] || []).map((l, i) => ({ ...l, i, feitas:[], andando:[], rotinas:[] }));
+    const linhas = linhasDoPlano(nome).map((l, i) => ({ ...l, i, feitas:[], andando:[], rotinas:[] }));
     const sem = [];
     const por = (x, tipo, item) => { const i = linhaDe(nome, x); (i >= 0 ? linhas[i][tipo] : sem).push(item); };
     TAREFAS.filter(t => t.estado === "concluida" && doNome(t, nome) && no(t.concluida_em))
@@ -1795,13 +1805,15 @@ window.iniciarArea = () => {
         ${escolha}
         ${total ? "" : `<p class="vazio">Nada registrado na área em ${r.mes.nome} ${dono ? "no seu nome" : "no nome de " + curto(nome)}.</p>`}
       </div>`);
-    const linhas = r.linhas.map(l => {
+    const proprio = temPlanoProprio(nome);
+    const linhas = r.linhas.filter(l => proprio || l.feitas.length || l.andando.length || l.rotinas.length).map(l => {
       const texto = textoDaLinha(l, estilo);
       const faltam = l.feitas.filter(({ t }) => !(t.entregue && t.entregue.produto));
-      const titulo = !l.entrega ? "Não vinculada" : ENTREGAS[l.entrega] || `${l.entrega} — não está no plano de entregas vigente`;
-      return bloco("var(--mes)", esc(titulo), `${l.pct}% planejado`, `
+      const titulo = !l.entrega ? "Não vinculada" : l.entrega === "outra" ? "Entrega de outra unidade ou órgão"
+        : ENTREGAS[l.entrega] || `${l.entrega} — não está no plano de entregas vigente`;
+      return bloco("var(--mes)", esc(titulo), l.pct ? `${l.pct}% planejado` : "", `
         <div class="pt-corpo">
-          <p class="pt-trab">Trabalho planejado: <b>${esc(l.trabalho)}</b></p>
+          ${l.trabalho ? `<p class="pt-trab">Trabalho planejado: <b>${esc(l.trabalho)}</b></p>` : ""}
           ${faltam.length && dono ? `<p class="pt-falta"><b>${faltam.length === 1 ? "Uma concluída" : faltam.length + " concluídas"} sem dizer o que foi entregue:</b>
               ${faltam.map(({ t }) => `<button type="button" class="link" data-acao="abrir-t" data-id="${t.id}">${esc(t.titulo)}</button>`).join(" · ")}
               <span>— entra o nome da tarefa; clique para dizer o produto.</span></p>` : ""}
@@ -1813,8 +1825,8 @@ window.iniciarArea = () => {
           : `<p class="vazio">Nada registrado na área para esta linha. Escreva no Petrvs como de costume.</p>`}
         </div>`);
     }).join("");
-    const opcoes = (PLANOS[nome] || []).map((l, i) =>
-      `<option value="${i}">${esc(l.entrega ? l.entrega + " — " + l.trabalho : "Não vinculada — " + l.trabalho)}</option>`).join("");
+    const opcoes = linhasDoPlano(nome).map((l, i) =>
+      `<option value="${i}">${esc(l.trabalho ? (l.entrega && l.entrega !== "outra" ? l.entrega : l.entrega ? "outra unidade" : "não vinculada") + " — " + l.trabalho : ENTREGAS[l.entrega] || l.entrega)}</option>`).join("");
     // fim do rascunho; o plano de entregas vem logo abaixo
     const sem = r.sem.length ? bloco("var(--meio)", "Sem linha no plano", r.sem.length, `
       <div class="pt-corpo pt-sem">
@@ -1828,6 +1840,61 @@ window.iniciarArea = () => {
       </div>`) : "";
     return cab + sem + linhas;
   }
+  // ---- o plano de trabalho de cada pessoa no Petrvs (versão 30) ----
+  // As linhas que a pessoa tem no Petrvs: a entrega, o trabalho planejado e o percentual.
+  // É delas que o rascunho parte. Cada um cadastra as suas; o chefe pode cadastrar por
+  // qualquer um. Precisa existir antes do primeiro prazo, 07/12/2026.
+  function blocoPlanoTrabalho(nome) {
+    const linhas = PLANOS[nome] || [], pode = nome === eu || eu === CHEFE, dono = nome === eu;
+    const total = linhas.reduce((s, l) => s + (Number(l.pct) || 0), 0);
+    const opcoesEntrega = sel => Object.keys(ENTREGAS).map(k =>
+      `<option value="${k}"${k === sel ? " selected" : ""}>${esc(ENTREGAS[k])}</option>`).join("")
+      + `<option value="outra"${sel === "outra" ? " selected" : ""}>Entrega de outra unidade ou órgão</option>`
+      + `<option value=""${sel === "" ? " selected" : ""}>Não vinculada a entrega (rotina do setor, apoio, coordenação)</option>`;
+    const campos = (pre, l = {}) => `
+      <div class="pl-campos">
+        <label class="campo">Entrega<select id="${pre}-entrega">${opcoesEntrega(l.entrega || "")}</select></label>
+        <label class="campo">Trabalho planejado, como está no Petrvs<input type="text" id="${pre}-trab" maxlength="300" value="${l.trabalho ? esc(l.trabalho).replace(/"/g, "&quot;") : ""}"></label>
+        <label class="campo pl-pct">%<input type="number" id="${pre}-pct" min="1" max="100" step="1" value="${l.pct || ""}"></label>
+      </div>`;
+    const linha = (l, i) => planoEditando && planoEditando.quem === nome && planoEditando.i === i ? `
+      <div class="linha"><div class="fr-edita">${campos("ple", l)}
+        <div class="grupo-linha">
+          <button type="button" class="bt pri" data-acao="pl-salvar" data-quem="${nome}" data-i="${i}">Salvar</button>
+          <button type="button" class="bt" data-acao="pl-cancelar">Cancelar</button>
+          <span class="mt-pe" id="ple-erro"></span>
+        </div></div></div>` : `
+      <div class="linha">
+        <div class="linha-corpo">
+          <span class="item-topo"><span class="chip">${!l.entrega ? "não vinculada" : l.entrega === "outra" ? "outra unidade" : esc(l.entrega)}</span><span class="chip vazado">${Number(l.pct) || 0}%</span></span>
+          <span class="mt-nome">${esc(l.trabalho)}</span>
+          ${l.entrega && l.entrega !== "outra" ? `<span class="mt-pe">${esc(ENTREGAS[l.entrega] || l.entrega + " — não está no plano de entregas vigente")}</span>` : ""}
+        </div>
+        ${pode ? `<div class="linha-acoes">
+          <button type="button" class="bt" data-acao="pl-editar" data-quem="${nome}" data-i="${i}">Editar</button>
+          <button type="button" class="link fino" data-acao="pl-tirar" data-quem="${nome}" data-i="${i}">tirar</button>
+        </div>` : ""}
+      </div>`;
+    const soma = !linhas.length ? "" : total === 100 ? `<span class="pill s-fechado">soma 100%</span>`
+      : `<span class="pill cheia s-falta">soma ${total}%</span> <span class="mt-pe">em regra o plano fecha em 100% — fica acima com compensação de horas e abaixo com usufruto</span>`;
+    const vazio = `<p class="vazio">${dono ? "Você ainda não cadastrou" : curto(nome) + " ainda não cadastrou"} as linhas do plano de trabalho.
+      Copie do Petrvs: cada linha tem a entrega para a qual contribui, o percentual da carga horária e o trabalho planejado.
+      Enquanto não cadastrar, o rascunho sai organizado pelas entregas da unidade.</p>`;
+    return bloco(linhas.length ? "var(--mes)" : "var(--meio)", `Plano de trabalho no Petrvs${dono ? "" : " — " + curto(nome)}`, linhas.length,
+      (linhas.length ? `<div class="pt-corpo"><div class="grupo-linha">${soma}</div></div>` : vazio)
+      + linhas.map(linha).join("")
+      + (pode ? `<div class="pt-corpo pl-nova"><b class="pt-trab">Incluir uma linha</b>${campos("pl")}
+          <div class="grupo-linha"><button type="button" class="bt${linhas.length ? "" : " pri"}" data-acao="pl-incluir" data-quem="${nome}">Incluir linha</button>
+          <span class="mt-pe" id="pl-erro"></span></div></div>` : ""));
+  }
+  function lerLinhaPlano(pre) {
+    const entrega = $("#" + pre + "-entrega").value || null, trabalho = $("#" + pre + "-trab").value.trim();
+    const pct = Math.round(Number($("#" + pre + "-pct").value));
+    const erro = !trabalho ? "Escreva o trabalho planejado." : !(pct >= 1 && pct <= 100) ? "O percentual vai de 1 a 100." : "";
+    if (erro) { $("#" + pre + "-erro").textContent = erro; return null; }
+    return { entrega, trabalho, pct };
+  }
+
   // ---- o plano de entregas da unidade: a cada três meses ----
   const proximaTroca = () => maisDias(dData(PLANO_ENTREGAS.fim), 1);
   const diasParaTroca = () => emDias(proximaTroca());
@@ -1988,6 +2055,21 @@ window.iniciarArea = () => {
         </div>
         <div class="linha-acoes">${botoes}</div>
       </div>`;
+  }
+  // Versão 30: o quadro de férias da equipe, no painel de todos — quem está fora e quem
+  // vai sair, para ninguém ser pego de surpresa. Só leitura; marcar continua no RH.
+  function quadroFeriasEquipe() {
+    const fs = FERIAS.filter(aindaVale).sort((a, b) => a.de < b.de ? -1 : 1);
+    return bloco("var(--mes)", "Férias e ausências da equipe", fs.length, fs.map(f => {
+      const agora = dData(f.de) <= hoje && f.situacao === "homologada";
+      return `
+      <div class="linha">
+        <div class="linha-corpo">
+          <span class="item-topo">${agora ? '<span class="pill s-avencer">fora agora</span>' : ""}${f.situacao === "homologada" ? "" : '<span class="pill s-off">aguarda homologação</span>'}<span class="chip">${ROTULO_AUSENCIA[f.tipo]}</span></span>
+          <span class="mt-nome">${curto(f.quem)}</span>
+          <span class="mt-pe">${agora ? (f.ate ? "volta depois de " + ddmm(f.ate) : "sem data de volta") : periodo(f)}</span>
+        </div>
+      </div>`; }).join(""), "Ninguém com férias ou ausência marcada daqui para a frente.");
   }
   // Cada pessoa vê as suas; o chefe vê o quadro de todos, por data de início.
   function blocoFerias() {
@@ -2422,8 +2504,8 @@ window.iniciarArea = () => {
     $("#pe").innerHTML = `<b>CGGES</b> — Escritório de Processos da SPU.
         ${REAL ? `<span class="versao">Home EPP · área da equipe · entrou como ${curto(eu)}</span>
         <button type="button" class="link" data-acao="sair">Sair</button>`
-        : `<span class="versao">Home EPP · área logada · protótipo de 18/11/2026 (versão 29) · dados de exemplo</span>
-        <button type="button" class="link" data-acao="vista" data-tipo="caixa" data-id="validar">Para validar nesta versão (29) →</button>`}`;
+        : `<span class="versao">Home EPP · área logada · protótipo de 18/11/2026 (versão 30) · dados de exemplo</span>
+        <button type="button" class="link" data-acao="vista" data-tipo="caixa" data-id="validar">Para validar nesta versão (30) →</button>`}`;
   }
 
   // Na frente os projetos vêm recolhidos. Abre sozinho só o que tem alerta: tarefa
@@ -2665,7 +2747,7 @@ window.iniciarArea = () => {
     if (id === "mes") {
       const ms = mesesNaTela(), antigos = ms.filter(m => m !== MES_ATUAL), m = MES_ATUAL, pz = prazoDe(m);
       const ver = mesVer || { quem: eu, mes: m.id };
-      const concluiu = blocoPlanoEntregas() + rascunhoPetrvs(ver.quem);
+      const concluiu = blocoPlanoEntregas() + blocoPlanoTrabalho(ver.quem) + rascunhoPetrvs(ver.quem);
       if (!chefe) {
         return `
           ${banda("var(--mes)", "", "RH do Escritório", "")}
@@ -2781,7 +2863,7 @@ window.iniciarArea = () => {
             fs.map(t => linhaTarefa(t, { onde:true, pessoa:chefe })).join(""), "Nada concluído ainda.")}`;
     }
     return `
-      ${banda("var(--off)", "Protótipo", "Para validar", "Não faz parte da tela final. No alto, o que mudou na versão 29; embaixo, o que veio antes. Em itálico, o que eu decidi por conta própria para você confirmar.")}
+      ${banda("var(--off)", "Protótipo", "Para validar", "Não faz parte da tela final. No alto, o que mudou na versão 30; embaixo, o que veio antes. Em itálico, o que eu decidi por conta própria para você confirmar.")}
       <div class="bloco validar"><ol><li>Notas de revisão retiradas da versão publicada.</li></ol></div>`;
   }
 
@@ -2939,7 +3021,7 @@ window.iniciarArea = () => {
     if (!chefe) {
       const pedem = ab.filter(andamentoPendente);
       $("#p-lado").innerHTML =
-        petrvsDaDireita(false) +
+        petrvsDaDireita(false) + quadroFeriasEquipe() +
         bloco("var(--meio)", "Pediram andamento", pedem.length, pedem.map(t => linhaTarefa(t, { onde:true })).join(""),
               "Ninguém pediu andamento de nada seu.");
       return;
@@ -2976,6 +3058,7 @@ window.iniciarArea = () => {
               <td class="n">${ts.length}</td><td class="n ${nPar ? "ruim" : ""}">${nPar}</td>
               <td class="n">${ts.filter(t => !t.responsavel).length}</td></tr>`; }).join("")}</tbody></table></div>
       </div>
+      ${quadroFeriasEquipe()}
       ${bloco("var(--meio)", "Andamentos respondidos", resp.length, resp.map(t => `
         <div class="linha" ${corDe(t)}>
           <button type="button" class="linha-corpo" data-acao="abrir-t" data-id="${t.id}">
@@ -3400,6 +3483,29 @@ window.iniciarArea = () => {
     "comentar-ok"({ id })           { return comentar(id); },
     "comentar-fechar"()             { comentando = null; },
     "pt-mes"({ corrente })          { ptCorrente = !!corrente; },
+    // ---- linhas do plano de trabalho (versão 30) ----
+    "pl-incluir"({ quem }) {
+      if (quem !== eu && eu !== CHEFE) return false;
+      const l = lerLinhaPlano("pl"); if (!l) return false;
+      (PLANOS[quem] = PLANOS[quem] || []).push(l);
+      avisoMsg = `Linha incluída no plano ${quem === eu ? "de trabalho" : "de " + curto(quem)}: ${esc(l.trabalho)} (${l.pct}%).`;
+    },
+    "pl-editar"({ quem, i })   { if (quem !== eu && eu !== CHEFE) return false; planoEditando = { quem, i:Number(i) }; },
+    "pl-cancelar"()            { planoEditando = null; },
+    "pl-salvar"({ quem, i }) {
+      if (quem !== eu && eu !== CHEFE) return false;
+      const l = lerLinhaPlano("ple"); if (!l) return false;
+      PLANOS[quem][Number(i)] = l; planoEditando = null;
+    },
+    "pl-tirar"({ quem, i }) {
+      if (quem !== eu && eu !== CHEFE) return false;
+      const k = Number(i), lista = PLANOS[quem]; if (!lista) return false;
+      lista.splice(k, 1);
+      // O que tinha sido levado à mão para uma linha acompanha a mudança de posição.
+      [...TAREFAS, ...ROTINAS].forEach(x => { const lp = x.linhaPetrvs;
+        if (lp && lp.quem === quem) { if (lp.i === k) delete x.linhaPetrvs; else if (lp.i > k) lp.i--; } });
+      planoEditando = null;
+    },
 
     // ---- rotina ----
     "abrir-r"({ id })    { abrirRotina(id); return false; },

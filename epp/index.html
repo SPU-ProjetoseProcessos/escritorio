@@ -2510,8 +2510,8 @@ window.iniciarArea = () => {
     $("#pe").innerHTML = `<b>CGGES</b> — Escritório de Processos da SPU.
         ${REAL ? `<span class="versao">Home EPP · área da equipe · entrou como ${curto(eu)}</span>
         <button type="button" class="link" data-acao="sair">Sair</button>`
-        : `<span class="versao">Home EPP · área logada · protótipo de 18/11/2026 (versão 31) · dados de exemplo</span>
-        <button type="button" class="link" data-acao="vista" data-tipo="caixa" data-id="validar">Para validar nesta versão (31) →</button>`}`;
+        : `<span class="versao">Home EPP · área logada · protótipo de 18/11/2026 (versão 32) · dados de exemplo</span>
+        <button type="button" class="link" data-acao="vista" data-tipo="caixa" data-id="validar">Para validar nesta versão (32) →</button>`}`;
   }
 
   // Na frente os projetos vêm recolhidos. Abre sozinho só o que tem alerta: tarefa
@@ -2869,7 +2869,7 @@ window.iniciarArea = () => {
             fs.map(t => linhaTarefa(t, { onde:true, pessoa:chefe })).join(""), "Nada concluído ainda.")}`;
     }
     return `
-      ${banda("var(--off)", "Protótipo", "Para validar", "Não faz parte da tela final. No alto, o que mudou na versão 31; embaixo, o que veio antes. Em itálico, o que eu decidi por conta própria para você confirmar.")}
+      ${banda("var(--off)", "Protótipo", "Para validar", "Não faz parte da tela final. No alto, o que mudou na versão 32; embaixo, o que veio antes. Em itálico, o que eu decidi por conta própria para você confirmar.")}
       <div class="bloco validar"><ol><li>Notas de revisão retiradas da versão publicada.</li></ol></div>`;
   }
 
@@ -3192,6 +3192,8 @@ window.iniciarArea = () => {
         <div><dt>Repete</dt><dd>${podeMexer(r) ? `<select class="mini" data-per-rotina="${r.id}" aria-label="Com que frequência repete">
             ${PERIODICIDADES.map(([v, t]) => `<option value="${v}"${v === r.periodicidade ? " selected" : ""}>${t}</option>`).join("")}</select>
             <small>${descricao(r)}</small>` : descricao(r)}</dd></div>
+        ${podeMexer(r) ? `<div><dt>Primeira rodada em</dt><dd><input type="date" class="mini" data-inicio-rotina="${r.id}" value="${r.inicio_em}" aria-label="A partir de quando conta">
+            <small>a partir desta data; o dia da semana ou do mês da repetição passa a ser o dela</small></dd></div>` : ""}
         <div><dt>${st.aberta ? "Rodada em aberto" : "Próxima rodada"}</dt><dd>${st.aberta ? dBR(st.pendente) : st.proxima ? dBR(st.proxima) : "—"}</dd></div>
         <div><dt>O que se espera</dt><dd>${r.natureza === "olhar" ? "Dar uma olhada e ver se há trabalho a fazer" : "Fazer: a rodada já é o trabalho"}</dd></div>
       </dl>
@@ -3743,6 +3745,13 @@ window.iniciarArea = () => {
       const x = rotina(d.respRotina); x.responsavel = alvo.value || null;
       if (x.suplente === x.responsavel) x.suplente = null;
       desenhar(); abrirRotina(x.id); return;
+    } else if (d.inicioRotina) {
+      // Versão 32: "a partir de" — a data da primeira rodada define também o dia da repetição.
+      const x = rotina(d.inicioRotina); if (!x || !podeMexer(x) || !alvo.value) return;
+      const dt = dData(alvo.value);
+      Object.assign(x, { inicio_em: alvo.value, dia_mes: dt.getDate(), dia_semana: dt.getDay() + 1, modo: "dia_mes" });
+      avisoMsg = `<b>${esc(x.titulo)}</b>: conta a partir de ${dBR(dt)} — ${descricao(x)}.`;
+      desenhar(); abrirRotina(x.id); return;
     } else if (d.perRotina) {
       const x = rotina(d.perRotina); if (!x || !podeMexer(x)) return;
       x.periodicidade = alvo.value;
@@ -3803,6 +3812,7 @@ window.iniciarArea = () => {
     $("#ficha-t").close();
     avisoMsg = `<b>${esc(t.titulo)}</b> virou tarefa recorrente: ${descricao(r)}. A primeira rodada vence em ${dBR(vencimentos(r, maisDias(hoje, 400))[0])}.`;
     desenhar();
+    abrirRotina(r.id);      // versão 32: abre a ficha dela, para acertar a partir de quando conta
   });
   $("#ft-prazo").addEventListener("change", ev => {
     tAtual.prazo = ev.target.value || null;

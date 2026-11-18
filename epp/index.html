@@ -223,6 +223,10 @@
   .nova-prazo { display:flex; gap:6px; align-items:center; font-size:13px; font-weight:600; color:var(--fg-muted); }
   .nova-linha .nova-prazo input { flex:0 0 auto; border-style:solid; }
   div.linha-corpo { cursor:default; }
+  /* Versão 29: outros responsáveis na ficha. */
+  .outros-escolha { display:flex; flex-wrap:wrap; gap:6px 14px; }
+  .outros-escolha .outro { display:inline-flex; align-items:center; gap:5px; font-size:14.5px; font-weight:600; color:var(--fg); }
+  .outros-escolha input { width:17px; height:17px; }
   /* Versão 28: os acessos. */
   .acessos-dias { display:flex; align-items:flex-end; gap:6px; padding:12px; overflow-x:auto; background:var(--surface); }
   .acessos-dia { flex:1 0 34px; display:flex; flex-direction:column; align-items:center; gap:4px; font-size:12.5px; color:var(--fg-muted); }
@@ -442,6 +446,7 @@
     <dl class="dados">
       <div><dt>Titular</dt><dd><select id="ft-resp" aria-label="Titular"></select></dd></div>
       <div><dt>Suplente <small style="font-weight:500">— assume nas férias do titular</small></dt><dd><select id="ft-sup" aria-label="Suplente"></select></dd></div>
+      <div><dt>Também responsáveis <small style="font-weight:500">— trabalham junto com o titular</small></dt><dd id="ft-outros" class="outros-escolha"></dd></div>
       <div><dt>Prazo</dt><dd><input type="date" id="ft-prazo" aria-label="Prazo"></dd></div>
       <div id="ft-rec-caixa"><dt>Repete</dt><dd><select id="ft-rec" aria-label="A tarefa se repete">
         <option value="">não — tarefa de uma vez só</option>
@@ -1393,6 +1398,12 @@ window.iniciarArea = () => {
   // Com quem a coisa está hoje: o titular; se ele está fora e há suplente, o suplente.
   const comQuem = x => x.responsavel && ausenciaDe(x.responsavel) && x.suplente ? x.suplente : x.responsavel;
   const substituindo = x => comQuem(x) !== x.responsavel;
+  // Versão 29 (18/11/2026): além do titular, a tarefa pode ter outros responsáveis
+  // ("outros"). Eles veem a tarefa como sua e também iniciam e concluem. O suplente
+  // continua sendo só do titular.
+  const outrosDe = t => (t.outros || []).filter(n => n && n !== t.responsavel);
+  const comigo = t => comQuem(t) === eu || outrosDe(t).includes(eu);
+  const doNome = (t, n) => t.responsavel === n || outrosDe(t).includes(n);
 
   // Tarefa de projeto guardado some das filas junto com o projeto.
   const noAr = t => !t.projeto || projeto(t.projeto).estado === "ativo";
@@ -1455,6 +1466,7 @@ window.iniciarArea = () => {
     const de = t.responsavel;
     if ((de || "") === (para || "")) return;
     t.responsavel = para || null;
+    if (t.outros) t.outros = t.outros.filter(n => n !== t.responsavel);
     t.iniciada = false;                    // quem recebe ainda não começou (versão 25)
     mexer(t, !de ? (para === eu ? "pegou" : `atribuiu a ${curto(para)}`)
                : !para ? `devolveu para os sem dono (estava com ${curto(de)})`
@@ -1470,7 +1482,7 @@ window.iniciarArea = () => {
   // Observação: empilha, com data. Vira um pequeno diário da tarefa.
   function anotar(t, texto) {
     t.notas.push({ quando: dISO(hoje), quem: eu, texto });
-    if (comQuem(t) === eu) t.iniciada = true;   // comentar é sinal de que começou
+    if (comigo(t)) t.iniciada = true;   // comentar é sinal de que começou
     mexer(t, `anotou: “${texto}”`);
   }
   const andamentoPendente = t => t.andamento && !t.andamento.resposta;
@@ -1487,7 +1499,7 @@ window.iniciarArea = () => {
              guardadas: ts.filter(t => t.estado === "suspensa"),
              paradas: p.estado === "ativo" ? ab.filter(t => estadoTarefa(t).parada).length : 0,
              semDono: ab.filter(t => !t.responsavel).length,
-             pessoas: [...new Set(ab.map(t => t.responsavel).filter(Boolean))] };
+             pessoas: [...new Set(ab.flatMap(t => [t.responsavel, ...outrosDe(t)]).filter(Boolean))] };
   }
   function contaProjeto(r) {
     return [
@@ -1693,7 +1705,7 @@ window.iniciarArea = () => {
     .reduce((s, m) => s + (eu === CHEFE ? semPetrvs(m).length : (m.marcas[eu].petrvs ? 0 : 1)), 0);
   function concluidoNoMes(nome, m) {
     const no = iso => !!iso && iso.slice(0, 7) === m.id;
-    const fora = TAREFAS.filter(t => t.estado === "concluida" && t.responsavel === nome && no(t.concluida_em))
+    const fora = TAREFAS.filter(t => t.estado === "concluida" && doNome(t, nome) && no(t.concluida_em))
       .map(t => ({ titulo:t.titulo, onde:ondeDe(t), frente:t.frente, quando:t.concluida_em, rotina:false }));
     // A rodada conta para o titular, mesmo feita pelo suplente (decisão de 13/11/2026).
     ROTINAS.forEach(r => r.ocorrencias.forEach(o => {
@@ -1734,12 +1746,12 @@ window.iniciarArea = () => {
     const linhas = (PLANOS[nome] || []).map((l, i) => ({ ...l, i, feitas:[], andando:[], rotinas:[] }));
     const sem = [];
     const por = (x, tipo, item) => { const i = linhaDe(nome, x); (i >= 0 ? linhas[i][tipo] : sem).push(item); };
-    TAREFAS.filter(t => t.estado === "concluida" && t.responsavel === nome && no(t.concluida_em))
+    TAREFAS.filter(t => t.estado === "concluida" && doNome(t, nome) && no(t.concluida_em))
       .sort((a, b) => a.concluida_em < b.concluida_em ? -1 : 1)
       .forEach(t => por(t, "feitas", { t, tipo:"feitas" }));
     // Em andamento: o que está aberto no nome da pessoa agora — o rascunho é feito
     // nos primeiros dias do mês seguinte, quando o retrato ainda é o do fim do mês.
-    TAREFAS.filter(t => (t.estado === "aberta" || t.estado === "suspensa") && t.responsavel === nome && noAr(t))
+    TAREFAS.filter(t => (t.estado === "aberta" || t.estado === "suspensa") && doNome(t, nome) && noAr(t))
       .forEach(t => por(t, "andando", { t, tipo:"andando" }));
     ROTINAS.forEach(r => {
       const n = r.ocorrencias.filter(o => (r.responsavel || o.quem) === nome && no(o.feita_em)).length;
@@ -2063,7 +2075,7 @@ window.iniciarArea = () => {
   // As minhas: as abertas e as paralisadas cuja data de volta chegou.
   // Versão 24: "minhas" é o que está comigo HOJE — as minhas como titular, e as de
   // quem está de férias quando eu sou o suplente.
-  const minhasTarefas = () => TAREFAS.filter(t => (aberta(t) || voltou(t)) && comQuem(t) === eu).sort(porUrgencia);
+  const minhasTarefas = () => TAREFAS.filter(t => (aberta(t) || voltou(t)) && comigo(t)).sort(porUrgencia);
   const rotinasDe = quem => ROTINAS.filter(r => (comQuem(r) || null) === quem)
     .sort((a, b) => estadoRotina(b).aberta - estadoRotina(a).aberta);    // as vencidas primeiro
   const minhasRotinas = () => rotinasDe(eu).filter(r => estadoRotina(r).aberta);   // as que pedem ação
@@ -2074,9 +2086,9 @@ window.iniciarArea = () => {
   const novos = () => PEDIDOS.filter(p => p.situacao === "novo");
   // Cartões de cima por perfil (versão 24): o servidor vê só o que é dele; pedidos
   // novos, todo mundo; sem dono, só o chefe.
-  const ehMeu = t => eu === CHEFE || comQuem(t) === eu || t.responsavel === eu;
+  const ehMeu = t => eu === CHEFE || comigo(t) || t.responsavel === eu;
   const minhasIdeias = () => IDEIAS.filter(i => eu === CHEFE || i.quem === eu);
-  const minhasConcluidas = () => TAREFAS.filter(t => t.estado === "concluida" && (eu === CHEFE || t.responsavel === eu));
+  const minhasConcluidas = () => TAREFAS.filter(t => t.estado === "concluida" && (eu === CHEFE || doNome(t, eu)));
   const minhasAnotacoes = () => ANOTACOES.filter(n => n.quem === eu);
   const pedidosDo = id => PEDIDOS.filter(x => PROJETO_DA_FERRAMENTA[x.ferramenta] === id);
   function parados() {
@@ -2092,7 +2104,7 @@ window.iniciarArea = () => {
     return de.sort((a, b) => b.dias - a.dias);
   }
   // O chefe vê os parados de todos; cada pessoa, só os dela.
-  const paradosMeus = () => eu === CHEFE ? parados() : parados().filter(x => x.quem === eu);
+  const paradosMeus = () => eu === CHEFE ? parados() : parados().filter(x => x.quem === eu || (x.tipo === "tarefa" && outrosDe(x.item).includes(eu)));
 
   // ======================================================================
   //  PEDAÇOS DE TELA
@@ -2101,7 +2113,7 @@ window.iniciarArea = () => {
   // Titular e suplente numa etiqueta só. Em substituição, diz de quem.
   const chipTitular = x => !x.responsavel ? chipPessoa(null)
     : substituindo(x) ? `<span class="chip">${curto(x.suplente)}, suplente de ${curto(x.responsavel)}</span>`
-    : `<span class="chip">${curto(x.responsavel)}${x.suplente ? ` · supl. ${curto(x.suplente)}` : ""}</span>`;
+    : `<span class="chip">${[x.responsavel, ...(x.outros ? outrosDe(x) : [])].map(curto).join(" + ")}${x.suplente ? ` · supl. ${curto(x.suplente)}` : ""}</span>`;
   // Para quem é suplente e está cobrindo: a marca aparece mesmo onde o nome não aparece.
   const chipCobrindo = x => substituindo(x) && comQuem(x) === eu
     ? `<span class="chip vazado c-liga">suplente de ${curto(x.responsavel)}</span>` : "";
@@ -2129,7 +2141,7 @@ window.iniciarArea = () => {
         botoes = `<button type="button" class="bt pri" data-acao="pegar" data-id="${t.id}">Pegar</button>`;
         if (eu === CHEFE && mostra.atribuir)
           botoes += `<select class="mini" data-atribuir="${t.id}" aria-label="Atribuir a alguém">${opcoesEquipe("", "atribuir a…")}</select>`;
-      } else if (comQuem(t) === eu) {
+      } else if (comigo(t)) {
         botoes = (t.iniciada ? "" : `<button type="button" class="bt pri" data-acao="iniciar" data-id="${t.id}">Iniciar</button>`) +
           `<button type="button" class="bt verde" data-acao="concluir" data-id="${t.id}">Concluir tarefa</button>`;
       }
@@ -2410,8 +2422,8 @@ window.iniciarArea = () => {
     $("#pe").innerHTML = `<b>CGGES</b> — Escritório de Processos da SPU.
         ${REAL ? `<span class="versao">Home EPP · área da equipe · entrou como ${curto(eu)}</span>
         <button type="button" class="link" data-acao="sair">Sair</button>`
-        : `<span class="versao">Home EPP · área logada · protótipo de 18/11/2026 (versão 28) · dados de exemplo</span>
-        <button type="button" class="link" data-acao="vista" data-tipo="caixa" data-id="validar">Para validar nesta versão (28) →</button>`}`;
+        : `<span class="versao">Home EPP · área logada · protótipo de 18/11/2026 (versão 29) · dados de exemplo</span>
+        <button type="button" class="link" data-acao="vista" data-tipo="caixa" data-id="validar">Para validar nesta versão (29) →</button>`}`;
   }
 
   // Na frente os projetos vêm recolhidos. Abre sozinho só o que tem alerta: tarefa
@@ -2619,10 +2631,10 @@ window.iniciarArea = () => {
       const mt = minhasTarefas(), pedem = mt.filter(andamentoPendente);
       const g = { nao:[], and:[], venc:[], para:[], conc:[] };
       mt.filter(t => !andamentoPendente(t)).forEach(t => g[secaoDaTarefa(t)].push(linhaTarefa(t, { onde:true, comentar:true })));
-      suspensas().filter(t => comQuem(t) === eu && !voltou(t)).forEach(t => g.para.push(linhaTarefa(t, { onde:true, comentar:true })));
+      suspensas().filter(t => comigo(t) && !voltou(t)).forEach(t => g.para.push(linhaTarefa(t, { onde:true, comentar:true })));
       rotinasDe(eu).forEach(r => { const st = estadoRotina(r);
         g[st.parada ? "venc" : st.chave === "fechado" ? "conc" : "and"].push(linhaRotina(r, { onde:true })); });
-      TAREFAS.filter(t => t.estado === "concluida" && t.responsavel === eu)
+      TAREFAS.filter(t => t.estado === "concluida" && doNome(t, eu))
         .sort((a, b) => (a.concluida_em || "") < (b.concluida_em || "") ? 1 : -1)
         .forEach(t => g.conc.push(linhaTarefa(t, { onde:true })));
       const fora = ausenciaDe(eu);
@@ -2769,7 +2781,7 @@ window.iniciarArea = () => {
             fs.map(t => linhaTarefa(t, { onde:true, pessoa:chefe })).join(""), "Nada concluído ainda.")}`;
     }
     return `
-      ${banda("var(--off)", "Protótipo", "Para validar", "Não faz parte da tela final. No alto, o que mudou na versão 28; embaixo, o que veio antes. Em itálico, o que eu decidi por conta própria para você confirmar.")}
+      ${banda("var(--off)", "Protótipo", "Para validar", "Não faz parte da tela final. No alto, o que mudou na versão 29; embaixo, o que veio antes. Em itálico, o que eu decidi por conta própria para você confirmar.")}
       <div class="bloco validar"><ol><li>Notas de revisão retiradas da versão publicada.</li></ol></div>`;
   }
 
@@ -2832,7 +2844,7 @@ window.iniciarArea = () => {
   }
   function desenharPainel() {
     const chefe = eu === CHEFE;
-    const meu = t => chefe || comQuem(t) === eu;
+    const meu = t => chefe || comigo(t);
     const abertasT = TAREFAS.filter(aberta), ab = abertasT.filter(meu).sort(porUrgencia);
     const par = paradosMeus(), sus = suspensas().filter(meu), gs = chefe ? guardados() : [];
     const sd = abertasT.filter(t => !t.responsavel);
@@ -2880,7 +2892,7 @@ window.iniciarArea = () => {
         + secao("semprazo", "var(--off)", "Sem prazo", ab.filter(t => !t.prazo).map(lin));
     } else if (painelVista === "abertas") {
       meio = chefe
-        ? EQUIPE.map(p => { const ts = ab.filter(t => t.responsavel === p);
+        ? EQUIPE.map(p => { const ts = ab.filter(t => doNome(t, p));
             return ts.length ? bloco("var(--accent)", p, ts.length, ts.map(t => linhaTarefa(t, { onde:true })).join("")) : ""; }).join("")
         : bloco("var(--accent)", "Abertas com você", ab.length, ab.map(t => linhaTarefa(t, { onde:true })).join(""),
                 "<b>Nada aberto no seu nome.</b>");
@@ -2941,9 +2953,9 @@ window.iniciarArea = () => {
           <thead><tr><th>Pessoa</th><th class="n">Abertas</th><th class="n">Paradas</th>
             <th class="n">Paralis.</th><th class="n">Recorr.</th></tr></thead>
           <tbody>${[...EQUIPE, null].map(p => {
-            const ts = abertasT.filter(t => (comQuem(t) || null) === p);
+            const ts = abertasT.filter(t => (comQuem(t) || null) === p || (p && outrosDe(t).includes(p)));
             const nPar = todosPar.filter(x => (x.quem || null) === p).length;
-            const nSus = todasSus.filter(t => (comQuem(t) || null) === p).length;
+            const nSus = todasSus.filter(t => (comQuem(t) || null) === p || (p && outrosDe(t).includes(p))).length;
             const nRot = ROTINAS.filter(r => (comQuem(r) || null) === p).length;
             if (!p && !ts.length && !nSus && !nRot) return "";
             const fora = p && ausenciaDe(p);
@@ -3013,6 +3025,8 @@ window.iniciarArea = () => {
     $("#ft-sup").innerHTML = opcoesEquipe(t.suplente, "sem suplente");
     $("#ft-sup").value = t.suplente || "";
     $("#ft-sup").disabled = eu !== CHEFE;
+    $("#ft-outros").innerHTML = EQUIPE.filter(n => n !== t.responsavel).map(n =>
+      `<label class="outro"><input type="checkbox" data-outro="${n}"${outrosDe(t).includes(n) ? " checked" : ""}${eu === CHEFE ? "" : " disabled"}> ${curto(n)}</label>`).join("");
     $("#ft-rec").value = "";
     $("#ft-rec-caixa").hidden = t.estado === "concluida";
     $("#ft-prazo").value = t.prazo || "";
@@ -3576,6 +3590,18 @@ window.iniciarArea = () => {
 
   // Dentro da ficha: mudou, gravou.
   $("#ft-resp").addEventListener("change", ev => { passar(tAtual, ev.target.value || null); abrirTarefaDeNovo(); });
+  // Versão 29: os outros responsáveis. Só o chefe põe e tira; quem entra recebe aviso.
+  $("#ft-outros").addEventListener("change", ev => {
+    const n = ev.target.dataset && ev.target.dataset.outro;
+    if (!n || eu !== CHEFE) return;
+    const lista = outrosDe(tAtual);
+    tAtual.outros = ev.target.checked ? [...lista.filter(x => x !== n), n] : lista.filter(x => x !== n);
+    mexer(tAtual, ev.target.checked ? `pôs ${curto(n)} também como responsável` : `tirou ${curto(n)} dos responsáveis`);
+    if (ev.target.checked && n !== eu)
+      AVISOS.unshift({ id:"av" + (++seq), texto:`${curto(eu)} pôs você também como responsável: ${tAtual.titulo}`,
+                       quem:eu, quando:dISO(hoje), ate:null, para:n, tarefa:tAtual.id });
+    abrirTarefaDeNovo();
+  });
   $("#ft-sup").addEventListener("change", ev => {
     if (eu !== CHEFE) return;
     tAtual.suplente = ev.target.value || null;

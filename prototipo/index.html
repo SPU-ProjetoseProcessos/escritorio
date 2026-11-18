@@ -223,6 +223,10 @@
   .nova-prazo { display:flex; gap:6px; align-items:center; font-size:13px; font-weight:600; color:var(--fg-muted); }
   .nova-linha .nova-prazo input { flex:0 0 auto; border-style:solid; }
   div.linha-corpo { cursor:default; }
+  /* Versão 31: título editável e excluir. */
+  .titulo-campo { width:100%; font:inherit; font-size:inherit; font-weight:inherit; color:var(--fg); padding:6px 9px;
+                  border:1.5px solid var(--border-forte); border-radius:8px; background:var(--surface); }
+  .bt.vermelho { background:var(--alerta); border-color:var(--alerta); color:#fff; }
   /* Versão 30: as linhas do plano de trabalho. */
   .pl-campos { display:grid; grid-template-columns:minmax(0,1.2fr) minmax(0,2fr) 90px; gap:10px; }
   @media (max-width: 760px) { .pl-campos { grid-template-columns:1fr; } }
@@ -506,6 +510,7 @@
     <div class="grupo" id="ft-g-feita" hidden>
       <div class="grupo-linha"><button type="button" class="bt pri" data-acao="f-reabrir">Reabrir — não estava concluída</button></div>
     </div>
+    <div class="grupo-linha" id="ft-excluir"></div>
     <div class="historico" id="ft-hist"></div>
   </div>
 </dialog>
@@ -1047,7 +1052,8 @@
   let trocandoPlano = false;            // o campo para subir o plano de entregas está aberto
   let verArquivados = false, verAvisos = false, novoAviso = false;
   let editandoFrente = null, verFrentesArq = false;   // versão 27: a tela das frentes
-  let planoEditando = null;                           // versão 30: { quem, i } da linha do plano aberta
+  let planoEditando = null;
+  let excluindo = null;                               // versão 31: a tarefa ou recorrente cuja exclusão está sendo confirmada                           // versão 30: { quem, i } da linha do plano aberta
   const avisoAberto = {};                // versão 24: os avisos longos que a pessoa expandiu
   let paralisando = false, pjParalisando = null;   // versão 25: os campos de paralisar abertos
   if (!REAL) PEDIDOS.find(p => p.id === "a2").responsavel = "Vinícius";   // o chefe já atribuiu este
@@ -2186,7 +2192,7 @@
     $("#pe").innerHTML = `<b>CGGES</b> — Escritório de Processos da SPU.
         ${REAL ? `<span class="versao">Home EPP · área da equipe · entrou como ${curto(eu)}</span>
         <button type="button" class="link" data-acao="sair">Sair</button>`
-        : `<span class="versao">Home EPP · área logada · protótipo de 18/11/2026 (versão 30) · dados de exemplo</span>`}`;
+        : `<span class="versao">Home EPP · área logada · protótipo de 18/11/2026 (versão 31) · dados de exemplo</span>`}`;
   }
 
   // Na frente os projetos vêm recolhidos. Abre sozinho só o que tem alerta: tarefa
@@ -2544,7 +2550,7 @@
             fs.map(t => linhaTarefa(t, { onde:true, pessoa:chefe })).join(""), "Nada concluído ainda.")}`;
     }
     return `
-      ${banda("var(--off)", "Protótipo", "Para validar", "Não faz parte da tela final. No alto, o que mudou na versão 30; embaixo, o que veio antes. Em itálico, o que eu decidi por conta própria para você confirmar.")}
+      ${banda("var(--off)", "Protótipo", "Para validar", "Não faz parte da tela final. No alto, o que mudou na versão 31; embaixo, o que veio antes. Em itálico, o que eu decidi por conta própria para você confirmar.")}
       <div class="bloco validar"><ol><li>Notas de revisão retiradas da versão publicada.</li></ol></div>`;
   }
 
@@ -2782,7 +2788,14 @@
     $("#ft-banda").style = "--fc:" + f.cor;
     $("#ft-frente").textContent = t.projeto ? "Projeto · " + f.nome : "Frente de trabalho";
     $("#ft-projeto").textContent = t.projeto ? projeto(t.projeto).nome : f.nome;
-    $("#ft-titulo").textContent = t.titulo;
+    if (podeMexer(t)) $("#ft-titulo").innerHTML = `<input type="text" class="titulo-campo" data-titulo-t="${t.id}" maxlength="300"
+        value="${esc(t.titulo).replace(/"/g, "&quot;")}" aria-label="Título da tarefa — escreva e saia do campo para gravar">`;
+    else $("#ft-titulo").textContent = t.titulo;
+    $("#ft-excluir").innerHTML = !podeMexer(t) ? ""
+      : excluindo === t.id ? `<span class="pt-trab"><b>Excluir de vez?</b> Some da área para todos e não dá para desfazer.</span>
+          <button type="button" class="bt vermelho" data-acao="t-excluir-sim">Excluir</button>
+          <button type="button" class="bt" data-acao="t-excluir-nao">Cancelar</button>`
+      : `<button type="button" class="link fino" data-acao="t-excluir">Excluir tarefa</button>`;
     $("#ft-resp").innerHTML = opcoesEquipe(t.responsavel);
     $("#ft-resp").value = t.responsavel || "";
     // Suplente: quem atribui é o chefe (versão 24).
@@ -2851,17 +2864,27 @@
         <span class="sobre">${r.projeto ? "Projeto · " + f.nome : "Frente de trabalho"}</span>
         <h2>${r.projeto ? projeto(r.projeto).nome : f.nome}</h2>
       </div>
-      <p class="ficha-texto">${r.titulo}</p>
+      ${podeMexer(r) ? `<p class="ficha-texto"><input type="text" class="titulo-campo" data-titulo-r="${r.id}" maxlength="300"
+          value="${esc(r.titulo).replace(/"/g, "&quot;")}" aria-label="Título da tarefa recorrente — escreva e saia do campo para gravar"></p>`
+        : `<p class="ficha-texto">${esc(r.titulo)}</p>`}
       <dl class="dados">
-        <div><dt>Titular</dt><dd>${r.responsavel || "sem titular"}${substituindo(r) ? ` <small>(${ROTULO_AUSENCIA[ausenciaDe(r.responsavel).tipo]})</small>` : ""}</dd></div>
+        <div><dt>Titular</dt><dd>${eu === CHEFE ? `<select class="mini" data-resp-rotina="${r.id}" aria-label="Titular">${opcoesEquipe(r.responsavel, "sem titular")}</select>` : r.responsavel || "sem titular"}${substituindo(r) ? ` <small>(${ROTULO_AUSENCIA[ausenciaDe(r.responsavel).tipo]})</small>` : ""}</dd></div>
         <div><dt>Suplente</dt><dd>${eu === CHEFE ? `<select class="mini" data-sup-rotina="${r.id}" aria-label="Suplente">${opcoesEquipe(r.suplente, "sem suplente")}</select>` : r.suplente || "sem suplente"}${substituindo(r) ? " <small>— está cobrindo</small>" : ""}</dd></div>
-        <div><dt>Repete</dt><dd>${descricao(r)}</dd></div>
+        <div><dt>Repete</dt><dd>${podeMexer(r) ? `<select class="mini" data-per-rotina="${r.id}" aria-label="Com que frequência repete">
+            ${PERIODICIDADES.map(([v, t]) => `<option value="${v}"${v === r.periodicidade ? " selected" : ""}>${t}</option>`).join("")}</select>
+            <small>${descricao(r)}</small>` : descricao(r)}</dd></div>
         <div><dt>${st.aberta ? "Rodada em aberto" : "Próxima rodada"}</dt><dd>${st.aberta ? dBR(st.pendente) : st.proxima ? dBR(st.proxima) : "—"}</dd></div>
         <div><dt>O que se espera</dt><dd>${r.natureza === "olhar" ? "Dar uma olhada e ver se há trabalho a fazer" : "Fazer: a rodada já é o trabalho"}</dd></div>
       </dl>
       ${botoes ? `<div class="grupo"><span>${st.chave === "hoje" ? "A rodada vence hoje" : "A rodada de " + dBR(st.pendente) + " não foi concluída"}</span><div class="grupo-linha">${botoes}</div></div>`
                : st.aberta ? `<p class="mt-pe">A rodada está em aberto com ${curto(comQuem(r))}.</p>`
                : `<p class="mt-pe">${st.chave === "fechado" ? "Concluída nesta rodada." : "Em dia."} Volta sozinha em ${st.proxima ? dBR(st.proxima) : "—"}.</p>`}
+      ${!podeMexer(r) ? "" : excluindo === r.id ? `<div class="grupo-linha"><span class="pt-trab"><b>Excluir de vez?</b> A tarefa recorrente e as rodadas registradas somem para todos. Não dá para desfazer.</span>
+          <button type="button" class="bt vermelho" data-acao="r-excluir-sim" data-id="${r.id}">Excluir</button>
+          <button type="button" class="bt" data-acao="r-excluir-nao" data-id="${r.id}">Cancelar</button></div>`
+        : `<div class="grupo-linha">
+          <button type="button" class="bt" data-acao="r-parar" data-id="${r.id}">Parar de repetir — vira tarefa de uma vez</button>
+          <button type="button" class="link fino" data-acao="r-excluir" data-id="${r.id}">Excluir tarefa recorrente</button></div>`}
       <div class="historico"><b>Rodadas concluídas</b>${feitas.length
         ? feitas.map(o => `<span><time>${dBR(dData(o.feita_em))}</time> — ${curto(o.quem)} ${DESFECHO[o.desfecho] || "fez"} (rodada de ${dBR(dData(o.vencimento))})</span>`).join("")
         : "<span>Nenhuma rodada registrada ainda.</span>"}</div>`;
@@ -2938,6 +2961,10 @@
   //  AÇÕES — um ouvinte só, pela marca data-acao
   // ======================================================================
   const tarefa = id => TAREFAS.find(t => t.id === id);
+  // Versão 31: editar o título, mudar a repetição e excluir — o chefe, o titular ou quem criou.
+  const criadoPor = x => x.criado_por || (x.hist && x.hist[0] && x.hist[0].quem) || null;
+  const podeMexer = x => eu === CHEFE || x.responsavel === eu || criadoPor(x) === eu;
+  const PERIODICIDADES = [["semanal","toda semana"],["quinzenal","a cada duas semanas"],["mensal","todo mês"],["bimestral","a cada dois meses"],["trimestral","a cada três meses"],["semestral","a cada seis meses"],["anual","todo ano"]];
   const rotina = id => ROTINAS.find(r => r.id === id);
 
   function responder(id) {
@@ -3164,6 +3191,34 @@
     "comentar-ok"({ id })           { return comentar(id); },
     "comentar-fechar"()             { comentando = null; },
     "pt-mes"({ corrente })          { ptCorrente = !!corrente; },
+    // ---- excluir e parar de repetir (versão 31) ----
+    "t-excluir"()      { excluindo = tAtual.id; abrirTarefa(tAtual.id); return false; },
+    "t-excluir-nao"()  { excluindo = null; abrirTarefa(tAtual.id); return false; },
+    "t-excluir-sim"() {
+      const t = tAtual; if (!t || !podeMexer(t)) return false;
+      TAREFAS.splice(TAREFAS.indexOf(t), 1);
+      for (let k = AVISOS.length - 1; k >= 0; k--) if (AVISOS[k].tarefa === t.id) AVISOS.splice(k, 1);
+      excluindo = null; tAtual = null; $("#ficha-t").close();
+      avisoMsg = `Tarefa excluída: ${esc(t.titulo)}.`;
+    },
+    "r-excluir"({ id })     { excluindo = id; abrirRotina(id); return false; },
+    "r-excluir-nao"({ id }) { excluindo = null; abrirRotina(id); return false; },
+    "r-excluir-sim"({ id }) {
+      const x = rotina(id); if (!x || !podeMexer(x)) return false;
+      ROTINAS.splice(ROTINAS.indexOf(x), 1);
+      excluindo = null; $("#ficha-r").close();
+      avisoMsg = `Tarefa recorrente excluída: ${esc(x.titulo)}.`;
+    },
+    "r-parar"({ id }) {
+      const x = rotina(id); if (!x || !podeMexer(x)) return false;
+      const st = estadoRotina(x), dia = st.aberta ? st.pendente : st.proxima;
+      const t = novaTarefa(x.frente, x.titulo, { projeto:x.projeto, responsavel:x.responsavel || null, suplente:x.suplente || null,
+                                                 prazo: dia ? dISO(dia) : null });
+      t.hist.push({ quando:dISO(hoje), quem:eu, o:"deixou de ser recorrente" });
+      ROTINAS.splice(ROTINAS.indexOf(x), 1);
+      $("#ficha-r").close();
+      avisoMsg = `<b>${esc(x.titulo)}</b> deixou de repetir: virou tarefa de uma vez${t.prazo ? `, com prazo em ${dBR(dData(t.prazo))}` : ""}.`;
+    },
     // ---- linhas do plano de trabalho (versão 30) ----
     "pl-incluir"({ quem }) {
       if (quem !== eu && eu !== CHEFE) return false;
@@ -3356,6 +3411,26 @@
       const n = ANOTACOES.find(x => x.id === d.vincular);
       n.projeto = alvo.value || null;
       avisoMsg = n.projeto ? `Anotação vinculada a <b>${projeto(n.projeto).nome}</b>. Só você vê, também lá no projeto.` : "Anotação solta de novo.";
+    } else if (d.tituloT) {
+      const t = tarefa(d.tituloT), novo = alvo.value.trim();
+      if (!t || !podeMexer(t) || !novo || novo === t.titulo) return;
+      t.titulo = novo; mexer(t, "mudou o título");
+    } else if (d.tituloR) {
+      const x = rotina(d.tituloR), novo = alvo.value.trim();
+      if (!x || !podeMexer(x) || !novo || novo === x.titulo) return;
+      x.titulo = novo; desenhar(); abrirRotina(x.id); return;
+    } else if (d.respRotina) {
+      if (eu !== CHEFE) return;
+      const x = rotina(d.respRotina); x.responsavel = alvo.value || null;
+      if (x.suplente === x.responsavel) x.suplente = null;
+      desenhar(); abrirRotina(x.id); return;
+    } else if (d.perRotina) {
+      const x = rotina(d.perRotina); if (!x || !podeMexer(x)) return;
+      x.periodicidade = alvo.value;
+      if (!x.dia_semana) x.dia_semana = hoje.getDay() + 1;
+      if (!x.dia_mes) x.dia_mes = hoje.getDate();
+      if (!["semanal", "quinzenal", "anual"].includes(x.periodicidade) && !x.modo) x.modo = "dia_mes";
+      desenhar(); abrirRotina(x.id); return;
     } else if (d.supRotina) {
       if (eu !== CHEFE) return;
       const r = rotina(d.supRotina); r.suplente = alvo.value || null;
@@ -3402,7 +3477,8 @@
     const t = tAtual;
     const r = { id:"r" + (++seq), frente:t.frente, projeto:t.projeto, natureza:"fazer", titulo:t.titulo,
                 periodicidade:per, modo:"dia_mes", dia_mes:hoje.getDate(), dia_semana:hoje.getDay() + 1,
-                inicio_em:dISO(maisDias(hoje, 1)), responsavel:t.responsavel || eu, suplente:t.suplente, ocorrencias:[] };
+                inicio_em:dISO(maisDias(hoje, 1)), responsavel:t.responsavel || eu, suplente:t.suplente, ocorrencias:[],
+                criado_por: criadoPor(t) || eu };
     ROTINAS.push(r);
     TAREFAS.splice(TAREFAS.indexOf(t), 1);
     $("#ficha-t").close();

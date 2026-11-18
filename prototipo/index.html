@@ -19,6 +19,7 @@
     /* Uma cor por frente. Nenhuma é o vermelho do alerta nem o laranja do parado. */
     --f1: #1d4ed8; --f2: #0e7490; --f3: #15803d; --f4: #6b7a0f; --f5: #a16207;
     --f6: #a21caf; --f7: #6d28d9; --f8: #be185d; --f9: #475569;
+    --f10: #9a3412; --f11: #0369a1; --f12: #3f6212;
     --sombra: 0 1px 2px rgba(28,28,28,.06), 0 8px 24px -16px rgba(12,50,111,.4);
     --fonte-ui: "Raleway", system-ui, -apple-system, "Segoe UI", sans-serif;
     --fonte-codigo: "IBM Plex Mono", ui-monospace, "SF Mono", Menlo, monospace;
@@ -34,6 +35,7 @@
       --tinta-solida: #0d1430;
       --f1: #7aa2ff; --f2: #4fd1e0; --f3: #5fd38a; --f4: #c3d35a; --f5: #e6b44c;
       --f6: #e58cf0; --f7: #b49cff; --f8: #f27fb2; --f9: #a8b3c7;
+    --f10: #fb9a6b; --f11: #6cc4f5; --f12: #a3d977;
       --sombra: 0 1px 2px rgba(0,0,0,.45), 0 8px 24px -16px rgba(0,0,0,.85);
       color-scheme: dark;
     }
@@ -48,6 +50,7 @@
     --tinta-solida: #0d1430;
     --f1: #7aa2ff; --f2: #4fd1e0; --f3: #5fd38a; --f4: #c3d35a; --f5: #e6b44c;
     --f6: #e58cf0; --f7: #b49cff; --f8: #f27fb2; --f9: #a8b3c7;
+    --f10: #fb9a6b; --f11: #6cc4f5; --f12: #a3d977;
     --sombra: 0 1px 2px rgba(0,0,0,.45), 0 8px 24px -16px rgba(0,0,0,.85);
     color-scheme: dark;
   }
@@ -152,7 +155,7 @@
   /* ---------- Linhas de trabalho ---------- */
   .linha { --fc: transparent; display:flex; gap:6px 12px; align-items:center; flex-wrap:wrap; padding:10px 12px 10px 10px; background:var(--surface); border-left:5px solid var(--fc); }
   .linha-corpo { flex:1 1 240px; min-width:0; display:flex; flex-direction:column; gap:4px; cursor:pointer; border:0; background:none; text-align:left; color:inherit; padding:0; }
-  .linha-corpo:hover .mt-nome { color:var(--accent); text-decoration:underline; }
+  button.linha-corpo:hover .mt-nome { color:var(--accent); text-decoration:underline; }
   .linha-corpo:focus-visible { outline:2px solid var(--accent); outline-offset:3px; border-radius:4px; }
   .linha-acoes { display:flex; gap:6px; flex-wrap:wrap; align-items:center; }
   .item-topo { display:flex; gap:6px; align-items:center; flex-wrap:wrap; }
@@ -214,6 +217,19 @@
   .nova-linha { display:flex; gap:8px; padding:8px 12px; background:var(--surface); }
   .nova-linha input { flex:1; min-width:0; font-size:14px; padding:6px 10px; border:1.5px dashed var(--border-forte); border-radius:7px; background:var(--surface); color:var(--fg); }
   .nova-linha.solta { padding:0; }
+  /* Versão 27: o prazo ao lado do título, na hora de abrir a tarefa. */
+  .nova-linha { flex-wrap:wrap; }
+  .nova-linha input[type="text"] { flex:1 1 220px; }
+  .nova-prazo { display:flex; gap:6px; align-items:center; font-size:13px; font-weight:600; color:var(--fg-muted); }
+  .nova-linha .nova-prazo input { flex:0 0 auto; border-style:solid; }
+  div.linha-corpo { cursor:default; }
+  /* Versão 28: os acessos. */
+  .acessos-dias { display:flex; align-items:flex-end; gap:6px; padding:12px; overflow-x:auto; background:var(--surface); }
+  .acessos-dia { flex:1 0 34px; display:flex; flex-direction:column; align-items:center; gap:4px; font-size:12.5px; color:var(--fg-muted); }
+  .acessos-dia i { display:block; width:100%; max-width:28px; background:var(--azul); border-radius:3px 3px 0 0; }
+  .acessos-n { font-weight:700; color:var(--fg); }
+  .acessos-cont { font-weight:700; font-size:15px; padding-right:4px; }
+  .fr-edita { flex:1 1 100%; display:grid; gap:10px; }
 
   /* ---------- Painel ---------- */
   .casco2 { flex:1; min-height:0; display:grid; grid-template-columns:minmax(0,1fr) 440px; gap:12px; padding-block:10px 12px; }
@@ -269,11 +285,39 @@
   .s-fechado { --pc: var(--ok); }
   .lembrete-texto { white-space:pre-wrap; font-size:14.5px; line-height:1.5; padding:12px 14px; border:1.5px solid var(--border-forte); border-radius:9px; background:var(--surface-2); user-select:all; -webkit-user-select:all; }
 
+  /* ---------- Rascunho do Petrvs (versão 22) ---------- */
+  .pt-corpo { display:flex; flex-direction:column; gap:10px; padding:12px; }
+  .pj-notas { border:0; border-radius:0; }
+  .pediu.comentar { background:color-mix(in srgb, var(--accent) 7%, var(--surface)); border-color:color-mix(in srgb, var(--accent) 35%, var(--surface)); }
+  .plano-campo { width:100%; min-height:130px; font:inherit; font-size:14px; line-height:1.45; padding:9px 11px;
+                 border:1.5px solid var(--border-forte); border-radius:8px; background:var(--surface); color:var(--fg); }
+  .pt-trab { font-size:14px; color:var(--fg-muted); }
+  .pt-trab b { color:var(--fg); }
+  .pt-texto { user-select:text; -webkit-user-select:text; }
+  .pt-falta { display:flex; flex-wrap:wrap; gap:4px 10px; align-items:center; font-size:14px; padding:8px 11px;
+              border-left:4px solid var(--meio); background:color-mix(in srgb, var(--meio) 9%, var(--surface)); border-radius:6px; }
+  .pt-falta b { color:var(--fg); }
+  .pt-sem select { font:inherit; font-size:14px; padding:4px 7px; border:1.5px solid var(--border-forte); border-radius:7px; background:var(--surface); color:var(--fg); }
+  .pt-escolha { display:flex; gap:8px; flex-wrap:wrap; align-items:center; font-size:14px; font-weight:700; color:var(--fg-muted); }
+  .bt[aria-pressed="true"] { background:var(--accent); border-color:var(--accent); color:var(--accent-fg); }
+  .entrega-passo { border:1.5px solid color-mix(in srgb, var(--ok) 40%, var(--border)); border-radius:9px; padding:12px;
+                   background:color-mix(in srgb, var(--ok) 6%, var(--surface)); }
+
   /* ---------- Quadro de avisos: à esquerda, embaixo das frentes ---------- */
   .col-esq > * { flex:none; }
   .aviso-item { display:flex; gap:4px 6px; align-items:flex-start; padding:8px 8px 8px 12px; background:var(--surface); }
   .aviso-item .txt { flex:1; min-width:0; display:flex; flex-direction:column; gap:2px; font-size:14.5px; font-weight:700; overflow-wrap:anywhere; }
   .aviso-item .txt small { font-size:12.5px; font-weight:500; color:var(--fg-muted); }
+  /* Versão 24: cada aviso mostra até três linhas; "mais" abre o resto. */
+  .aviso-item .corte { display:-webkit-box; -webkit-box-orient:vertical; -webkit-line-clamp:3; line-clamp:3; overflow:hidden; }
+  .aviso-item .mais { align-self:flex-start; font-size:12.5px; }
+  /* Seções que abrem e fecham (versão 25): Minhas tarefas e Frentes de trabalho */
+  .s-naoiniciada { --pc: var(--fg-muted); }
+  .bloco-cab .seta { flex:none; width:16px; font-size:17px; line-height:1; font-weight:800; color:var(--bc); }
+  .secao + .secao { margin-top:0; }
+  /* Férias e recesso (versão 24) */
+  .ferias-nova { display:flex; flex-wrap:wrap; gap:6px 10px; align-items:center; padding:8px 10px 10px; background:var(--surface-2); font-size:13.5px; font-weight:600; color:var(--fg-muted); }
+  .ferias-nova select, .ferias-nova input { font-size:14px; padding:4px 7px; border:1.5px solid var(--border-forte); border-radius:7px; background:var(--surface); color:var(--fg); }
   .aviso-novo { display:flex; flex-direction:column; gap:6px; padding:8px 10px 10px; background:var(--surface-2); }
   .aviso-novo input { font-size:14px; padding:6px 9px; border:1.5px dashed var(--border-forte); border-radius:7px; background:var(--surface); color:var(--fg); }
   .aviso-novo input[type="text"] { width:100%; }
@@ -357,14 +401,13 @@
     </span>
     <div class="modulo">
       <strong id="mod-titulo">Área de trabalho</strong>
-      <span id="mod-sub">O trabalho da equipe, por frente</span>
     </div>
     <div class="topo-dir">
       <label class="quem" title="Só existe no protótipo: no sistema, é quem fez login.">vendo como
         <select id="eu"></select>
       </label>
       <button type="button" class="ir" id="ir" data-acao="ir"></button>
-      <a class="mem-topo" href="../" target="_blank" rel="noopener" title="A página do Escritório de Processos, com o link de todas as ferramentas">Ferramentas do Escritório <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a>
+      <a class="mem-topo" href="../" target="_blank" rel="noopener" title="A página do Escritório de Processos: todas as ferramentas, e como falar com a equipe">Página do Escritório <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 17 17 7M9 7h8v8"/></svg></a>
     </div>
   </div>
 </header>
@@ -373,8 +416,8 @@
 
 <main class="casco interno" id="tela-trabalho">
   <div class="col col-esq">
-    <nav id="menu" aria-label="Frentes de trabalho"></nav>
     <section id="avisos" aria-label="Quadro de avisos"></section>
+    <nav id="menu" aria-label="Frentes de trabalho"></nav>
     <p class="assina" id="pe"></p>
   </div>
   <section class="col col-meio" id="meio" aria-live="polite"></section>
@@ -398,13 +441,23 @@
     </div>
     <p class="ficha-texto" id="ft-titulo"></p>
     <dl class="dados">
-      <div><dt>Com quem está</dt><dd><select id="ft-resp" aria-label="Com quem está"></select></dd></div>
+      <div><dt>Titular</dt><dd><select id="ft-resp" aria-label="Titular"></select></dd></div>
+      <div><dt>Suplente <small style="font-weight:500">— assume nas férias do titular</small></dt><dd><select id="ft-sup" aria-label="Suplente"></select></dd></div>
       <div><dt>Prazo</dt><dd><input type="date" id="ft-prazo" aria-label="Prazo"></dd></div>
+      <div id="ft-rec-caixa"><dt>Repete</dt><dd><select id="ft-rec" aria-label="A tarefa se repete">
+        <option value="">não — tarefa de uma vez só</option>
+        <option value="semanal">toda semana, neste dia da semana</option>
+        <option value="quinzenal">a cada duas semanas</option>
+        <option value="mensal">todo mês, neste dia</option>
+        <option value="trimestral">a cada três meses</option>
+        <option value="semestral">a cada seis meses</option>
+        <option value="anual">todo ano</option>
+      </select></dd></div>
       <div id="ft-origem-caixa"><dt>Nasceu de</dt><dd id="ft-origem"></dd></div>
       <div id="ft-devido-caixa"><dt>Devemos a</dt><dd id="ft-devido"></dd></div>
     </dl>
     <div class="grupo">
-      <span>Observações — cada uma fica com a data; não é obrigatório</span>
+      <span>Comentários</span>
       <div class="notas" id="ft-notas"></div>
     </div>
     <p class="aviso" id="ft-andamento-txt" hidden></p>
@@ -412,19 +465,34 @@
       <div class="grupo-linha">
         <button type="button" class="bt pri" data-acao="f-concluir">Concluir tarefa</button>
         <button type="button" class="bt" data-acao="f-andamento" id="ft-andamento">Pedir andamento</button>
+        <button type="button" class="bt" data-acao="f-paralisar" id="ft-paralisar-bt">Paralisar tarefa</button>
       </div>
-      <span>Paralisar, porque</span>
-      <label class="volta">voltar a olhar em <input type="date" id="ft-volta" aria-label="Voltar a olhar em">
-        <small>opcional — escolha antes de dizer o motivo</small></label>
-      <div class="grupo-linha">
-        <button type="button" class="bt" data-acao="f-suspender" data-motivo="aguardando">está aguardando o retorno de outra área</button>
-        <button type="button" class="bt" data-acao="f-suspender" data-motivo="prioridades">entraram outras prioridades</button>
+      <div class="grupo" id="ft-paralisar" hidden>
+        <label class="volta">voltar a olhar em <input type="date" id="ft-volta" aria-label="Voltar a olhar em">
+          <small>opcional</small></label>
+        <span>O motivo — escolher paralisa a tarefa</span>
+        <div class="grupo-linha">
+          <button type="button" class="bt pri" data-acao="f-suspender" data-motivo="aguardando">está aguardando o retorno de outra área</button>
+          <button type="button" class="bt pri" data-acao="f-suspender" data-motivo="prioridades">entraram outras prioridades</button>
+          <button type="button" class="bt" data-acao="f-paralisar">Voltar</button>
+        </div>
       </div>
     </div>
     <div class="grupo" id="ft-g-suspensa" hidden>
       <span id="ft-volta-txt"></span>
       <div class="grupo-linha"><button type="button" class="bt pri" data-acao="f-retomar">Retomar</button>
         <label class="volta">voltar a olhar em <input type="date" id="ft-volta2" aria-label="Voltar a olhar em"></label></div>
+    </div>
+    <div class="grupo entrega-passo" id="ft-g-entrega" hidden>
+      <span id="ft-entrega-tit">O que foi entregue — vai para o rascunho do Petrvs; não é obrigatório</span>
+      <input type="text" class="campo-linha" id="ft-produto" data-nova="entrega" maxlength="200"
+             placeholder="fluxo validado com a área e publicado no SPUProcessos" aria-label="O que foi entregue">
+      <input type="text" class="campo-linha" id="ft-prova" data-nova="entrega" maxlength="120"
+             placeholder="a prova, se houver: link, nº do SEI, data da reunião" aria-label="A prova do que foi entregue">
+      <div class="grupo-linha">
+        <button type="button" class="bt pri" data-acao="f-entrega-ok" id="ft-entrega-ok">Concluir tarefa</button>
+        <button type="button" class="bt" data-acao="f-entrega-volta" id="ft-entrega-volta">Voltar</button>
+      </div>
     </div>
     <div class="grupo" id="ft-g-feita" hidden>
       <div class="grupo-linha"><button type="button" class="bt pri" data-acao="f-reabrir">Reabrir — não estava concluída</button></div>
@@ -483,6 +551,7 @@
       <div><dt>De</dt><dd id="fp-de"></dd></div>
       <div><dt>Quando</dt><dd id="fp-quando"></dd></div>
       <div><dt>O que foi feito</dt><dd id="fp-desfecho"></dd></div>
+      <div><dt>Quem olha</dt><dd id="fp-quem"></dd></div>
     </dl>
     <div class="grupo" id="fp-acoes">
       <div class="grupo-linha">
@@ -520,6 +589,9 @@
     <label class="campo" for="dn-resp" id="dn-resp-caixa">Com quem fica
       <select id="dn-resp"></select>
     </label>
+    <label class="campo" for="dn-prazo" id="dn-prazo-caixa">Prazo <small style="font-weight:600">(se tiver)</small>
+      <input type="date" id="dn-prazo">
+    </label>
     <div class="grupo-linha">
       <button type="button" class="bt pri" data-acao="dn-salvar">Abrir</button>
       <button type="button" class="bt" data-acao="fechar" data-id="dlg-nova">Cancelar</button>
@@ -530,6 +602,11 @@
 <script>
 (() => {
   "use strict";
+  // Versão de verdade (18/11/2026): a mesma página, com os dados do banco. Quando
+  // window.EPP_DADOS existe, quem fez login, a equipe e tudo o que está guardado vêm
+  // dali, e o que se mexe na tela é gravado por EPP_DADOS.salvar(). Sem ele, a
+  // página é o protótipo, com os dados de exemplo abaixo.
+  const REAL = window.EPP_DADOS || null;
 
   const $ = s => document.querySelector(s);
   const DIA = 86400000;
@@ -537,8 +614,8 @@
   // ======================================================================
   //  QUEM, AS FRENTES E OS PROJETOS
   // ======================================================================
-  const CHEFE = "Juarez";
-  const EQUIPE = ["Juarez", "Eder", "Fábio",
+  const CHEFE = REAL ? REAL.chefe : "Juarez";
+  const EQUIPE = REAL ? REAL.equipe : ["Juarez", "Eder", "Fábio",
                   "Fernando", "Karin",
                   "Luiz", "Vinícius"];
   const curto = n => n ? n.split(" ")[0] : "ninguém";
@@ -546,7 +623,7 @@
   // As frentes da EQUIPE, definidas pela chefia em 12/11/2026. O que é pessoal dela —
   // Indexador, normativos, regimento, Desenho Organizacional — não entra.
   // Cada frente tem a sua cor (--f1 … --f9): é ela que orienta o olho.
-  const FRENTES = [
+  const FRENTES = REAL ? REAL.frentes : [
     { id:"ferramentas",  nome:"Ferramentas de TI",                sub:"Sites, sisteminhas e painéis que a equipe constrói, publica e mantém. Cada ferramenta é um projeto." },
     { id:"servicos",     nome:"Serviços",                         sub:"CentralGov e Portal de Serviços — os formulários eletrônicos." },
     { id:"mapeamento",   nome:"Mapeamento de processos",          sub:"Acionada pelos donos de processo. Cada mapeamento é um projeto." },
@@ -556,15 +633,25 @@
     { id:"prototipacao", nome:"Prototipação de sistemas",         sub:"A prévia do sistema que outro vai construir, feita com a área finalística antes da TI." },
     { id:"instrucao",    nome:"Módulo de Instrução de Destinação", sub:"As tarefas da vez, e o que a equipe deve à TI." },
     { id:"curadoria",    nome:"Curadoria",                        sub:"Coleção Fluxos e Procedimentos e o catálogo do SPUProcessos." }
-  ].map((f, i) => ({ ...f, cor:`var(--f${i + 1})` }));
+  ].map((f, i) => ({ estado:"ativa", arquivada_em:null, ...f, cor:`var(--f${i + 1})` }));
   const frente = id => FRENTES.find(f => f.id === id);
+  // Versão 27: o chefe inclui, edita e arquiva frentes. Arquivada, a frente sai do menu,
+  // das contagens e das listas de escolha, mas nada se apaga.
+  const frentesAtivas = () => FRENTES.filter(f => f.estado === "ativa");
+  const frentesArquivadas = () => FRENTES.filter(f => f.estado === "arquivada");
+  const CORES_FRENTE = 12;
+  const proximaCor = () => {
+    const usadas = new Set(frentesAtivas().map(f => f.cor));
+    for (let i = 1; i <= CORES_FRENTE; i++) if (!usadas.has(`var(--f${i})`)) return `var(--f${i})`;
+    return `var(--f${FRENTES.length % CORES_FRENTE + 1})`;
+  };
   const corDe = x => `style="--fc:${frente(x.frente).cor}"`;
 
   // Frente → (projeto) → tarefa. O projeto é opcional: há frente só de tarefas.
   // estado: ativo · depois (paralisado, com motivo) · concluido · arquivado
   // url: o endereço da ferramenta publicada, quando o projeto é uma. O Aplicativo CGLEP
   // é Power Apps e não tem endereço público: fica sem link.
-  const PROJETOS = [
+  const PROJETOS = REAL ? REAL.projetos : [
     { id:"p-spup",   frente:"ferramentas",  nome:"SPUProcessos",
       url:"https://spu-projetoseprocessos.github.io/SPUProcessos/" },
     { id:"p-cade",   frente:"ferramentas",  nome:"Cadê?",
@@ -583,8 +670,12 @@
     { id:"p-manual", frente:"artefatos",    nome:"Manual interativo da instrução de Cessão de Uso",
       estado:"depois", motivo:"prioridades" },
     { id:"p-diag",   frente:"prototipacao", nome:"Diagnóstico Patrimonial do Imóvel" },
+    { id:"p-mgc",    frente:"prototipacao", nome:"Monitoramento de contratos do MGC",   // 16/11/2026
+      url:"https://spu-projetoseprocessos.github.io/monitoramento-contratos-mgc-spu/" },
     { id:"p-spunet", frente:"prototipacao", nome:"Alteração SPUnet Cadastro",
       estado:"depois", motivo:"aguardando" },
+    { id:"p-binst",  frente:"instrucao",    nome:"Backlog de demandas",
+      url:"https://claude.ai/artifact/7ospmmbwV3gH2rPFPZfXxv" },
     { id:"p-col",    frente:"curadoria",    nome:"Coleção Fluxos e Procedimentos" },
     { id:"p-cat",    frente:"curadoria",    nome:"Catálogo do SPUProcessos" }
   ].map(p => ({ estado:"ativo", motivo:null, mexido:null, ...p }));
@@ -632,15 +723,16 @@
   //  DADOS DE EXEMPLO
   //  Só a carga do SPUOrganograma é real (levantamento de 11/11/2026).
   // ======================================================================
-  let seq = 100;
+  // Na versão de verdade o número parte do relógio: duas pessoas nunca geram o mesmo id.
+  let seq = REAL ? Date.now() * 1000 + Math.floor(Math.random() * 1000) : 100;
   const T = (frenteId, titulo, o = {}) => ({
-    id:"t" + (++seq), frente:frenteId, projeto:null, titulo, responsavel:null, estado:"aberta",
+    id:"t" + (++seq), frente:frenteId, projeto:null, titulo, responsavel:null, suplente:null, estado:"aberta",
     motivo:null, volta:null, prazo:null, mexido:ha(2), origem:null, devido_a:null, notas:[], andamento:null,
-    concluida_em:null,
+    concluida_em:null, entregue:null, iniciada:true,
     hist:[], ...o
   });
 
-  const TAREFAS = [
+  const TAREFAS = REAL ? REAL.tarefas : [
     T("ferramentas", "Conferir a TT-02 contra a Resolução 5",
       { projeto:"p-tax", responsavel:"Fábio", prazo:em(2), mexido:ha(1),
         origem:{ tipo:"pedido" } }),
@@ -651,7 +743,7 @@
     T("ferramentas", "Migrar os repositórios da conta pessoal para a organização", { mexido:ha(6) }),
 
     T("servicos", "Modelo de formulário do serviço de certidão",
-      { projeto:"p-cgov", responsavel:"Karin", prazo:em(6), mexido:ha(1) }),
+      { projeto:"p-cgov", responsavel:"Karin", suplente:"Eder", prazo:em(6), mexido:ha(1), iniciada:false }),
     T("servicos", "Revisar a linguagem dos requerimentos",
       { projeto:"p-portal", responsavel:"Eder", estado:"suspensa", motivo:"aguardando",
         mexido:ha(11),
@@ -662,7 +754,7 @@
       { projeto:"p-m1", responsavel:"Luiz", mexido:ha(11),
         notas:[{ quando:ha(11), quem:"Luiz", texto:"reunião realizada com a CGIPA" }] }),
     T("mapeamento", "Desenhar o fluxo no Bizagi",
-      { projeto:"p-m1", responsavel:"Fernando", mexido:ha(4) }),
+      { projeto:"p-m1", responsavel:"Fernando", mexido:ha(4), iniciada:false }),
     T("mapeamento", "Validar o fluxo com o dono do processo", { projeto:"p-m1", mexido:ha(4) }),
     T("mapeamento", "Marcar a primeira reunião com o dono do processo",
       { projeto:"p-m2", mexido:ha(3), origem:{ tipo:"pedido" } }),
@@ -671,7 +763,7 @@
       { responsavel:"Fernando", mexido:ha(4) }),
 
     T("conformidade", "Definir o tamanho e o critério da amostra",
-      { responsavel:"Juarez", mexido:ha(5) }),
+      { responsavel:"Juarez", mexido:ha(5), iniciada:false }),
 
     T("artefatos", "Roteirizar as telas do manual",
       { projeto:"p-manual", responsavel:"Vinícius", mexido:ha(25) }),
@@ -684,7 +776,7 @@
       { projeto:"p-spunet", responsavel:"Fernando", mexido:ha(30) }),
 
     T("instrucao", "Entregar a especificação da tela de diagnóstico",
-      { responsavel:"Karin", prazo:em(4), mexido:ha(2), devido_a:"TI" }),
+      { responsavel:"Karin", suplente:"Juarez", prazo:em(4), mexido:ha(2), devido_a:"TI" }),
     T("instrucao", "Responder as dúvidas sobre as regras de validação",
       { responsavel:"Juarez", mexido:ha(16), devido_a:"TI" }),
     T("instrucao", "Desenhar o fluxo do despacho saneador", { mexido:ha(1) }),
@@ -694,26 +786,52 @@
       { projeto:"p-cgov", responsavel:"Karin", estado:"suspensa", motivo:"aguardando", volta:ha(0), mexido:ha(8),
         hist:[{ quando:ha(8), quem:"Karin", o:"paralisou — aguardando o retorno de outra área, até " + dBR(hoje) }] }),
     T("curadoria", "Inserir o POP de avaliação de imóveis",
-      { projeto:"p-col", responsavel:"Eder", mexido:ha(2) })
+      { projeto:"p-col", responsavel:"Eder", mexido:ha(2), iniciada:false })
   ];
   // Concluídas no mês que se fecha agora: é o que cada um tem para pôr no Petrvs.
-  [["instrucao", "Fechar com a TI o escopo da primeira entrega", "Juarez", 14, { devido_a:"TI" }],
-   ["curadoria", "Inserir o POP de vistoria na coleção", "Eder", 8, { projeto:"p-col" }],
+  // Algumas dizem o que foi entregue (versão 22); outras não, para mostrar o aviso no rascunho.
+  const E = (produto, prova = "") => ({ entregue:{ produto, prova } });
+  if (!REAL) [["instrucao", "Fechar com a TI o escopo da primeira entrega", "Juarez", 14,
+     { devido_a:"TI", ...E("Escopo da primeira entrega do Módulo de Instrução acordado com a TI", "ata da reunião com a TI") }],
+   ["mapeamento", "Validar o roteiro de entrevistas", "Juarez", 9,
+     { projeto:"p-m1", ...E("Roteiro de entrevistas da Inscrição de Ocupação validado com a área") }],
+   ["artefatos", "Revisar o POP de recebimento de requerimento", "Juarez", 17,
+     E("POP de recebimento de requerimento revisado, com as sugestões devolvidas ao autor", "e-mail ao autor")],
+   ["curadoria", "Revisar os metadados da coleção", "Juarez", 21, { projeto:"p-col" }],
+   ["curadoria", "Inserir o POP de vistoria na coleção", "Eder", 8,
+     { projeto:"p-col", ...E("POP de vistoria publicado na coleção Fluxos e Procedimentos", "item novo no MemóriaSPU") }],
    ["conformidade", "Montar o roteiro da análise de conformidade", "Eder", 22, {}],
-   ["servicos", "Revisar o texto do serviço de certidão", "Karin", 20, { projeto:"p-cgov" }],
+   ["servicos", "Revisar o texto do serviço de certidão", "Karin", 20,
+     { projeto:"p-cgov", ...E("Texto do serviço de certidão revisado em linguagem simples", "enviado à equipe do CentralGov") }],
    ["mapeamento", "Levantar os documentos do processo", "Luiz", 16, { projeto:"p-m1" }],
-   ["criticidade", "Aplicar o questionário ao processo de Aforamento", "Fernando", 27, {}],
-   ["ferramentas", "Corrigir a busca por sigla", "Vinícius", 9, { projeto:"p-spup" }]
+   // A entrega da Criticidade (A11) não está no plano do Luiz: cai em "Sem linha no plano".
+   ["criticidade", "Aplicar o questionário ao processo de Demarcação", "Luiz", 23,
+     E("Criticidade da Demarcação calculada")],
+   ["criticidade", "Aplicar o questionário ao processo de Aforamento", "Fernando", 27,
+     E("Criticidade do Aforamento calculada", "planilha de criticidade")],
+   ["ferramentas", "Corrigir a busca por sigla", "Vinícius", 9,
+     { projeto:"p-spup", ...E("Busca por sigla corrigida e publicada no SPUProcessos", "versão publicada") }]
   ].forEach(([f, titulo, quem, dia, o]) => TAREFAS.push(T(f, titulo, { responsavel:quem, estado:"concluida",
       concluida_em:mesPassado(dia), mexido:mesPassado(dia),
       hist:[{ quando:mesPassado(dia), quem, o:"concluiu" }], ...o })));
+  // Titular e suplente (versão 24): o chefe põe os dois em tudo. No exemplo, quase
+  // todas as abertas já têm suplente; as do Juarez ficam sem, para mostrar o caso.
+  const SUPLENTE_EXEMPLO = { "Fábio":"Vinícius", "Vinícius":"Fábio", "Eder":"Karin", "Karin":"Eder",
+                             "Luiz":"Fernando", "Fernando":"Luiz" };
+  if (!REAL) {
+  TAREFAS.filter(t => t.estado !== "concluida" && t.responsavel && !t.suplente)
+    .forEach(t => { t.suplente = SUPLENTE_EXEMPLO[t.responsavel] || null; });
   projeto("p-manual").mexido = ha(25);
+  projeto("p-spup").notas = [
+    { quando:ha(6), quem:"Juarez", texto:"Combinar com a DEMIN a apresentação do SPUProcessos às superintendências." },
+    { quando:ha(2), quem:"Vinícius", texto:"Filtro por superintendência depende da planilha nova do SIORG." }];
   projeto("p-spunet").mexido = ha(30);
   projeto("p-spunet").volta = em(10);
+  }
 
   // natureza: "olhar" é a rotina como foi definida — dar uma olhada para
   // saber se há o que fazer. "fazer" é a rotina que já é o próprio trabalho.
-  const ROTINAS = [
+  const ROTINAS = REAL ? REAL.rotinas : [
     { id:"r1", frente:"ferramentas", projeto:"p-org", natureza:"fazer", real:true,
       titulo:"Recarregar os dados de pessoas",
       periodicidade:"mensal", modo:"dia_mes", dia_mes:11, inicio_em:"2026-11-11",
@@ -739,15 +857,93 @@
       titulo:"Revisar os processos mapeados com os donos",
       periodicidade:"anual", dia_mes:2, inicio_em:"2027-03-02",
       responsavel:"Luiz", ocorrencias:[] },
-    // Rotina do grupo: sem responsável. Quem fizer a rodada, marca.
+    // Era a "rotina do grupo"; na versão 24 ela também tem titular e suplente.
     { id:"r7", frente:"ferramentas", projeto:null, natureza:"olhar",
       titulo:"Conferir se as ferramentas publicadas estão no ar",
       periodicidade:"semanal", dia_semana:2, inicio_em:"2026-10-05",
-      responsavel:null, ocorrencias:[] }
+      responsavel:"Fábio", ocorrencias:[] }
+  ];
+  // Versão 24: a rotina virou TAREFA RECORRENTE. Por baixo continua igual — a regra
+  // (quando repete) e o registro de cada rodada —; na tela ela é uma tarefa com a
+  // marca "recorrente", que se conclui "nesta rodada" e volta sozinha na próxima.
+  if (!REAL) ROTINAS.forEach(r => { r.suplente = r.suplente || SUPLENTE_EXEMPLO[r.responsavel] || null; });
+
+  // ======================================================================
+  //  FÉRIAS E RECESSO (versão 24)
+  //  Cada pessoa marca as suas; o chefe homologa. Só o período homologado faz o
+  //  suplente assumir as tarefas do titular.
+  // ======================================================================
+  const FERIAS = REAL ? REAL.ferias : [
+    { id:"fe1", quem:"Karin",    tipo:"ferias",  de:ha(3),  ate:em(11), situacao:"homologada", pedida_em:ha(40) },
+    { id:"fe2", quem:"Luiz",     tipo:"ferias",  de:em(18), ate:em(32), situacao:"pedida",     pedida_em:ha(2) },
+    { id:"fe3", quem:"Fernando", tipo:"recesso", de:em(39), ate:em(46), situacao:"homologada", pedida_em:ha(10) },
+    { id:"fe4", quem:"Eder",     tipo:"recesso", de:em(39), ate:em(46), situacao:"pedida",     pedida_em:ha(1) },
+    // Afastamento sem prazo (versão 26): enquanto não tiver fim, o suplente segue assumindo.
+    { id:"fe5", quem:"Vinícius", tipo:"afastamento", de:ha(2), ate:null, situacao:"homologada", pedida_em:ha(2) }
+  ];
+  const ROTULO_AUSENCIA = { ferias:"férias", recesso:"recesso", afastamento:"afastamento" };
+
+  // ======================================================================
+  //  MINHAS ANOTAÇÕES (versão 24)
+  //  Nascem soltas — sem frente, sem projeto, sem virar tarefa — e só quem
+  //  escreveu vê. Depois a pessoa vincula a um projeto ou transforma em tarefa.
+  // ======================================================================
+  const ANOTACOES = REAL ? REAL.anotacoes : [
+    { id:"n1", quem:"Juarez", texto:"Perguntar à DEDES se a lista de serviços sai este mês.", quando:ha(1), projeto:null },
+    { id:"n2", quem:"Juarez", texto:"Ideia: mostrar o SPUProcessos na reunião de superintendentes de dezembro.", quando:ha(4), projeto:"p-spup" },
+    { id:"n3", quem:"Fábio",  texto:"Ver com o Vinícius o erro de acentuação na busca.", quando:ha(0), projeto:null }
   ];
 
+  // ======================================================================
+  //  PLANO DE TRABALHO DO PETRVS (versão 22)
+  //  As entregas são as do Plano de Entregas da CGGES, como aparecem no Petrvs
+  //  (modelo trazido em 13/11/2026). Que frente vai para qual entrega é palpite:
+  //  falta confirmar. Um projeto pode apontar para outra entrega (p.entrega).
+  // ======================================================================
+  // O plano de entregas da unidade é trocado a cada três meses (versão 23): o chefe sobe
+  // o novo em "Petrvs e frequência", e as entregas abaixo passam a ser as dele.
+  // A vigência é exemplo — falta a data certa.
+  const PLANO_ENTREGAS = REAL ? REAL.plano_entregas : { inicio:"2026-11-01", fim:"2027-01-31", carregado_em:"2026-11-01", quem:CHEFE };
+  const ENTREGAS = REAL ? REAL.entregas : {
+    A10:"A10. Ferramenta de gestão do portfólio de processos de trabalho da SPU instituída",
+    A11:"A11. Modelo de gestão de processos de trabalho da SPU elaborado",
+    A12:"A12. Artefatos de padronização e melhoria de processos elaborados",
+    A13:"A13. Processos de trabalho mapeados ou redesenhados",
+    A30:"A30. Coleções do Repositório Institucional do MemóriaSPU curadas"
+  };
+  const ENTREGA_DA_FRENTE = REAL ? REAL.entrega_frente : { ferramentas:"A10", servicos:"A12", mapeamento:"A13", criticidade:"A11",
+    conformidade:"A11", artefatos:"A12", prototipacao:"A12", instrucao:"A12", curadoria:"A30" };
+  // As linhas do plano de cada pessoa, como estão no Petrvs. As do Juarez vêm do
+  // modelo que ele trouxe; as demais são exemplo. Na versão de verdade, cada pessoa
+  // cadastra as suas uma vez por plano.
+  const L = (entrega, trabalho, pct) => ({ entrega, trabalho, pct });
+  const PLANOS = REAL ? REAL.planos : {
+    "Juarez":   [L("A13", "Participar de reuniões com o dono de processo e internas para consolidação de fluxo.", 35),
+                 L(null, "Assessorar a Coordenação-Geral e a Diretoria.", 15),
+                 L(null, "Coordenação e trabalhos administrativos.", 15),
+                 L("A10", "Elaborar documentos.", 3),
+                 L("A11", "Elaborar e revisar texto.", 8),
+                 L("A12", "Revisar e sugerir alterações.", 20),
+                 L("A30", "Curadoria da coleção Fluxos e Procedimentos.", 4)],
+    "Eder":     [L("A30", "Inserir e revisar documentos na coleção Fluxos e Procedimentos.", 40),
+                 L("A11", "Analisar a conformidade dos processos de destinação.", 40),
+                 L("A12", "Revisar textos de serviços.", 20)],
+    "Fábio":    [L("A10", "Desenvolver e manter as ferramentas do Escritório.", 60),
+                 L("A12", "Validar telas com as áreas.", 40)],
+    "Fernando": [L("A13", "Desenhar os fluxos no Bizagi.", 40),
+                 L("A11", "Aplicar o questionário de criticidade.", 40),
+                 L("A12", "Ajustar protótipos.", 20)],
+    "Karin":    [L("A12", "Elaborar formulários, textos de serviços e especificações para a TI.", 70),
+                 L(null, "Atendimento às áreas e reuniões internas.", 30)],
+    "Luiz":     [L("A13", "Conduzir o mapeamento com o dono do processo.", 60),
+                 L("A12", "Validar protótipos com as áreas.", 40)],
+    "Vinícius": [L("A10", "Desenvolver e manter as ferramentas do Escritório.", 70),
+                 L("A12", "Roteirizar manuais interativos.", 30)]
+  };
+  const ESTILO = REAL ? REAL.estilo : {};          // por pessoa: "lista" ou "corrido" — escolhido uma vez
+
   // Ideias: o que ainda não é trabalho. Moram na caixa "Não iniciado".
-  const IDEIAS = [
+  const IDEIAS = REAL ? REAL.ideias : [
     { id:"i1", texto:"Apresentar o SPUProcessos numa reunião de superintendentes",
       frente:"ferramentas", quem:"Juarez", quando:ha(12) },
     { id:"i2", texto:"Manual interativo do requerimento de regularização",
@@ -756,13 +952,42 @@
 
   const ROTULO_FERRAMENTA = {
     spuprocessos:"SPUProcessos", cade:"Cadê?", taxonomias:"Tabelas Taxonômicas",
-    simulador:"Governança da Destinação", organograma:"SPUOrganograma", outra:"outra"
+    simulador:"Governança da Destinação", organograma:"SPUOrganograma", home:"Página do Escritório",
+    desenho:"Desenho Organizacional", outra:"outra"
   };
+  // ======================================================================
+  //  ACESSOS ÀS FERRAMENTAS (versão 28)
+  //  O contador das páginas publicadas grava em home.acessos (16/11/2026). Aqui ficam
+  //  os últimos 30 dias. No protótipo, números inventados.
+  // ======================================================================
+  const ROTULO_ACESSO = { home:"Página do Escritório", spuprocessos:"SPUProcessos", organograma:"SPUOrganograma",
+                          cade:"Cadê?", taxonomias:"Tabelas Taxonômicas", simulador:"Governança da Destinação" };
+  function acessosExemplo() {
+    let s = 7; const sorte = () => (s = (s * 9301 + 49297) % 233280) / 233280;
+    const peso = { spuprocessos:9, simulador:6, home:4, taxonomias:3, cade:3, organograma:2 };
+    const paginas = { spuprocessos:["/SPUProcessos/", "/SPUProcessos/processo.html?id=34", "/SPUProcessos/processo.html?id=12", "/SPUProcessos/painel.html"],
+      simulador:["/simulador-competencia-spu/"], home:["/escritorio/"], taxonomias:["/tabelas-taxonomicas-spu/"],
+      cade:["/cade-catalogo-solucoes-spu/"], organograma:["/SPUProcessos/organograma/"] };
+    const origens = [null, null, null, "www.google.com", "sei.economia.gov.br", "teams.microsoft.com"];
+    const lista = [];
+    for (let d = 29; d >= 0; d--) {
+      const dia = ha(d), util = diaDaSemana(dData(dia));
+      Object.keys(peso).forEach(f => {
+        const n = Math.round(peso[f] * (util ? 1 : 0.2) * (0.5 + sorte()));
+        for (let i = 0; i < n; i++) lista.push({ dia, ferramenta:f, pagina: paginas[f][Math.floor(sorte() * paginas[f].length)],
+          origem: origens[Math.floor(sorte() * origens.length)], tela: sorte() < 0.2 ? "celular" : "computador", nova: sorte() < 0.6 });
+      });
+    }
+    return lista;
+  }
+  const diaDaSemana = d => d.getDay() !== 0 && d.getDay() !== 6;
+  const ACESSOS = REAL ? REAL.acessos : acessosExemplo();
+
   const ROTULO_TIPO = { erro:"erro", duvida:"dúvida", melhoria:"melhoria",
                         sugestao_solucao:"sugestão de solução", mapeamento:"pedido de mapeamento" };
   const ROTULO_SITUACAO = { novo:"novo", tratado:"tratado", descartado:"descartado" };
 
-  const PEDIDOS = [
+  const PEDIDOS = REAL ? REAL.pedidos : [
     { id:"a1", ferramenta:"cade", tipo:"sugestao_solucao", situacao:"novo",
       texto:"Falta o Sistema de Gestão de Contratos (MGC) na lista. Uso todo dia e não achei aqui.",
       contato:"marina.alves@exemplo.gov.br", criado:ha(0), hist:[] },
@@ -799,25 +1024,40 @@
   // ======================================================================
   //  ESTADO DA TELA
   // ======================================================================
-  let eu = CHEFE;
+  let eu = REAL ? REAL.eu : CHEFE;
   let tela = "trabalho";
-  let vista = { tipo:"caixa", id:"chegou" };
+  let vista = { tipo:"caixa", id:"minhas" };      // abre sempre em Minhas tarefas (versão 23)
   let avisoMsg = "";
   let verOlhados = false;
   let tAtual = null, pAtual = null, novaCtx = null, spuCtx = null;
   let mesVer = null;      // { quem, mes } da lista de concluídos aberta em "Todo mês"
+  let ptCorrente = false; // o rascunho do Petrvs mostra o mês que fecha (false) ou o corrente, até hoje
+  let entregaModo = null; // na ficha: "concluir" (passo antes de concluir) ou "editar" (já concluída)
+  let comentando = null;  // a tarefa cujo campo de comentário está aberto na linha (versão 23)
+  const verArqPed = {}, verCofre = {};   // por projeto: o arquivo dos pedidos e o cofre das concluídas
+  let trocandoPlano = false;            // o campo para subir o plano de entregas está aberto
   let verArquivados = false, verAvisos = false, novoAviso = false;
+  let editandoFrente = null, verFrentesArq = false;   // versão 27: a tela das frentes
+  const avisoAberto = {};                // versão 24: os avisos longos que a pessoa expandiu
+  let paralisando = false, pjParalisando = null;   // versão 25: os campos de paralisar abertos
+  if (!REAL) PEDIDOS.find(p => p.id === "a2").responsavel = "Vinícius";   // o chefe já atribuiu este
   let painelVista = null; // o que o campo principal do painel mostra
   const dobras = {};      // projeto → aberto ou recolhido, quando a pessoa mexeu
   // Quadro de avisos: qualquer pessoa da equipe escreve, todo mundo lê. Aviso com
   // `para` é pessoal: nasce quando alguém passa uma tarefa, e só o destinatário vê.
-  const AVISOS = [
+  const AVISOS = REAL ? REAL.avisos : [
+    { id:"av4", texto:"Pessoal, a partir da semana que vem cada tarefa e cada tarefa recorrente passa a ter titular e suplente. " +
+        "O suplente assume nas férias, no recesso e no afastamento do titular, sem ninguém precisar passar nada à mão. " +
+        "Quando pedirem férias ou recesso no SouGov, registrem também aqui no RH do Escritório: é assim que eu sei que tenho que homologar lá.",
+      quem:CHEFE, quando:ha(0), ate:null },
     { id:"av3", texto:"Petrvs de outubro: quem ainda não preencheu, preencha até sexta.",
       quem:CHEFE, quando:ha(0), ate:null },
     { id:"av1", texto:"Reunião da equipe na quinta-feira, às 10h. Tragam o que está parado.",
       quem:CHEFE, quando:ha(1), ate:null },
     { id:"av2", texto:"Subi no SPUProcessos a versão nova do fluxo de Cessão de Uso.",
-      quem:"Luiz", quando:ha(3), ate:null }
+      quem:"Luiz", quando:ha(3), ate:null },
+    { id:"av5", texto:"O Cadê? ganhou a busca por sigla. Quem achar sistema faltando, avise.",
+      quem:"Vinícius", quando:ha(6), ate:null }
   ];
 
   // ======================================================================
@@ -827,6 +1067,14 @@
     t.mexido = dISO(hoje);
     t.hist.push({ quando: dISO(hoje), quem: eu, o });
   }
+
+  // ---------- Titular, suplente e ausência (versão 24) ----------
+  // Está fora quem tem férias, recesso ou afastamento HOMOLOGADO cobrindo hoje.
+  const ausenciaDe = nome => FERIAS.find(f => f.quem === nome && f.situacao === "homologada"
+    && dData(f.de) <= hoje && (!f.ate || dData(f.ate) >= hoje)) || null;   // sem fim: afastamento sem prazo
+  // Com quem a coisa está hoje: o titular; se ele está fora e há suplente, o suplente.
+  const comQuem = x => x.responsavel && ausenciaDe(x.responsavel) && x.suplente ? x.suplente : x.responsavel;
+  const substituindo = x => comQuem(x) !== x.responsavel;
 
   // Tarefa de projeto guardado some das filas junto com o projeto.
   const noAr = t => !t.projeto || projeto(t.projeto).estado === "ativo";
@@ -855,25 +1103,26 @@
         return { chave:"breve", rotulo: d === 1 ? "prazo amanhã" : `prazo em ${d} dias`, parada:false };
     }
     if (sem >= LIMITE_PARADO)
-      return { chave:"parada", parada:true, dias:sem, cheia:true, rotulo:`parada há ${sem} dias`,
+      return { chave:"parada", parada:true, dias:sem, cheia:true, rotulo:`sem movimento há ${sem} dias`,
                porque:`sem movimento há ${sem} dias` };
     // Aviso antes de parar: quem está com a tarefa sabe quatro dias antes do chefe.
     if (t.responsavel && sem >= LIMITE_PARADO - AVISO_ANTES) {
       const n = LIMITE_PARADO - sem;
       return { chave:"quase", rotulo: n === 1 ? "para amanhã" : `para em ${n} dias`, parada:false };
     }
+    if (t.responsavel && !t.iniciada) return { chave:"naoiniciada", rotulo:"não iniciada", parada:false };
     return t.responsavel
       ? { chave:"andando", rotulo:"em andamento", parada:false }
       : { chave:"semdono", rotulo:"sem dono", parada:false, cheia:true };
   }
   const pill = st => `<span class="pill s-${st.chave}${st.cheia ? " cheia" : ""}">${st.rotulo}</span>`;
-  const PESO = { atrasada:0, hoje:1, voltar:2, parada:3, quase:4, breve:5, andando:6, semdono:7, suspensa:8, feita:9 };
+  const PESO = { atrasada:0, hoje:1, voltar:2, parada:3, quase:4, breve:5, naoiniciada:6, andando:6, semdono:7, suspensa:8, feita:9 };
   const voltou = t => t.estado === "suspensa" && !!t.volta && dData(t.volta) <= hoje && noAr(t);
   const porUrgencia = (a, b) => PESO[estadoTarefa(a).chave] - PESO[estadoTarefa(b).chave];
 
   function novaTarefa(frenteId, titulo, o = {}) {
-    const t = T(frenteId, titulo, { mexido: dISO(hoje), ...o });
-    t.hist.push({ quando: dISO(hoje), quem: eu, o: "abriu a tarefa" });
+    const t = T(frenteId, titulo, { mexido: dISO(hoje), iniciada:false, ...o });
+    t.hist.push({ quando: dISO(hoje), quem: eu, o: "abriu a tarefa" + (t.prazo ? ", com prazo para " + dBR(dData(t.prazo)) : "") });
     TAREFAS.push(t);
     return t;
   }
@@ -888,6 +1137,7 @@
     const de = t.responsavel;
     if ((de || "") === (para || "")) return;
     t.responsavel = para || null;
+    t.iniciada = false;                    // quem recebe ainda não começou (versão 25)
     mexer(t, !de ? (para === eu ? "pegou" : `atribuiu a ${curto(para)}`)
                : !para ? `devolveu para os sem dono (estava com ${curto(de)})`
                : `passou de ${curto(de)} para ${curto(para)}`);
@@ -902,6 +1152,7 @@
   // Observação: empilha, com data. Vira um pequeno diário da tarefa.
   function anotar(t, texto) {
     t.notas.push({ quando: dISO(hoje), quem: eu, texto });
+    if (comQuem(t) === eu) t.iniciada = true;   // comentar é sinal de que começou
     mexer(t, `anotou: “${texto}”`);
   }
   const andamentoPendente = t => t.andamento && !t.andamento.resposta;
@@ -923,7 +1174,7 @@
   function contaProjeto(r) {
     return [
       `${r.abertas.length} ${r.abertas.length === 1 ? "aberta" : "abertas"}`,
-      r.paradas ? `<b>${r.paradas} ${r.paradas === 1 ? "parada" : "paradas"}</b>` : "",
+      r.paradas ? `<b>${r.paradas} ${r.paradas === 1 ? "vencida" : "vencidas"}</b>` : "",
       r.semDono ? `${r.semDono} sem dono` : "",
       r.pessoas.length ? r.pessoas.map(curto).join(", ") : ""
     ].filter(Boolean).join(" · ");
@@ -987,6 +1238,8 @@
             aberta:true, pendente, proxima, parada:true, dias:d,
             porque:`a rodada de ${dBR(pendente)} não foi feita` };
     }
+    // Versão 24: a rodada corrente já foi concluída — a tarefa recorrente diz isso.
+    if (corrente) return { chave:"fechado", rotulo:"concluída nesta rodada", aberta:false, pendente:null, proxima, parada:false };
     return { chave:"emdia", rotulo:"em dia", aberta:false, pendente:null, proxima, parada:false };
   }
   function fecharRodada(r, desfecho) {
@@ -1046,25 +1299,45 @@
   //   assinado — o chefe assinou o Petrvs dela
   //   freq     — o chefe aprovou a frequência dela no SouGov
   //   cobrado  — o chefe cobrou
-  function novoMes(atras) {
-    const comp = new Date(hoje.getFullYear(), hoje.getMonth() - atras, 1);
-    const m = { id: dISO(comp).slice(0, 7), comp, lembrado:null, marcas:{},
+  function novoMes(atras) { return novoMesDe(new Date(hoje.getFullYear(), hoje.getMonth() - atras, 1)); }
+  function novoMesDe(comp) {
+    // freq: o chefe aprovou no SouGov a frequência de todos daquele mês (versão 24:
+    // uma marca só, por mês, que só ele vê — a frequência de teletrabalho é automática).
+    const m = { id: dISO(comp).slice(0, 7), comp, lembrado:null, marcas:{}, freq:null,
                 prazo: quintoDiaUtil(comp.getFullYear(), comp.getMonth() + 1) };
     EQUIPE.forEach(n => { m.marcas[n] = { petrvs:null, assinado:null, freq:null, cobrado:null }; });
     return m;
   }
-  const MES_ANTIGO = novoMes(2), MES_ATUAL = novoMes(1);
-  const MESES_FECH = [MES_ANTIGO, MES_ATUAL];
+  // Na versão de verdade, o primeiro mês cobrado é dezembro de 2026, cobrado em janeiro
+  // (decidido em 18/11/2026). Até lá, o mês que aparece é dezembro, com o prazo dele.
+  const PRIMEIRO_MES = new Date(2026, 11, 1);
+  function mesesDoBanco() {
+    let ult = new Date(hoje.getFullYear(), hoje.getMonth() - 1, 1);
+    if (ult < PRIMEIRO_MES) ult = PRIMEIRO_MES;
+    const ms = [];
+    for (let d = PRIMEIRO_MES; d <= ult; d = new Date(d.getFullYear(), d.getMonth() + 1, 1)) {
+      const m = novoMesDe(d), salvo = REAL.meses[m.id] || {};
+      m.lembrado = salvo.lembrado || null; m.freq = salvo.freq || null;
+      EQUIPE.forEach(n => Object.assign(m.marcas[n], REAL.marcas[m.id + "|" + n] || {}));
+      ms.push(m);
+    }
+    return ms;
+  }
+  const MESES_FECH = REAL ? mesesDoBanco() : [novoMes(2), novoMes(1)];
+  const MES_ANTIGO = MESES_FECH[MESES_FECH.length - 2] || null, MES_ATUAL = MESES_FECH[MESES_FECH.length - 1];
+  if (!REAL) {
   // O mês antigo fechou para todos, menos para o Vinícius, que não preencheu.
   EQUIPE.forEach(n => Object.assign(MES_ANTIGO.marcas[n], { petrvs:mesPassado(3),
       assinado: n === CHEFE ? null : mesPassado(6), freq: n === CHEFE ? null : mesPassado(5) }));
   Object.assign(MES_ANTIGO.marcas["Vinícius"], { petrvs:null, assinado:null });
+  MES_ANTIGO.freq = mesPassado(5);
   //  [pessoa, preencheu o Petrvs, foi assinado, frequência aprovada]
   [["Juarez", 3, null, null], ["Eder", 3, 5, 5],
    ["Fernando", 6, null, 5], ["Karin", 4, null, null],
    ["Luiz", 9, null, null], ["Vinícius", null, null, 5]
   ].forEach(([n, p, a, f]) => Object.assign(MES_ATUAL.marcas[n],
       { petrvs: p && noMes(p), assinado: a && noMes(a), freq: f && noMes(f) }));
+  }
 
   const mesFech = id => MESES_FECH.find(m => m.id === id);
   const nomeMes = m => `${mesDe(m.comp)} de ${m.comp.getFullYear()}`;
@@ -1080,22 +1353,23 @@
       : { chave:"avencer", cheia:false, atrasado:false,
           rotulo: n === 1 ? "falta 1 dia útil" : `faltam ${n} dias úteis` };
   }
-  // Fechado: Petrvs preenchido, assinado, e frequência aprovada. O do chefe é
-  // assinado e aprovado pela chefia dele, fora desta tela.
+  // Fechado, por pessoa: Petrvs preenchido e assinado. O do chefe é assinado pela
+  // chefia dele, fora desta tela. O mês fecha quando, além disso, a frequência foi aprovada.
   const fechouEm = (m, n) => { const x = m.marcas[n];
-    return n === CHEFE ? !!x.petrvs : !!(x.petrvs && x.assinado && x.freq); };
-  const mesFechado = m => EQUIPE.every(n => fechouEm(m, n));
+    return n === CHEFE ? !!x.petrvs : !!(x.petrvs && x.assinado); };
+  const mesFechado = m => EQUIPE.every(n => fechouEm(m, n)) && !!m.freq;
   // O mês continua cobrando até fechar: o corrente aparece sempre; o antigo,
   // enquanto tiver pendência.
   const mesesNaTela = () => MESES_FECH.filter(m => m === MES_ATUAL || !mesFechado(m));
   const semPetrvs = m => EQUIPE.filter(n => !m.marcas[n].petrvs);
   const aAssinar = m => EQUIPE.filter(n => n !== CHEFE && m.marcas[n].petrvs && !m.marcas[n].assinado);
-  const aAprovar = m => EQUIPE.filter(n => n !== CHEFE && !m.marcas[n].freq);
+  const freqFalta = m => !m.freq;
   const podeMarcar = nome => nome === eu || eu === CHEFE;
   // O que cada um enxerga como pendência: o chefe, as linhas abertas de todos;
   // cada pessoa, só o próprio Petrvs.
   const pendenciasMes = () => eu === CHEFE
-    ? mesesNaTela().reduce((s, m) => s + EQUIPE.filter(n => !fechouEm(m, n)).length, 0)
+    ? mesesNaTela().reduce((s, m) => s + EQUIPE.filter(n => !fechouEm(m, n)).length + (m.freq ? 0 : 1), 0)
+      + FERIAS.filter(f => f.situacao === "pedida").length
     : mesesNaTela().filter(m => !m.marcas[eu].petrvs).length;
   const atrasadasMes = () => mesesNaTela().filter(m => prazoDe(m).atrasado)
     .reduce((s, m) => s + (eu === CHEFE ? semPetrvs(m).length : (m.marcas[eu].petrvs ? 0 : 1)), 0);
@@ -1103,8 +1377,9 @@
     const no = iso => !!iso && iso.slice(0, 7) === m.id;
     const fora = TAREFAS.filter(t => t.estado === "concluida" && t.responsavel === nome && no(t.concluida_em))
       .map(t => ({ titulo:t.titulo, onde:ondeDe(t), frente:t.frente, quando:t.concluida_em, rotina:false }));
+    // A rodada conta para o titular, mesmo feita pelo suplente (decisão de 13/11/2026).
     ROTINAS.forEach(r => r.ocorrencias.forEach(o => {
-      if (o.quem === nome && no(o.feita_em))
+      if ((r.responsavel || o.quem) === nome && no(o.feita_em))
         fora.push({ titulo:r.titulo, onde:ondeDe(r), frente:r.frente, quando:o.feita_em, rotina:true });
     }));
     return fora.sort((a, b) => a.quando < b.quando ? -1 : 1);
@@ -1114,9 +1389,169 @@
       <div class="linha-corpo" style="cursor:default">
         <span class="mt-nome">${x.titulo}</span>
         <span class="mt-onde">${x.onde}</span>
-        <span class="mt-pe">${x.rotina ? "rotina feita" : "concluída"} em ${ddmm(x.quando)}</span>
+        <span class="mt-pe">${x.rotina ? "rodada concluída" : "concluída"} em ${ddmm(x.quando)}</span>
       </div>
     </div>`).join("");
+
+  // ======================================================================
+  //  RASCUNHO DO PETRVS (versão 22)
+  //  Monta, linha por linha do plano de trabalho, o texto para colar no Petrvs.
+  //  Só usa o que está na área: as tarefas concluídas no mês (com o que foi
+  //  entregue), as abertas no nome da pessoa e as rodadas de rotina feitas.
+  // ======================================================================
+  const esc = t => String(t).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+  const lugar = x => x.projeto ? projeto(x.projeto).nome : frente(x.frente).nome;
+  const entregaDe = x => x.entrega || (x.projeto && projeto(x.projeto).entrega) || ENTREGA_DA_FRENTE[x.frente];
+  // A linha do plano onde o trabalho entra: a escolhida à mão, ou a da entrega da frente.
+  function linhaDe(nome, x) {
+    if (x.linhaPetrvs && x.linhaPetrvs.quem === nome) return x.linhaPetrvs.i;
+    return (PLANOS[nome] || []).findIndex(l => l.entrega && l.entrega === entregaDe(x));
+  }
+  function mesDoRascunho() {
+    if (!ptCorrente) return { id: MES_ATUAL.id, nome: nomeMes(MES_ATUAL), ate: null };
+    return { id: dISO(hoje).slice(0, 7), nome: `${MESES[hoje.getMonth()]} de ${hoje.getFullYear()}`, ate: dISO(hoje) };
+  }
+  function montarRascunho(nome) {
+    const mes = mesDoRascunho(), no = iso => !!iso && iso.slice(0, 7) === mes.id;
+    const linhas = (PLANOS[nome] || []).map((l, i) => ({ ...l, i, feitas:[], andando:[], rotinas:[] }));
+    const sem = [];
+    const por = (x, tipo, item) => { const i = linhaDe(nome, x); (i >= 0 ? linhas[i][tipo] : sem).push(item); };
+    TAREFAS.filter(t => t.estado === "concluida" && t.responsavel === nome && no(t.concluida_em))
+      .sort((a, b) => a.concluida_em < b.concluida_em ? -1 : 1)
+      .forEach(t => por(t, "feitas", { t, tipo:"feitas" }));
+    // Em andamento: o que está aberto no nome da pessoa agora — o rascunho é feito
+    // nos primeiros dias do mês seguinte, quando o retrato ainda é o do fim do mês.
+    TAREFAS.filter(t => (t.estado === "aberta" || t.estado === "suspensa") && t.responsavel === nome && noAr(t))
+      .forEach(t => por(t, "andando", { t, tipo:"andando" }));
+    ROTINAS.forEach(r => {
+      const n = r.ocorrencias.filter(o => (r.responsavel || o.quem) === nome && no(o.feita_em)).length;
+      if (n) por(r, "rotinas", { r, n, tipo:"rotinas" });
+    });
+    return { mes, linhas, sem };
+  }
+  function textoDaLinha(l, estilo) {
+    const feitas = l.feitas.map(({ t }) => {
+      const e = t.entregue, oque = e && e.produto ? e.produto : t.titulo;
+      return { lista: `• ${oque} — ${lugar(t)}, concluído em ${ddmm(t.concluida_em)}.${e && e.prova ? ` Prova: ${e.prova}.` : ""}`,
+               corrido: `${oque} (${lugar(t)}, ${ddmm(t.concluida_em)}${e && e.prova ? `; ${e.prova}` : ""})` };
+    });
+    const andando = l.andando.map(({ t }) => {
+      const nota = t.notas.length ? t.notas[t.notas.length - 1].texto : "";
+      const situ = t.estado === "suspensa" ? `paralisada — ${MOTIVO[t.motivo]}` : "";
+      const extra = [situ, nota].filter(Boolean).join("; ");
+      return { lista: `• ${t.titulo} — ${lugar(t)}${extra ? `; ${extra}` : ""}.`,
+               corrido: `${t.titulo} (${lugar(t)}${extra ? `; ${extra}` : ""})` };
+    });
+    const rotinas = l.rotinas.map(({ r, n }) => {
+      const q = `${n} ${n === 1 ? "rodada" : "rodadas"}`;
+      return { lista: `• ${r.titulo} — ${lugar(r)}: ${q}.`, corrido: `${r.titulo} (${lugar(r)}, ${q})` };
+    });
+    const partes = [["Entregues no período", feitas], ["Em andamento", andando], ["Tarefas recorrentes", rotinas]]
+      .filter(([, xs]) => xs.length);
+    if (estilo === "corrido")
+      return partes.map(([tit, xs]) => `${tit}: ${xs.map(x => x.corrido).join("; ")}.`).join(" ");
+    return partes.map(([tit, xs]) => `${tit}:\n${xs.map(x => x.lista).join("\n")}`).join("\n\n");
+  }
+  function rascunhoPetrvs(nome) {
+    const r = montarRascunho(nome), dono = nome === eu, estilo = "lista";   // versão 26: sempre em lista
+    const total = r.linhas.reduce((n, l) => n + l.feitas.length + l.andando.length + l.rotinas.length, 0) + r.sem.length;
+    const escolha = `
+      <div class="pt-escolha">Mês:
+        <button type="button" class="bt" data-acao="pt-mes" data-corrente="" aria-pressed="${!ptCorrente}">${nomeMes(MES_ATUAL)} — o que fecha agora</button>
+        <button type="button" class="bt" data-acao="pt-mes" data-corrente="1" aria-pressed="${ptCorrente}">${MESES[hoje.getMonth()]}, até hoje</button>
+      </div>`;
+    const cab = bloco("var(--mes)", `Rascunho do Petrvs${dono ? "" : " de " + curto(nome)} — ${r.mes.nome}`, "", `
+      <div class="pt-corpo">
+        ${escolha}
+        ${total ? "" : `<p class="vazio">Nada registrado na área em ${r.mes.nome} ${dono ? "no seu nome" : "no nome de " + curto(nome)}.</p>`}
+      </div>`);
+    const linhas = r.linhas.map(l => {
+      const texto = textoDaLinha(l, estilo);
+      const faltam = l.feitas.filter(({ t }) => !(t.entregue && t.entregue.produto));
+      const titulo = !l.entrega ? "Não vinculada" : ENTREGAS[l.entrega] || `${l.entrega} — não está no plano de entregas vigente`;
+      return bloco("var(--mes)", esc(titulo), `${l.pct}% planejado`, `
+        <div class="pt-corpo">
+          <p class="pt-trab">Trabalho planejado: <b>${esc(l.trabalho)}</b></p>
+          ${faltam.length && dono ? `<p class="pt-falta"><b>${faltam.length === 1 ? "Uma concluída" : faltam.length + " concluídas"} sem dizer o que foi entregue:</b>
+              ${faltam.map(({ t }) => `<button type="button" class="link" data-acao="abrir-t" data-id="${t.id}">${esc(t.titulo)}</button>`).join(" · ")}
+              <span>— entra o nome da tarefa; clique para dizer o produto.</span></p>` : ""}
+          ${texto ? `<p class="lembrete-texto pt-texto" id="pt-${l.i}">${esc(texto)}</p>
+            <div class="grupo-linha">
+              <button type="button" class="bt pri" data-acao="pt-copiar" data-i="${l.i}">Copiar o texto desta linha</button>
+              <span class="mt-pe" id="pt-ok-${l.i}">${texto.length} caracteres</span>
+            </div>`
+          : `<p class="vazio">Nada registrado na área para esta linha. Escreva no Petrvs como de costume.</p>`}
+        </div>`);
+    }).join("");
+    const opcoes = (PLANOS[nome] || []).map((l, i) =>
+      `<option value="${i}">${esc(l.entrega ? l.entrega + " — " + l.trabalho : "Não vinculada — " + l.trabalho)}</option>`).join("");
+    // fim do rascunho; o plano de entregas vem logo abaixo
+    const sem = r.sem.length ? bloco("var(--meio)", "Sem linha no plano", r.sem.length, `
+      <div class="pt-corpo pt-sem">
+        <p class="pt-trab">A entrega destes trabalhos não está no plano ${dono ? "de você" : "de " + curto(nome)}. Diga em que linha cada um entra.</p>
+        ${r.sem.map(x => {
+          const o = x.t || x.r, id = (x.t ? "t:" : "r:") + o.id;
+          return `<div class="pt-escolha"><span style="color:var(--fg)">${esc(o.titulo)} <small>(${esc(lugar(o))})</small></span>
+            ${dono ? `<select data-linha-de="${id}" aria-label="Linha do plano para ${esc(o.titulo)}">
+              <option value="">levar para a linha…</option>${opcoes}</select>` : ""}</div>`;
+        }).join("")}
+      </div>`) : "";
+    return cab + sem + linhas;
+  }
+  // ---- o plano de entregas da unidade: a cada três meses ----
+  const proximaTroca = () => maisDias(dData(PLANO_ENTREGAS.fim), 1);
+  const diasParaTroca = () => emDias(proximaTroca());
+  function blocoPlanoEntregas() {
+    const d = diasParaTroca(), chefe = eu === CHEFE;
+    const situ = d < 0 ? `<span class="pill cheia s-falta">venceu há ${-d} ${d === -1 ? "dia" : "dias"}</span>`
+      : d <= 15 ? `<span class="pill s-avencer">troca em ${d} ${d === 1 ? "dia" : "dias"}</span>`
+      : `<span class="pill s-fechado">vigente</span>`;
+    const lista = Object.values(ENTREGAS).map(e => `<li>${esc(e)}</li>`).join("");
+    const campo = trocandoPlano ? `
+      <div class="grupo">
+        <span>Cole as entregas do plano novo, uma por linha, começando pelo código (A13. …)</span>
+        <textarea class="plano-campo" id="pe-texto" aria-label="Entregas do plano novo">${esc(Object.values(ENTREGAS).join("\n"))}</textarea>
+        <div class="grupo-linha">
+          <label class="volta">vale de <input type="date" id="pe-inicio" value="${dISO(proximaTroca())}" aria-label="Início da vigência"></label>
+          <label class="volta">até <input type="date" id="pe-fim" aria-label="Fim da vigência"></label>
+        </div>
+        <div class="grupo-linha">
+          <button type="button" class="bt pri" data-acao="pe-guardar">Guardar o plano de entregas</button>
+          <button type="button" class="bt" data-acao="pe-trocar">Cancelar</button>
+          <span class="mt-pe" id="pe-erro"></span>
+        </div>
+      </div>` : chefe ? `<div class="grupo-linha"><button type="button" class="bt${d <= 15 ? " pri" : ""}" data-acao="pe-trocar">Subir o plano de entregas novo</button></div>` : "";
+    return bloco("var(--mes)", "Plano de entregas da unidade", "", `
+      <div class="pt-corpo">
+        <div class="grupo-linha">${situ}<span class="pt-trab">Vale de <b>${dBR(dData(PLANO_ENTREGAS.inicio))}</b> a <b>${dBR(dData(PLANO_ENTREGAS.fim))}</b>.</span></div>
+        <ul class="pt-trab" style="margin:0;padding-left:20px">${lista}</ul>
+        ${campo}
+      </div>`);
+  }
+  function guardarPlano() {
+    const linhas = ($("#pe-texto").value || "").split("\n").map(x => x.trim()).filter(Boolean);
+    const novas = {};
+    linhas.forEach(x => { const m = x.match(/^([A-Z]{1,3}\d{1,3})\b[.\s–-]*(.+)$/); if (m) novas[m[1]] = `${m[1]}. ${m[2].trim()}`; });
+    const ini = $("#pe-inicio").value, fim = $("#pe-fim").value;
+    const erro = !Object.keys(novas).length ? "Nenhuma linha começa com o código da entrega (A13. …)."
+      : !ini || !fim ? "Diga de quando a quando o plano vale." : fim < ini ? "O fim da vigência está antes do início." : "";
+    if (erro) { $("#pe-erro").textContent = erro; return false; }
+    Object.keys(ENTREGAS).forEach(k => delete ENTREGAS[k]);
+    Object.assign(ENTREGAS, novas);
+    Object.assign(PLANO_ENTREGAS, { inicio:ini, fim, carregado_em:dISO(hoje), quem:eu });
+    trocandoPlano = false;
+    avisoMsg = `Plano de entregas guardado: <b>${Object.keys(novas).length} entregas</b>, de ${dBR(dData(ini))} a ${dBR(dData(fim))}.`;
+  }
+  function copiarLinha(i) {
+    const el = $("#pt-" + i), ok = $("#pt-ok-" + i);
+    const naMao = () => {
+      const sel = window.getSelection(), r = document.createRange();
+      r.selectNodeContents(el); sel.removeAllRanges(); sel.addRange(r);
+      ok.textContent = "Texto selecionado: copie com Ctrl+C.";
+    };
+    try { navigator.clipboard.writeText(el.textContent).then(() => { ok.textContent = "Copiado. Cole na linha do Petrvs."; }, naMao); }
+    catch (e) { naMao(); }
+  }
 
   // ---- a tabela, que só o chefe vê ----
   const desfaz = (acao, at) => `<button type="button" class="link fino" data-acao="${acao}" ${at}>desfazer</button>`;
@@ -1137,22 +1572,32 @@
     if (!x.petrvs) return '<span class="mt-pe">aguarda o Petrvs</span>';
     return `<div class="cel"><button type="button" class="bt pri" data-acao="mes-assinar" ${at}>Assinar</button></div>`;
   }
-  function celFreq(m, nome) {
-    const x = m.marcas[nome], at = `data-mes="${m.id}" data-quem="${nome}"`;
-    if (nome === CHEFE) return '<span class="mt-pe">fora desta tela</span>';
-    if (x.freq) return `<div class="cel"><span class="pill s-fechado">✓ ${ddmm(x.freq)}</span>${desfaz("mes-desaprovar", at)}</div>`;
-    return `<div class="cel"><button type="button" class="bt pri" data-acao="mes-aprovar" ${at}>Aprovar</button></div>`;
+  // A frequência (versão 24): uma linha por mês, só para o chefe — o aviso do prazo
+  // e o botão "Aprovei". A de teletrabalho é automática; ninguém mais precisa ver.
+  function linhaFreq(m) {
+    const pz = prazoDe(m), at = `data-mes="${m.id}"`;
+    return `
+      <div class="linha">
+        <div class="linha-corpo" style="cursor:default">
+          <span class="item-topo">${chipMes(m)}${m.freq ? `<span class="pill s-fechado">✓ aprovada em ${ddmm(m.freq)}</span>`
+            : `<span class="pill s-${pz.chave}${pz.cheia ? " cheia" : ""}">${pz.rotulo}</span>`}</span>
+          <span class="mt-nome">${m.freq ? `Frequência de ${mesDe(m.comp)} aprovada no SouGov` : `Aprovar no SouGov a frequência de ${mesDe(m.comp)}`}</span>
+          ${m.freq ? "" : `<span class="mt-pe">O prazo é o 5º dia útil, ${dBR(m.prazo)}.</span>`}
+        </div>
+        <div class="linha-acoes">${m.freq ? desfaz("mes-desaprovar", at)
+          : `<button type="button" class="bt pri" data-acao="mes-aprovar" ${at}>Aprovei</button>`}</div>
+      </div>`;
   }
   function tabelaMes(m, soAbertos) {
     const gente = EQUIPE.filter(n => !soAbertos || !fechouEm(m, n));
     return `<table class="tab mes-tab">
-      <thead><tr><th>Pessoa</th><th>Petrvs</th><th>Sua assinatura</th><th>Frequência no SouGov</th>
+      <thead><tr><th>Pessoa</th><th>Petrvs</th><th>Sua assinatura</th>
         <th>Concluiu em ${mesDe(m.comp)}</th></tr></thead>
       <tbody>${gente.map(n => {
         const c = concluidoNoMes(n, m).length;
         return `<tr class="${n === eu ? "eu-linha" : ""}">
           <td class="pessoa" title="${n}">${curto(n)}${n === CHEFE ? ' <span class="mt-pe">chefe</span>' : ""}</td>
-          <td>${celPetrvs(m, n)}</td><td>${celAssina(m, n)}</td><td>${celFreq(m, n)}</td>
+          <td>${celPetrvs(m, n)}</td><td>${celAssina(m, n)}</td>
           <td>${c ? `<button type="button" class="link" data-acao="mes-ver" data-mes="${m.id}" data-quem="${n}">${c} ${c === 1 ? "trabalho" : "trabalhos"}</button>`
                   : '<span class="mt-pe">nada registrado</span>'}</td></tr>`;
       }).join("")}</tbody></table>`;
@@ -1172,8 +1617,7 @@
           ${x.petrvs ? "" : `<span class="mt-pe">O prazo é o 5º dia útil, ${dBR(m.prazo)}.${!chefe && cobr ? ` <b style="color:var(--fg)">${cobr}</b>` : ""}</span>`}
           ${chefe ? "" : `
           <span class="mt-pe">${x.assinado ? `<b style="color:var(--ok)">${curto(CHEFE)} já assinou</b>, em ${ddmm(x.assinado)}`
-            : x.petrvs ? "O seu Petrvs ainda não foi assinado" : "A assinatura vem depois do preenchimento"}</span>
-          <span class="mt-pe">${x.freq ? `Frequência aprovada em ${ddmm(x.freq)}` : "A sua frequência ainda não foi aprovada"}</span>`}
+            : x.petrvs ? "O seu Petrvs ainda não foi assinado" : "A assinatura vem depois do preenchimento"}</span>`}
         </div>
         <div class="linha-acoes">${x.petrvs ? (x.assinado ? "" : desfaz("mes-desmarcar", at))
           : `<button type="button" class="bt pri" data-acao="mes-marcar" ${at}>Preenchi o Petrvs</button>`}</div>
@@ -1185,17 +1629,70 @@
   function meuPetrvs(m) { return bloco(corMeuPetrvs([m]), `Petrvs — ${mesDe(m.comp)}`, "", linhaMeuPetrvs(m)); }
   // Na coluna da direita, um bloco SÓ, com todos os meses abertos dentro. Para o
   // chefe é aviso: o resumo de cada mês; assinar e aprovar se faz na tela.
+  // ---- férias e recesso (versão 24) ----
+  const periodo = f => f.ate ? `${ddmm(f.de)} a ${ddmm(f.ate)}` : `desde ${ddmm(f.de)}, sem prazo`;
+  const aindaVale = f => !f.ate || dData(f.ate) >= hoje;
+  // "Karin — férias até 24/11" · "Vinícius — afastamento, sem prazo" (versão 26)
+  const foraAte = f => `${ROTULO_AUSENCIA[f.tipo]}${f.ate ? " até " + ddmm(f.ate) : ", sem prazo"}`;
+  function linhaFerias(f, comNome) {
+    const chefe = eu === CHEFE, agora = dData(f.de) <= hoje && aindaVale(f);
+    const passam = f.situacao === "homologada"
+      ? TAREFAS.filter(t => t.estado !== "concluida" && t.responsavel === f.quem && t.suplente).length : 0;
+    const botoes = chefe && f.situacao === "pedida"
+      ? `<button type="button" class="bt pri" data-acao="fe-homologar" data-id="${f.id}">Homologuei no SouGov</button>
+         <button type="button" class="bt" data-acao="fe-devolver" data-id="${f.id}">Não homologar</button>`
+      : chefe && !f.ate ? `<button type="button" class="bt" data-acao="fe-encerrar" data-id="${f.id}">Encerrar hoje</button>`
+      : (f.quem === eu && f.situacao === "pedida") || (chefe && f.situacao === "homologada")
+        ? `<button type="button" class="link fino" data-acao="fe-tirar" data-id="${f.id}">${f.situacao === "pedida" ? "desmarcar" : "desfazer"}</button>` : "";
+    return `
+      <div class="linha">
+        <div class="linha-corpo" style="cursor:default">
+          <span class="item-topo">
+            ${agora && f.situacao === "homologada" ? '<span class="pill s-avencer">fora agora</span>' : ""}
+            <span class="pill ${f.situacao === "homologada" ? "s-fechado" : "s-avencer"}">${f.situacao === "homologada" ? "homologada" : chefe ? "homologar no SouGov" : "aguarda homologação no SouGov"}</span>
+            <span class="chip">${ROTULO_AUSENCIA[f.tipo]}</span>
+          </span>
+          <span class="mt-nome">${comNome ? curto(f.quem) + " — " : ""}${periodo(f)}</span>
+          ${passam ? `<span class="mt-pe">No período, ${passam} ${passam === 1 ? "tarefa passa" : "tarefas passam"} para o suplente.</span>`
+            : f.situacao === "pedida" ? `<span class="mt-pe">Registrada ${quando(f.pedida_em)}. Só depois de homologada o suplente assume.</span>` : ""}
+        </div>
+        <div class="linha-acoes">${botoes}</div>
+      </div>`;
+  }
+  // Cada pessoa vê as suas; o chefe vê o quadro de todos, por data de início.
+  function blocoFerias() {
+    const chefe = eu === CHEFE;
+    const fs = FERIAS.filter(f => (chefe || f.quem === eu) && aindaVale(f))
+      .sort((a, b) => a.de < b.de ? -1 : 1);
+    const pend = fs.filter(f => f.situacao === "pedida").length;
+    return bloco("var(--mes)", "Férias e recesso", fs.length,
+      fs.map(f => linhaFerias(f, chefe)).join("") + `
+      <div class="ferias-nova">
+        ${chefe ? `<select id="fe-quem" aria-label="De quem">${EQUIPE.map(n => `<option value="${n}"${n === eu ? " selected" : ""}>${curto(n)}</option>`).join("")}</select>` : ""}
+        <select id="fe-tipo" aria-label="Tipo"><option value="ferias">férias</option><option value="recesso">recesso</option><option value="afastamento">afastamento</option></select>
+        <label>de <input type="date" id="fe-de" aria-label="Início"></label>
+        <label>a <input type="date" id="fe-ate" aria-label="Fim — em branco só no afastamento sem prazo"></label>
+        <button type="button" class="bt" data-acao="fe-marcar">${chefe ? "Marcar" : "Registrei no SouGov"}</button>
+        <span class="mt-pe" id="fe-erro"></span>
+      </div>`,
+      chefe ? "Ninguém marcou férias ou recesso daqui para a frente." : "Você não tem férias ou recesso marcados.",
+      chefe && pend ? `${pend} para homologar no SouGov` : "");
+  }
+
   function petrvsDaDireita(abre) {
     const ms = mesesNaTela();
     if (eu !== CHEFE) {
       const meus = ms.filter(m => m === MES_ATUAL || !fechouEm(m, eu));
-      return bloco(corMeuPetrvs(meus), "Petrvs e frequência", "", meus.map(m => linhaMeuPetrvs(m, true)).join(""), "", "", abre ? "mes" : "");
+      const fe = FERIAS.filter(f => f.quem === eu && aindaVale(f));
+      return bloco(corMeuPetrvs(meus), "RH do Escritório", "", meus.map(m => linhaMeuPetrvs(m, true)).join("")
+        + fe.map(f => linhaFerias(f, false)).join(""), "", "", abre ? "mes" : "");
     }
-    const haAcao = ms.some(m => aAssinar(m).length || aAprovar(m).length);
+    const haAcao = ms.some(m => aAssinar(m).length || !m.freq) || FERIAS.some(f => f.situacao === "pedida");
+    const fePend = FERIAS.filter(f => f.situacao === "pedida"), foraAgora = EQUIPE.filter(ausenciaDe);
     const corpo = ms.map(m => {
-      const sem = semPetrvs(m), as = aAssinar(m), ap = aAprovar(m), pz = prazoDe(m), falto = !m.marcas[eu].petrvs;
+      const sem = semPetrvs(m), as = aAssinar(m), pz = prazoDe(m), falto = !m.marcas[eu].petrvs;
       const resumo = [sem.length ? `${sem.length} sem Petrvs` : "", as.length ? `${as.length} para assinar` : "",
-                      ap.length ? `${ap.length} ${ap.length === 1 ? "frequência" : "frequências"} para aprovar` : ""].filter(Boolean).join(" · ");
+                      m.freq ? "" : "frequência para aprovar"].filter(Boolean).join(" · ");
       return `
         <div class="linha">
           <div class="linha-corpo" style="cursor:default">
@@ -1206,10 +1703,17 @@
           </div>
           ${falto ? `<div class="linha-acoes"><button type="button" class="bt pri" data-acao="mes-marcar" data-mes="${m.id}" data-quem="${eu}">Preenchi o Petrvs</button></div>` : ""}
         </div>`;
-    }).join("") + (haAcao ? `
+    }).join("") + (diasParaTroca() <= 15 ? `
         <div class="linha"><div class="linha-corpo" style="cursor:default">
-          <span class="mt-pe">Para assinar e aprovar, abra pelo título deste bloco.</span></div></div>` : "");
-    return bloco("var(--mes)", "Petrvs e frequência", pendenciasMes(), corpo, "", "", abre ? "mes" : "");
+          <span class="item-topo"><span class="pill ${diasParaTroca() < 0 ? "cheia s-falta" : "s-avencer"}">${diasParaTroca() < 0 ? "venceu" : "troca em " + diasParaTroca() + " dias"}</span></span>
+          <span class="mt-nome">Plano de entregas da unidade: subir o novo até ${dBR(proximaTroca())}</span></div></div>` : "") + (fePend.length || foraAgora.length ? `
+        <div class="linha"><div class="linha-corpo" style="cursor:default">
+          <span class="item-topo"><span class="chip">férias e recesso</span>${fePend.length ? `<span class="pill s-avencer">${fePend.length} para homologar no SouGov</span>` : ""}</span>
+          ${foraAgora.length ? foraAgora.map(n => `<span class="mt-nome" style="font-weight:600">${curto(n)} — ${foraAte(ausenciaDe(n))}</span>`).join("")
+            : '<span class="mt-nome" style="font-weight:600">Ninguém fora agora</span>'}</div></div>` : "") + (haAcao ? `
+        <div class="linha"><div class="linha-corpo" style="cursor:default">
+          <span class="mt-pe">Para assinar, aprovar e homologar, abra pelo título deste bloco.</span></div></div>` : "");
+    return bloco("var(--mes)", "RH do Escritório", pendenciasMes(), corpo, "", "", abre ? "mes" : "");
   }
   function textoLembrete() {
     const ms = mesesNaTela(), pz = prazoDe(MES_ATUAL);
@@ -1239,26 +1743,33 @@
 
   // ---------- Recortes ----------
   // As minhas: as abertas e as paralisadas cuja data de volta chegou.
-  const minhasTarefas = () => TAREFAS.filter(t => (aberta(t) || voltou(t)) && t.responsavel === eu).sort(porUrgencia);
-  const rotinasDe = quem => ROTINAS.filter(r => (r.responsavel || null) === quem)
+  // Versão 24: "minhas" é o que está comigo HOJE — as minhas como titular, e as de
+  // quem está de férias quando eu sou o suplente.
+  const minhasTarefas = () => TAREFAS.filter(t => (aberta(t) || voltou(t)) && comQuem(t) === eu).sort(porUrgencia);
+  const rotinasDe = quem => ROTINAS.filter(r => (comQuem(r) || null) === quem)
     .sort((a, b) => estadoRotina(b).aberta - estadoRotina(a).aberta);    // as vencidas primeiro
   const minhasRotinas = () => rotinasDe(eu).filter(r => estadoRotina(r).aberta);   // as que pedem ação
-  const rotinasDoGrupo = () => rotinasDe(null);
   const semDono = () => TAREFAS.filter(t => aberta(t) && !t.responsavel).sort(porUrgencia);
   const suspensas = () => TAREFAS.filter(t => t.estado === "suspensa" && noAr(t));
   const guardados = () => PROJETOS.filter(p => p.estado === "depois");
   const arquivados = () => PROJETOS.filter(p => p.estado === "arquivado");
   const novos = () => PEDIDOS.filter(p => p.situacao === "novo");
+  // Cartões de cima por perfil (versão 24): o servidor vê só o que é dele; pedidos
+  // novos, todo mundo; sem dono, só o chefe.
+  const ehMeu = t => eu === CHEFE || comQuem(t) === eu || t.responsavel === eu;
+  const minhasIdeias = () => IDEIAS.filter(i => eu === CHEFE || i.quem === eu);
+  const minhasConcluidas = () => TAREFAS.filter(t => t.estado === "concluida" && (eu === CHEFE || t.responsavel === eu));
+  const minhasAnotacoes = () => ANOTACOES.filter(n => n.quem === eu);
   const pedidosDo = id => PEDIDOS.filter(x => PROJETO_DA_FERRAMENTA[x.ferramenta] === id);
   function parados() {
     const de = [];
     TAREFAS.filter(t => aberta(t) || voltou(t)).forEach(t => {
       const st = estadoTarefa(t);
-      if (st.parada) de.push({ tipo:"tarefa", item:t, st, quem:t.responsavel, dias:st.dias });
+      if (st.parada) de.push({ tipo:"tarefa", item:t, st, quem:comQuem(t), dias:st.dias });
     });
     ROTINAS.forEach(r => {
       const st = estadoRotina(r);
-      if (st.parada) de.push({ tipo:"rotina", item:r, st, quem:r.responsavel, dias:st.dias });
+      if (st.parada) de.push({ tipo:"rotina", item:r, st, quem:comQuem(r), dias:st.dias });
     });
     return de.sort((a, b) => b.dias - a.dias);
   }
@@ -1269,7 +1780,14 @@
   //  PEDAÇOS DE TELA
   // ======================================================================
   const chipPessoa = n => `<span class="chip">${n ? curto(n) : "sem dono"}</span>`;
-  const ORIGEM = { pedido:"veio de um pedido", rotina:"veio de uma rotina",
+  // Titular e suplente numa etiqueta só. Em substituição, diz de quem.
+  const chipTitular = x => !x.responsavel ? chipPessoa(null)
+    : substituindo(x) ? `<span class="chip">${curto(x.suplente)}, suplente de ${curto(x.responsavel)}</span>`
+    : `<span class="chip">${curto(x.responsavel)}${x.suplente ? ` · supl. ${curto(x.suplente)}` : ""}</span>`;
+  // Para quem é suplente e está cobrindo: a marca aparece mesmo onde o nome não aparece.
+  const chipCobrindo = x => substituindo(x) && comQuem(x) === eu
+    ? `<span class="chip vazado c-liga">suplente de ${curto(x.responsavel)}</span>` : "";
+  const ORIGEM = { pedido:"veio de um pedido", rotina:"veio de uma tarefa recorrente",
                    projeto:"veio de um projeto concluído", ideia:"era uma ideia" };
   function chipsOrigem(t) {
     let h = "";
@@ -1281,7 +1799,7 @@
     EQUIPE.map(n => `<option value="${n}"${n === sel ? " selected" : ""}>${n}</option>`).join("");
   const ultimaNota = t => { if (!t.notas.length) return "";
     const n = t.notas[t.notas.length - 1];
-    return `<span class="mt-pe">obs. de ${dBR(dData(n.quando))}: ${n.texto}${t.notas.length > 1 ? ` <b>(+${t.notas.length - 1})</b>` : ""}</span>`; };
+    return `<span class="mt-pe">comentário de ${dBR(dData(n.quando))}: ${n.texto}${t.notas.length > 1 ? ` <b>(+${t.notas.length - 1})</b>` : ""}</span>`; };
 
   // `mostra` diz o que o contexto ainda não disse: onde (frente › projeto, na
   // cor da frente, com a barra lateral) e pessoa.
@@ -1293,15 +1811,19 @@
         botoes = `<button type="button" class="bt pri" data-acao="pegar" data-id="${t.id}">Pegar</button>`;
         if (eu === CHEFE && mostra.atribuir)
           botoes += `<select class="mini" data-atribuir="${t.id}" aria-label="Atribuir a alguém">${opcoesEquipe("", "atribuir a…")}</select>`;
-      } else if (t.responsavel === eu) {
-        botoes = `<button type="button" class="bt verde" data-acao="concluir" data-id="${t.id}">Concluir tarefa</button>`;
+      } else if (comQuem(t) === eu) {
+        botoes = (t.iniciada ? "" : `<button type="button" class="bt pri" data-acao="iniciar" data-id="${t.id}">Iniciar</button>`) +
+          `<button type="button" class="bt verde" data-acao="concluir" data-id="${t.id}">Concluir tarefa</button>`;
       }
     } else if (t.estado === "suspensa") {
       botoes = `<button type="button" class="bt" data-acao="retomar" data-id="${t.id}">Retomar</button>`;
     } else {
       botoes = `<button type="button" class="bt" data-acao="reabrir" data-id="${t.id}">Reabrir</button>`;
     }
-    const pediu = andamentoPendente(t) && t.responsavel === eu && t.estado === "aberta" ? `
+    // Comentar direto da linha (versão 23): o diário de bordo de quem está com a tarefa.
+    if (mostra.comentar && t.estado !== "concluida" && comentando !== t.id)
+      botoes = `<button type="button" class="bt" data-acao="comentar" data-id="${t.id}">Comentar</button>` + botoes;
+    const pediu = andamentoPendente(t) && comQuem(t) === eu && t.estado === "aberta" ? `
       <div class="pediu">
         <span><b>${curto(CHEFE)} pediu uma atualização.</b> Como está isto?</span>
         <div>
@@ -1310,13 +1832,24 @@
           <button type="button" class="bt pri" data-acao="responder" data-id="${t.id}">Responder</button>
         </div>
       </div>` : "";
+    const comentario = comentando === t.id ? `
+      <div class="pediu comentar">
+        <span><b>Comentário</b> — fica com a data de hoje, no diário de bordo da tarefa.</span>
+        <div>
+          <input type="text" class="campo-linha" id="com-${t.id}" data-nova="comentario" data-id="${t.id}" maxlength="200"
+                 placeholder="estou aguardando a resposta da área; hoje o sistema saiu do ar…" aria-label="Comentário sobre ${t.titulo}">
+          <button type="button" class="bt pri" data-acao="comentar-ok" data-id="${t.id}">Incluir</button>
+          <button type="button" class="bt" data-acao="comentar-fechar">Cancelar</button>
+        </div>
+      </div>` : "";
     return `
       <div class="linha" ${mostra.onde ? corDe(t) : ""}>
         <button type="button" class="linha-corpo" data-acao="abrir-t" data-id="${t.id}">
           <span class="item-topo">
             ${pill(st)}
+            ${mostra.prazo && t.prazo ? `<span class="chip">prazo ${ddmm(t.prazo)}</span>` : ""}
             ${t.estado === "suspensa" ? `<span class="chip">${MOTIVO[t.motivo]}</span>` : ""}
-            ${mostra.pessoa && (t.responsavel || st.chave !== "semdono") ? chipPessoa(t.responsavel) : ""}
+            ${mostra.pessoa && (t.responsavel || st.chave !== "semdono") ? chipTitular(t) : chipCobrindo(t)}
             ${chipsOrigem(t)}
           </span>
           <span class="mt-nome">${t.titulo}</span>
@@ -1324,17 +1857,17 @@
           ${ultimaNota(t)}
         </button>
         <div class="linha-acoes">${botoes}</div>
-        ${pediu}
+        ${pediu}${comentario}
       </div>`;
   }
 
   // Os botões da rodada: os mesmos na linha e na ficha.
+  // Versão 24: a rotina é uma tarefa recorrente. Conclui-se "nesta rodada"; quando a
+  // tarefa é de olhar, dá para concluir e já abrir o trabalho que apareceu.
   function botoesRotina(r, st) {
-    if (!st.aberta) return "";
-    return r.natureza === "olhar"
-      ? `<button type="button" class="bt" data-acao="rot-nada" data-id="${r.id}">Ciente, não há nada a fazer</button>
-         <button type="button" class="bt pri" data-acao="rot-trabalho" data-id="${r.id}">Ciente, há trabalho a fazer</button>`
-      : `<button type="button" class="bt verde" data-acao="rot-feita" data-id="${r.id}">Concluir rodada</button>`;
+    if (!st.aberta || (comQuem(r) && comQuem(r) !== eu)) return "";
+    return `<button type="button" class="bt verde" data-acao="rot-feita" data-id="${r.id}">Concluir nesta rodada</button>` +
+      (r.natureza === "olhar" ? `<button type="button" class="bt" data-acao="rot-trabalho" data-id="${r.id}">Concluir e abrir tarefa</button>` : "");
   }
   function linhaRotina(r, mostra = {}) {
     const st = estadoRotina(r);
@@ -1344,8 +1877,8 @@
         <button type="button" class="linha-corpo" data-acao="abrir-r" data-id="${r.id}">
           <span class="item-topo">
             ${pill(st)}
-            <span class="chip vazado c-rot">rotina · ${descricao(r)}</span>
-            ${mostra.pessoa ? `<span class="chip">${r.responsavel ? curto(r.responsavel) : "do grupo"}</span>` : ""}
+            <span class="chip vazado c-rot">recorrente · ${descricao(r)}</span>
+            ${mostra.pessoa ? chipTitular(r) : chipCobrindo(r)}
           </span>
           <span class="mt-nome">${r.titulo}</span>
           ${mostra.onde ? `<span class="mt-onde">${ondeDe(r)}</span>` : ""}
@@ -1366,11 +1899,15 @@
             ${semEtiqueta ? "" : `<span class="pill s-${p.situacao}${p.situacao === "novo" ? " cheia" : ""}">${ROTULO_SITUACAO[p.situacao]}</span>`}
             <span class="chip">${ROTULO_FERRAMENTA[p.ferramenta]}</span>
             <span class="chip">${ROTULO_TIPO[p.tipo]}</span>
+            ${p.responsavel ? `<span class="chip">com ${curto(p.responsavel)}</span>` : ""}
             ${marca}
           </span>
           <span class="mt-nome" style="font-weight:600">${p.texto}</span>
           <span class="mt-pe">${p.contato} · ${quando(p.criado)}</span>
         </button>
+        ${p.situacao === "novo" ? `<div class="linha-acoes">${eu === CHEFE
+          ? `<select class="mini" data-atribuir-pedido="${p.id}" aria-label="Atribuir o pedido">${opcoesEquipe(p.responsavel || "", "atribuir a…")}</select>`
+          : !p.responsavel ? `<button type="button" class="bt" data-acao="pedido-pegar" data-id="${p.id}">Pegar</button>` : ""}</div>` : ""}
       </div>`;
   }
 
@@ -1410,59 +1947,122 @@
   };
   const banda = (cor, sobre, titulo, texto, extra = "") => `
     <div class="banda" style="--fc:${cor}">
-      <span class="sobre">${sobre}</span><h2>${titulo}</h2>${texto ? `<p>${texto}</p>` : ""}${extra}
+      ${sobre ? `<span class="sobre">${sobre}</span>` : ""}<h2>${titulo}</h2>${texto ? `<p>${texto}</p>` : ""}${extra}
     </div>`;
-  // Anotar uma tarefa própria sem passar pela frente: escreve, Enter, escolhe a frente.
+  // Versão 24: anotar não pede frente nem projeto. A anotação nasce solta, em Minhas
+  // anotações, e só quem escreveu vê. Depois vincula a um projeto, ou vira tarefa.
   const campoMinha = () => `
-    <div class="nova-linha"><input type="text" data-nova="minha" maxlength="160"
-      placeholder="Anotar uma tarefa minha — escreva e dê Enter" aria-label="Anotar uma tarefa minha"></div>`;
+    <div class="nova-linha"><input type="text" data-nova="minha" maxlength="300"
+      placeholder="Anotar — uma tarefa só sua, ou uma observação; escreva e dê Enter" aria-label="Anotar"></div>`;
+  // ---- Minhas tarefas por situação (versão 25) ----
+  function secaoDaTarefa(t) {
+    const st = estadoTarefa(t);
+    if (t.estado === "suspensa") return st.parada ? "venc" : "para";
+    if (st.parada) return "venc";
+    return t.iniciada ? "and" : "nao";
+  }
+  // Seção que abre e fecha. Começa recolhida; a escolha fica, por pessoa.
+  const secoesAbertas = {};
+  function secao(id, cor, titulo, itens, sub = "", alarme = false) {
+    const k = eu + ":" + id, aberta = !!secoesAbertas[k], n = itens.length;
+    return `
+    <div class="bloco secao" style="--bc:${cor}">
+      <button type="button" class="bloco-cab" data-acao="secao" data-id="${id}" aria-expanded="${aberta}">
+        <span class="seta" aria-hidden="true">${aberta ? "▾" : "▸"}</span>${titulo}${sub ? ` <small>— ${sub}</small>` : ""}
+        ${alarme && n ? `<span class="pill cheia s-falta" style="margin-left:auto">${n}</span>` : `<span class="n">${n}</span>`}
+      </button>
+      ${aberta ? `<div class="bloco-corpo">${itens.join("") || '<p class="vazio">Nenhuma.</p>'}</div>` : ""}
+    </div>`;
+  }
+  // As anotações na coluna da direita, embaixo do RH (versão 25): as três últimas e o campo.
+  function quadroAnotacoes() {
+    const ns = minhasAnotacoes().slice().sort((a, b) => a.quando < b.quando ? 1 : -1);
+    return bloco("var(--accent)", "Minhas anotações", ns.length,
+      ns.slice(0, 3).map(n => `
+        <div class="linha" style="--fc:${n.projeto ? frente(projeto(n.projeto).frente).cor : "transparent"}">
+          <button type="button" class="linha-corpo" data-acao="nota-ver" data-id="${n.id}">
+            <span class="mt-nome" style="font-weight:600">${esc(n.texto)}</span>
+            <span class="mt-pe">${n.projeto ? projeto(n.projeto).nome + " · " : ""}${quando(n.quando)}</span>
+          </button>
+        </div>`).join("") + campoMinha(), "", "", "anotacoes");
+  }
+  let notaDestaque = null;   // versão 26: a anotação clicada no quadrinho da direita
+  function linhaAnotacao(n) {
+    const pjs = PROJETOS.filter(p => p.estado === "ativo");
+    return `
+      <div class="linha" style="--fc:${n.projeto ? frente(projeto(n.projeto).frente).cor : "transparent"}${n.id === notaDestaque ? ";outline:2.5px solid var(--accent);outline-offset:-2.5px" : ""}">
+        <div class="linha-corpo" style="cursor:default">
+          ${n.projeto ? `<span class="item-topo"><span class="chip">${projeto(n.projeto).nome}</span></span>` : ""}
+          <span class="mt-nome">${esc(n.texto)}</span>
+          <span class="mt-pe">anotado ${quando(n.quando)}</span>
+        </div>
+        <div class="linha-acoes">
+          <select class="mini" data-vincular="${n.id}" aria-label="Vincular a um projeto">
+            <option value="">${n.projeto ? "tirar do projeto" : "vincular a projeto…"}</option>
+            ${pjs.map(p => `<option value="${p.id}"${p.id === n.projeto ? " selected" : ""}>${p.nome}</option>`).join("")}
+          </select>
+          <button type="button" class="bt" data-acao="nota-tarefa" data-id="${n.id}">Virar tarefa</button>
+          <button type="button" class="link fino" data-acao="nota-apagar" data-id="${n.id}">apagar</button>
+        </div>
+      </div>`;
+  }
   const frenteProvavel = () => {
     if (vista.tipo === "frente") return vista.id;
     if (vista.tipo === "projeto") return projeto(vista.id).frente;
     const conta = {}; minhasTarefas().forEach(t => { conta[t.frente] = (conta[t.frente] || 0) + 1; });
-    return Object.keys(conta).sort((a, b) => conta[b] - conta[a])[0] || FRENTES[0].id;
+    return Object.keys(conta).sort((a, b) => conta[b] - conta[a])[0] || frentesAtivas()[0].id;
   };
+  // Versão 27: a tarefa nasce com prazo, se a pessoa quiser. O prazo é opcional; o Enter
+  // grava tanto no título quanto na data.
   const campoNova = (tipo, f, p, texto) => `
     <div class="nova-linha"><input type="text" data-nova="${tipo}" data-frente="${f}" data-projeto="${p || ""}"
-      placeholder="${texto}" aria-label="${texto}"></div>`;
+      placeholder="${texto}" aria-label="${texto}">${tipo === "tarefa" ? `
+      <label class="nova-prazo">prazo <input type="date" class="nova-data" aria-label="Prazo da nova tarefa (opcional)"></label>` : ""}</div>`;
 
   // ======================================================================
   //  TELA 1 — O COCKPIT
   // ======================================================================
   // Todo contador abre alguma coisa, e fica aceso enquanto ela está aberta.
   function desenharFaixa() {
+    const chefe = eu === CHEFE;
     $("#resumo").innerHTML = [
       ["minhas",     minhasTarefas().length + minhasRotinas().length, "minhas tarefas", "var(--accent)"],
-      ["parados",    paradosMeus().length,                    "parados",        "var(--alerta)"],
-      ["semdono",    semDono().length,                        "sem dono",       "var(--meio)"],
+      ["anotacoes",  minhasAnotacoes().length,                "minhas anotações", "var(--accent)"],
+      ["parados",    paradosMeus().length,                    "vencidas",       "var(--alerta)"],
+      chefe ? ["semdono", semDono().length,                   "sem dono",       "var(--meio)"] : null,
       ["chegou",     novos().length,                          "pedidos novos",  "var(--azul)"],
-      ["ideias",     IDEIAS.length,                           "não iniciado",   "var(--off)"],
-      ["paralisado", guardados().length + suspensas().length, "paralisados",    "var(--roxo)"],
-      ["feitas",     TAREFAS.filter(t => t.estado === "concluida").length, "concluídas", "var(--ok)"]
-    ].map(([id, n, rot, cor]) =>
+      ["ideias",     minhasIdeias().length,                   "ideias",         "var(--off)"],
+      ["paralisado", (chefe ? guardados().length : 0) + suspensas().filter(ehMeu).length, "paralisados", "var(--roxo)"],
+      ["feitas",     minhasConcluidas().length,               "concluídas",     "var(--ok)"]
+    ].filter(Boolean).map(([id, n, rot, cor]) =>
       `<button type="button" class="tile ${n ? "" : "zero"}" style="--tc:${cor}" data-acao="vista" data-tipo="caixa" data-id="${id}" aria-current="${vista.tipo === "caixa" && vista.id === id}"><b>${n}</b><span>${rot}</span></button>`
     ).join("");
   }
 
   // Quadro de avisos: uma faixa fina. Sem aviso, e sem ser chefe, ela nem aparece.
   const avisosValidos = () => AVISOS.filter(a => (!a.ate || dData(a.ate) >= hoje) && (!a.para || a.para === eu));
-  // Os três últimos ficam sempre à vista; o resto, a um clique. Qualquer pessoa
-  // escreve; tira o aviso quem escreveu, ou o chefe.
+  // Versão 24: o quadro vem primeiro na coluna da esquerda. Os quatro últimos ficam
+  // à vista; o resto, a um clique. Cada aviso mostra até três linhas, com "mais".
+  // Qualquer pessoa escreve; tira o aviso quem escreveu, ou o chefe.
+  const VISIVEIS = 4;
   function desenharAvisos() {
     const av = avisosValidos();
-    const item = a => `
+    const item = a => {
+      const longo = a.texto.length > 110, aberto = !!avisoAberto[a.id];
+      const texto = a.para && a.tarefa
+        ? `<span class="item-topo"><span class="pill cheia s-novo">para você</span></span><button type="button" class="link" data-acao="abrir-t" data-id="${a.tarefa}">${esc(a.texto)}</button>`
+        : `${a.para ? '<span class="item-topo"><span class="pill cheia s-novo">para você</span></span>' : ""}<span class="${longo && !aberto ? "corte" : ""}">${esc(a.texto)}</span>`;
+      return `
       <div class="aviso-item">
-        <span class="txt">${a.para
-          ? `<span class="item-topo"><span class="pill cheia s-novo">para você</span></span><button type="button" class="link" data-acao="abrir-t" data-id="${a.tarefa}">${a.texto}</button>`
-          : a.texto}<small>${curto(a.quem)}, ${quando(a.quando)}${a.ate ? ` · vale até ${ddmm(a.ate)}` : ""}</small></span>
+        <span class="txt">${texto}${longo && !(a.para && a.tarefa) ? `<button type="button" class="link fino mais" data-acao="aviso-mais" data-id="${a.id}">${aberto ? "menos" : "mais"}</button>` : ""}<small>${curto(a.quem)}, ${quando(a.quando)}${a.ate ? ` · vale até ${ddmm(a.ate)}` : ""}</small></span>
         ${eu === CHEFE || a.quem === eu || a.para === eu ? `<button type="button" class="tirar" data-acao="aviso-tirar" data-id="${a.id}" aria-label="Tirar este aviso" title="Tirar este aviso">×</button>` : ""}
-      </div>`;
+      </div>`; };
     $("#avisos").innerHTML = bloco("var(--aviso)", "Quadro de avisos", av.length,
-      (verAvisos ? av : av.slice(0, 3)).map(item).join("") +
+      (verAvisos ? av : av.slice(0, VISIVEIS)).map(item).join("") +
       (av.length ? "" : '<p class="vazio">Nenhum aviso para a equipe.</p>') +
-      (av.length > 3 ? `<div class="aviso-item"><button type="button" class="link fino" data-acao="aviso-ver">${verAvisos ? "mostrar só os 3 últimos" : `ver os ${av.length} avisos`}</button></div>` : "") + `
+      (av.length > VISIVEIS ? `<div class="aviso-item"><button type="button" class="link fino" data-acao="aviso-ver">${verAvisos ? `mostrar só os ${VISIVEIS} últimos` : `mais — ver os ${av.length} avisos`}</button></div>` : "") + `
       <div class="aviso-novo">
-        <input type="text" data-nova="aviso" maxlength="200" placeholder="Novo aviso para todos — escreva e dê Enter" aria-label="Novo aviso para a equipe">
+        <input type="text" data-nova="aviso" maxlength="500" placeholder="Novo aviso para todos — escreva e dê Enter" aria-label="Novo aviso para a equipe">
         <label>vale até <input type="date" id="aviso-ate" aria-label="O aviso vale até"></label>
       </div>`);
   }
@@ -1471,21 +2071,28 @@
   // rotinas se abrem pelo título dos blocos da direita.
   function desenharMenu() {
     const par = parados();
+    // Versão 27: as frentes ficam sempre abertas, abaixo dos avisos (desfaz o recolher
+    // da 25). O título leva à tela das frentes, no centro.
+    const ativas = frentesAtivas();
     $("#menu").innerHTML = `
-      <div class="bloco" style="--bc:var(--f9)">
-        <p class="bloco-cab">Frentes de trabalho</p>
+      <div class="bloco secao" style="--bc:var(--f9)">
+        <button type="button" class="bloco-cab" data-acao="vista" data-tipo="frentes" data-id="" aria-current="${vista.tipo === "frentes"}" title="Ver todas as frentes no centro da tela">
+          Frentes de trabalho <span aria-hidden="true">→</span><span class="n">${ativas.length}</span>
+        </button>
         <div class="bloco-corpo">
-          ${FRENTES.map(f => {
+          ${ativas.map(f => {
             const atual = (vista.tipo === "frente" && vista.id === f.id)
               || (vista.tipo === "projeto" && projeto(vista.id).frente === f.id);
             const ruim = par.filter(x => x.item.frente === f.id).length;
             return `<button type="button" class="nav" style="--nc:${f.cor}" data-acao="vista" data-tipo="frente" data-id="${f.id}" aria-current="${atual}">
-              <i class="ponto"></i><span>${f.nome}</span>${ruim ? `<b class="n ruim" title="paradas">${ruim}</b>` : ""}<b class="n">${TAREFAS.filter(t => t.frente === f.id && aberta(t)).length}</b></button>`;
+              <i class="ponto"></i><span>${f.nome}</span>${ruim ? `<b class="n ruim" title="vencidas">${ruim}</b>` : ""}<b class="n">${TAREFAS.filter(t => t.frente === f.id && aberta(t)).length}</b></button>`;
           }).join("")}
         </div>
       </div>`;
     $("#pe").innerHTML = `<b>CGGES</b> — Escritório de Processos da SPU.
-        <span class="versao">Home EPP · área logada · protótipo de 13/11/2026 · dados de exemplo</span>`;
+        ${REAL ? `<span class="versao">Home EPP · área da equipe · entrou como ${curto(eu)}</span>
+        <button type="button" class="link" data-acao="sair">Sair</button>`
+        : `<span class="versao">Home EPP · área logada · protótipo de 18/11/2026 (versão 28) · dados de exemplo</span>`}`;
   }
 
   // Na frente os projetos vêm recolhidos. Abre sozinho só o que tem alerta: tarefa
@@ -1508,8 +2115,9 @@
           <button type="button" class="projeto-dobra" data-acao="pj-dobrar" data-id="${p.id}" aria-expanded="${aberto}" title="${aberto ? "Recolher" : "Expandir"}">
             <span class="seta" aria-hidden="true">${aberto ? "▾" : "▸"}</span>
             <span class="projeto-nome">${p.nome}</span>
-            <span class="projeto-conta">${contaProjeto(r)}${nPed ? ` · <span style="color:var(--azul);font-weight:800">${nPed} ${nPed === 1 ? "pedido novo" : "pedidos novos"}</span>` : ""}</span>
+            <span class="projeto-conta">${contaProjeto(r)}</span>
           </button>
+          ${nPed ? `<button type="button" class="projeto-abrir" style="color:var(--azul)" data-acao="pj-pedidos" data-id="${p.id}">${nPed} ${nPed === 1 ? "pedido novo" : "pedidos novos"} pela ferramenta →</button>` : ""}
           ${linkFerramenta(p, true)}
           <button type="button" class="projeto-abrir" data-acao="vista" data-tipo="projeto" data-id="${p.id}">abrir o projeto →</button>
           </div>
@@ -1522,18 +2130,89 @@
     }).join("");
     const guardadosAqui = PROJETOS.filter(p => p.frente === f.id && p.estado === "depois").length;
     return `
-      ${banda(f.cor, "Frente de trabalho", f.nome, f.sub)}
-      ${pjs.length ? `<p class="mt-pe">Os projetos vêm recolhidos. Abrem sozinhos os que têm algo parado ou atrasado; clique no nome para abrir ou recolher.</p>` + grupos : ""}
-      <div class="nova-linha solta">
+      <button type="button" class="link" data-acao="vista" data-tipo="frentes" data-id="">← Frentes de trabalho</button>
+      ${banda(f.cor, "", f.nome, "")}
+      ${pjs.length ? grupos : ""}
+      ${eu !== CHEFE ? "" : `<div class="nova-linha solta">
         <input type="text" data-nova="projeto" data-frente="${f.id}"
                placeholder="Novo projeto nesta frente — escreva o nome e dê Enter" aria-label="Novo projeto em ${f.nome}">
-      </div>
-      ${bloco(f.cor, pjs.length ? "Tarefas soltas" : "Tarefas", rotSoltas.length + soltas.length,
+      </div>`}
+      ${bloco(f.cor, pjs.length ? "Tarefas avulsas" : "Tarefas", rotSoltas.length + soltas.length,
           rotSoltas.map(r => linhaRotina(r, { pessoa:true })).join("") +
           soltas.map(t => linhaTarefa(t, { pessoa:true, atribuir:true })).join("") +
           campoNova("tarefa", f.id, "", "Nova tarefa nesta frente — escreva e dê Enter"),
-          "", pjs.length ? "as que não são de projeto nenhum" : "")}
+          "")}
       ${guardadosAqui ? `<button type="button" class="link" data-acao="vista" data-tipo="caixa" data-id="paralisado">${guardadosAqui} ${guardadosAqui === 1 ? "projeto desta frente está paralisado" : "projetos desta frente estão paralisados"} →</button>` : ""}`;
+  }
+
+  // ======================================================================
+  //  AS FRENTES NO CENTRO (versão 27)
+  //  Todos veem a lista e entram em cada frente. Só o chefe inclui, edita e arquiva.
+  //  Arquivar não apaga, e só vale para frente sem nada em aberto: arquivada, ela
+  //  some do menu e das contagens, e o trabalho em andamento não pode sumir junto.
+  // ======================================================================
+  const attr = t => esc(t).replace(/"/g, "&quot;");
+  const plural = (n, um, varios) => `${n} ${n === 1 ? um : varios}`;
+  function emAbertoNaFrente(id) {
+    return {
+      tarefas: TAREFAS.filter(t => t.frente === id && t.estado !== "concluida").length,
+      projetos: PROJETOS.filter(p => p.frente === id && (p.estado === "ativo" || p.estado === "depois")).length,
+      rotinas: ROTINAS.filter(r => r.frente === id).length
+    };
+  }
+  function vistaFrentes() {
+    const chefe = eu === CHEFE, par = parados(), ativas = frentesAtivas(), arq = frentesArquivadas();
+    const linha = f => {
+      const ent = ENTREGA_DA_FRENTE[f.id];
+      if (chefe && editandoFrente === f.id) return `
+        <div class="linha" style="--fc:${f.cor}">
+          <div class="fr-edita">
+            <label class="campo" for="frd-nome">Nome da frente
+              <input type="text" id="frd-nome" maxlength="80" value="${attr(f.nome)}"></label>
+            <label class="campo" for="frd-sub">O que ela cobre
+              <input type="text" id="frd-sub" maxlength="200" value="${attr(f.sub || "")}"></label>
+            <label class="campo" for="frd-entrega">Entrega do Petrvs que ela alimenta
+              <select id="frd-entrega"><option value="">nenhuma</option>${Object.keys(ENTREGAS).map(k =>
+                `<option value="${k}"${k === ent ? " selected" : ""}>${ENTREGAS[k]}</option>`).join("")}</select></label>
+            <div class="grupo-linha">
+              <button type="button" class="bt pri" data-acao="fr-salvar" data-id="${f.id}">Salvar</button>
+              <button type="button" class="bt" data-acao="fr-cancelar">Cancelar</button>
+            </div>
+          </div>
+        </div>`;
+      const ab = TAREFAS.filter(t => t.frente === f.id && aberta(t)).length;
+      const venc = par.filter(x => x.item.frente === f.id).length;
+      const pjs = PROJETOS.filter(p => p.frente === f.id && p.estado === "ativo").length;
+      return `
+        <div class="linha" style="--fc:${f.cor}">
+          <button type="button" class="linha-corpo" data-acao="vista" data-tipo="frente" data-id="${f.id}">
+            ${venc ? `<span class="item-topo"><span class="pill cheia s-falta">${plural(venc, "vencida", "vencidas")}</span></span>` : ""}
+            <span class="mt-nome">${esc(f.nome)}</span>
+            ${f.sub ? `<span class="mt-pe">${esc(f.sub)}</span>` : ""}
+            <span class="mt-onde">${[pjs && plural(pjs, "projeto", "projetos"), plural(ab, "tarefa aberta", "tarefas abertas"), ent && "Petrvs " + ent].filter(Boolean).join(" · ")}</span>
+          </button>
+          ${chefe ? `<div class="linha-acoes">
+            <button type="button" class="bt" data-acao="fr-editar" data-id="${f.id}">Editar</button>
+            <button type="button" class="bt" data-acao="fr-arquivar" data-id="${f.id}">Arquivar</button>
+          </div>` : ""}
+        </div>`;
+    };
+    return `
+      ${banda("var(--f9)", "", "Frentes de trabalho", "")}
+      ${bloco("var(--f9)", "Frentes ativas", ativas.length, ativas.map(linha).join("") + (chefe ? `
+        <div class="nova-linha"><input type="text" data-nova="frente" maxlength="80"
+          placeholder="Nova frente de trabalho — escreva o nome e dê Enter" aria-label="Nova frente de trabalho"></div>` : ""),
+        "Nenhuma frente ativa.")}
+      ${chefe && arq.length ? `<button type="button" class="link" data-acao="fr-ver-arq">${verFrentesArq ? "esconder as arquivadas"
+          : `ver ${arq.length === 1 ? "a frente arquivada" : `as ${arq.length} frentes arquivadas`}`}</button>` : ""}
+      ${chefe && verFrentesArq && arq.length ? bloco("var(--off)", "Frentes arquivadas", arq.length, arq.map(f => `
+        <div class="linha" style="--fc:${f.cor}">
+          <div class="linha-corpo">
+            <span class="mt-nome">${esc(f.nome)}</span>
+            <span class="mt-pe">arquivada ${quando(f.arquivada_em)}</span>
+          </div>
+          <div class="linha-acoes"><button type="button" class="bt" data-acao="fr-desarquivar" data-id="${f.id}">Desarquivar</button></div>
+        </div>`).join("")) : ""}`;
   }
 
   // O link para a ferramenta em si, para quem está trabalhando nela.
@@ -1549,16 +2228,27 @@
   function vistaProjeto(p) {
     const f = frente(p.frente), r = resumoProjeto(p);
     const rots = ROTINAS.filter(x => x.projeto === p.id);
-    const peds = pedidosDo(p.id).sort((a, b) => (b.situacao === "novo") - (a.situacao === "novo"));
-    const acoes = p.estado === "ativo" ? `
+    const peds = pedidosDo(p.id), novos = peds.filter(x => x.situacao === "novo"), olhados = peds.filter(x => x.situacao !== "novo");
+    const notas = p.notas || [];
+    // Versão 26: projeto é decisão da chefia — só o chefe conclui, paralisa, arquiva e reabre.
+    // O servidor vê a situação do projeto e trabalha nas tarefas dele.
+    const acoes = eu !== CHEFE ? (p.estado === "ativo" ? ""
+        : `<div class="grupo-linha"><span class="pill cheia s-${p.estado === "concluido" ? "feita" : p.estado}">${
+            p.estado === "depois" ? "paralisado — " + MOTIVO[p.motivo] : p.estado === "arquivado" ? "arquivado" : "concluído"}</span>${p.estado === "depois" ? voltaProjeto(p) : ""}</div>`)
+      : p.estado === "ativo" ? `
         <div class="grupo-linha">
           <button type="button" class="bt verde" data-acao="pj-concluir" data-id="${p.id}">Concluir o projeto</button>
-          <span class="mt-pe" style="font-weight:700">ou paralisar, porque</span>
-          <button type="button" class="bt" data-acao="pj-depois" data-id="${p.id}" data-motivo="aguardando">está aguardando o retorno de outra área</button>
-          <button type="button" class="bt" data-acao="pj-depois" data-id="${p.id}" data-motivo="prioridades">entraram outras prioridades</button>
+          ${pjParalisando === p.id ? "" : `<button type="button" class="bt" data-acao="pj-paralisar" data-id="${p.id}">Paralisar o projeto</button>`}
         </div>
+        ${pjParalisando !== p.id ? "" : `
         <label class="volta">voltar a olhar em <input type="date" id="pj-volta" aria-label="Voltar a olhar o projeto em">
-          <small>opcional — escolha antes de dizer o motivo</small></label>`
+          <small>opcional</small></label>
+        <div class="grupo-linha">
+          <span class="mt-pe" style="font-weight:700">O motivo — escolher paralisa o projeto:</span>
+          <button type="button" class="bt pri" data-acao="pj-depois" data-id="${p.id}" data-motivo="aguardando">está aguardando o retorno de outra área</button>
+          <button type="button" class="bt pri" data-acao="pj-depois" data-id="${p.id}" data-motivo="prioridades">entraram outras prioridades</button>
+          <button type="button" class="bt" data-acao="pj-paralisar" data-id="${p.id}">Voltar</button>
+        </div>`}`
       : p.estado === "depois" ? `
         <div class="grupo-linha"><span class="pill cheia s-depois">paralisado — ${MOTIVO[p.motivo]}</span>${voltaProjeto(p)}
           <button type="button" class="bt pri" data-acao="pj-retomar" data-id="${p.id}">Retomar o projeto</button>
@@ -1573,102 +2263,118 @@
     return `
       <button type="button" class="link" data-acao="vista" data-tipo="frente" data-id="${f.id}">← ${f.nome}</button>
       ${banda(f.cor, "Projeto · " + f.nome, p.nome, resumo, linkFerramenta(p) + acoes)}
-      ${rots.length ? bloco(f.cor, "Rotinas do projeto", rots.length, rots.map(x => linhaRotina(x, { pessoa:true })).join("")) : ""}
+      ${rots.length ? bloco(f.cor, "Tarefas recorrentes", rots.length, rots.map(x => linhaRotina(x, { pessoa:true })).join("")) : ""}
       ${bloco(f.cor, "Tarefas abertas", r.abertas.length,
           r.abertas.sort(porUrgencia).map(t => linhaTarefa(t, { pessoa:true, atribuir:true })).join("") +
           (p.estado === "ativo" ? campoNova("tarefa", f.id, p.id, "Nova tarefa neste projeto — escreva e dê Enter") : ""),
           p.estado === "ativo" ? "" : "Nenhuma tarefa aberta.")}
       ${r.guardadas.length ? bloco("var(--roxo)", "Tarefas paralisadas", r.guardadas.length,
           r.guardadas.map(t => linhaTarefa(t, { pessoa:true })).join("")) : ""}
-      ${peds.length ? bloco("var(--azul)", "Pedidos recebidos", peds.length, peds.map(x => linhaPedido(x)).join(""),
-          "", "o que chegou pelo canal da ferramenta, e o que cada um virou") : ""}
-      ${r.feitas.length ? bloco("var(--ok)", "Concluídas", r.feitas.length,
+      ${bloco(f.cor, "Comentários", notas.length, `
+          <div class="notas pj-notas">${notas.slice().reverse().map(n =>
+            `<div><time>${dBR(dData(n.quando))} · ${curto(n.quem)}</time><span>${n.texto}</span></div>`).join("")}
+            <div class="nota-nova">
+              <input type="text" class="campo-linha" data-nova="pj-nota" data-id="${p.id}" maxlength="300"
+                     placeholder="${notas.length ? "outro comentário" : "combinamos com a área apresentar na quinta"} — escreva e dê Enter" aria-label="Comentário no projeto ${p.nome}">
+            </div>
+          </div>`)}
+      ${minhasAnotacoes().some(n => n.projeto === p.id) ? bloco("var(--accent)", "Minhas anotações neste projeto",
+          minhasAnotacoes().filter(n => n.projeto === p.id).length,
+          minhasAnotacoes().filter(n => n.projeto === p.id).map(linhaAnotacao).join("")) : ""}
+      <span id="pedidos-${p.id}"></span>
+      ${novos.length ? bloco("var(--azul)", "Pedidos novos", novos.length, novos.map(x => linhaPedido(x)).join(""),
+          "") : ""}
+      ${olhados.length ? `<button type="button" class="link" data-acao="pj-arq" data-id="${p.id}">${verArqPed[p.id] ? "esconder" : "ver"} o arquivo dos pedidos (${olhados.length}) — tratados e descartados</button>` : ""}
+      ${olhados.length && verArqPed[p.id] ? bloco("var(--off)", "Arquivo dos pedidos", olhados.length, olhados.map(x => linhaPedido(x)).join(""),
+          "") : ""}
+      ${r.feitas.length ? `<button type="button" class="link" data-acao="pj-cofre" data-id="${p.id}">${verCofre[p.id] ? "fechar" : "abrir"} o cofre das concluídas (${r.feitas.length})</button>` : ""}
+      ${r.feitas.length && verCofre[p.id] ? bloco("var(--ok)", "Cofre — tarefas concluídas", r.feitas.length,
           r.feitas.map(t => linhaTarefa(t, { pessoa:true })).join("")) : ""}`;
   }
 
   function vistaCaixa(id) {
     const chefe = eu === CHEFE;
     if (id === "minhas") {
+      // Versão 25: sem cabeçalho por frente (a linha já diz "Serviços › CentralGov").
+      // Seções por situação, que abrem e fecham, e começam recolhidas.
       const mt = minhasTarefas(), pedem = mt.filter(andamentoPendente);
-      const sus = suspensas().filter(t => t.responsavel === eu);
-      const porFrente = FRENTES.map(f => {
-        const ts = mt.filter(t => t.frente === f.id && !andamentoPendente(t));
-        const rs = rotinasDe(eu).filter(r => r.frente === f.id);
-        return ts.length + rs.length ? bloco(f.cor, f.nome, ts.length + rs.length,
-          ts.map(t => linhaTarefa(t, { onde:true })).join("") + rs.map(r => linhaRotina(r, { onde:true })).join("")) : "";
-      }).join("");
+      const g = { nao:[], and:[], venc:[], para:[], conc:[] };
+      mt.filter(t => !andamentoPendente(t)).forEach(t => g[secaoDaTarefa(t)].push(linhaTarefa(t, { onde:true, comentar:true })));
+      suspensas().filter(t => comQuem(t) === eu && !voltou(t)).forEach(t => g.para.push(linhaTarefa(t, { onde:true, comentar:true })));
+      rotinasDe(eu).forEach(r => { const st = estadoRotina(r);
+        g[st.parada ? "venc" : st.chave === "fechado" ? "conc" : "and"].push(linhaRotina(r, { onde:true })); });
+      TAREFAS.filter(t => t.estado === "concluida" && t.responsavel === eu)
+        .sort((a, b) => (a.concluida_em || "") < (b.concluida_em || "") ? 1 : -1)
+        .forEach(t => g.conc.push(linhaTarefa(t, { onde:true })));
+      const fora = ausenciaDe(eu);
       return `
-        ${banda("var(--accent)", "Caixa", "Minhas tarefas", "Tudo o que está no seu nome, separado por frente: as tarefas abertas e as rotinas.")}
-        ${pedem.length ? bloco("var(--meio)", "Pediram andamento", pedem.length, pedem.map(t => linhaTarefa(t, { onde:true })).join("")) : ""}
-        ${bloco("var(--accent)", "Anotar", "", campoMinha(), "", "uma tarefa sua; depois você diz a frente")}
-        ${porFrente || '<p class="vazio"><b>Nada no seu nome.</b> Dê uma olhada nos sem dono.</p>'}
-        ${sus.length ? bloco("var(--roxo)", "Paralisadas comigo", sus.length, sus.map(t => linhaTarefa(t, { onde:true })).join("")) : ""}`;
+        ${banda("var(--accent)", "", "Minhas tarefas", fora
+            ? `<b>Você está de ${foraAte(fora)}.</b> As suas tarefas estão com os suplentes e voltam para você quando o período acabar.` : "")}
+        ${pedem.length ? bloco("var(--meio)", "Pediram andamento", pedem.length, pedem.map(t => linhaTarefa(t, { onde:true, comentar:true })).join("")) : ""}
+        ${secao("nao",  "var(--off)",    "Não iniciadas", g.nao)}
+        ${secao("and",  "var(--accent)", "Em andamento",  g.and)}
+        ${secao("venc", "var(--alerta)", "Vencidas",      g.venc, "", true)}
+        ${secao("para", "var(--roxo)",   "Paralisadas",   g.para)}
+        ${secao("conc", "var(--ok)",     "Concluídas",    g.conc)}`;
+    }
+    if (id === "anotacoes") {
+      const ns = minhasAnotacoes().slice().sort((a, b) => a.quando < b.quando ? 1 : -1);
+      return `
+        ${banda("var(--accent)", "", "Minhas anotações", "")}
+        ${bloco("var(--accent)", "Anotações", ns.length, ns.map(linhaAnotacao).join("") + campoMinha(),
+            "")}`;
     }
     if (id === "parados") {
       const par = paradosMeus();
       return `
-        ${banda("var(--alerta)", "Caixa", "Parados", chefe
-            ? "Prazo vencido, ou catorze dias sem movimento: com quem está, e por quê."
-            : "O que está no seu nome com prazo vencido, ou há catorze dias sem movimento.")}
-        ${bloco("var(--alerta)", chefe ? "O que está parado" : "Parado com você", par.length, par.map(linhaParado).join(""),
-            "<b>Nada parado.</b> Tudo o que está aberto andou nas últimas duas semanas.")}`;
+        ${banda("var(--alerta)", "", "Vencidas", "")}
+        ${bloco("var(--alerta)", chefe ? "O que está vencido" : "Vencido com você", par.length, par.map(linhaParado).join(""),
+            "<b>Nada vencido.</b> Tudo o que está aberto andou nas últimas duas semanas.")}`;
     }
     if (id === "mes") {
       const ms = mesesNaTela(), antigos = ms.filter(m => m !== MES_ATUAL), m = MES_ATUAL, pz = prazoDe(m);
-      const ver = mesVer || { quem: eu, mes: m.id }, mVer = mesFech(ver.mes), feito = concluidoNoMes(ver.quem, mVer);
-      const concluiu = bloco("var(--ok)", `O que ${ver.quem === eu ? "você" : curto(ver.quem)} concluiu em ${mesDe(mVer.comp)}`, feito.length,
-          linhasConcluido(feito),
-          `Nada concluído em ${mesDe(mVer.comp)} ${ver.quem === eu ? "no seu nome" : "no nome de " + curto(ver.quem)}.`,
-          "para ajudar a preencher o Petrvs");
+      const ver = mesVer || { quem: eu, mes: m.id };
+      const concluiu = blocoPlanoEntregas() + rascunhoPetrvs(ver.quem);
       if (!chefe) {
         return `
-          ${banda("var(--mes)", "Todo mês", `O seu Petrvs — ${nomeMes(m)}`,
-              `O prazo é o 5º dia útil: <b style="color:var(--fg)">${dBR(m.prazo)}</b>, ${SEMANA[m.prazo.getDay()].n}. A frequência é aprovada pela chefia no SouGov: você não precisa informar nada.`)}
+          ${banda("var(--mes)", "", "RH do Escritório", "")}
           ${antigos.filter(a => !fechouEm(a, eu)).map(a => meuPetrvs(a).replace("Petrvs — ", "Ainda aberto — ")).join("")}
           ${meuPetrvs(m)}
+          ${blocoFerias()}
           ${concluiu}`;
       }
       const sem = ms.reduce((s, x) => s + semPetrvs(x).length, 0);
-      const as = ms.reduce((s, x) => s + aAssinar(x).length, 0), ap = ms.reduce((s, x) => s + aAprovar(x).length, 0);
+      const as = ms.reduce((s, x) => s + aAssinar(x).length, 0);
       const faltaOutro = ms.some(x => semPetrvs(x).some(n => n !== eu));
+      // Versão 26: a situação do mês saiu da faixa do título e foi para o cabeçalho da tabela.
       const situacao = [
-        sem ? `<span class="pill s-${pz.chave}${pz.cheia ? " cheia" : ""}">${pz.rotulo}</span> ${sem} sem Petrvs` : "Todo mundo já preencheu o Petrvs",
-        as ? `${as} para assinar` : "", ap ? `${ap} ${ap === 1 ? "frequência" : "frequências"} para aprovar` : ""
+        sem ? `<span class="pill s-${pz.chave}${pz.cheia ? " cheia" : ""}">${pz.rotulo}</span> ${sem} sem Petrvs` : "",
+        as ? `${as} para assinar` : ""
       ].filter(Boolean).join(" · ");
       const botoes = `
         <div class="grupo-linha">
           ${faltaOutro ? `<button type="button" class="bt pri" data-acao="mes-lembrar">Lembrar quem falta</button>` : ""}
-          ${aAprovar(m).length ? `<button type="button" class="bt" data-acao="mes-aprovar-todos" data-mes="${m.id}">Aprovar a frequência de todos</button>` : ""}
           ${m.lembrado ? `<span class="mt-pe">você lembrou ${quando(m.lembrado)}</span>` : ""}
         </div>`;
       return `
-        ${banda("var(--mes)", "Todo mês", `Petrvs e frequência — ${nomeMes(m)}`,
-            `Fecha no 5º dia útil: <b style="color:var(--fg)">${dBR(m.prazo)}</b>, ${SEMANA[m.prazo.getDay()].n}. ${situacao}.`, botoes)}
+        ${banda("var(--mes)", "", "RH do Escritório", "", botoes)}
         ${antigos.map(a => `
         <div class="bloco" style="--bc:var(--mes)">
-          <p class="bloco-cab">Ainda aberto — ${nomeMes(a)} <small>— o prazo era ${dBR(a.prazo)}; continua cobrando até fechar</small></p>
+          <p class="bloco-cab">Ainda aberto — ${nomeMes(a)}</p>
           <div class="tab-rolo">${tabelaMes(a, true)}</div>
         </div>`).join("")}
         <div class="bloco" style="--bc:var(--mes)">
-          <p class="bloco-cab">${nomeMes(m)} <small>— só você vê esta tabela; cada pessoa vê a própria linha</small><span class="n">${EQUIPE.filter(n => fechouEm(m, n)).length} de ${EQUIPE.length} fechados</span></p>
+          <p class="bloco-cab">Petrvs — ${nomeMes(m)}${situacao ? ` <small>— ${situacao}</small>` : ""}<span class="n">${EQUIPE.filter(n => fechouEm(m, n)).length} de ${EQUIPE.length} fechados</span></p>
           <div class="tab-rolo">${tabelaMes(m)}</div>
         </div>
+        ${bloco("var(--mes)", "Frequência", ms.filter(freqFalta).length, ms.map(linhaFreq).join(""))}
+        ${blocoFerias()}
         ${concluiu}`;
-    }
-    if (id === "rot-minhas" || id === "rot-grupo") {
-      const grupo = id === "rot-grupo", rs = grupo ? rotinasDoGrupo() : rotinasDe(eu);
-      const venc = rs.filter(r => estadoRotina(r).aberta), dia = rs.filter(r => !estadoRotina(r).aberta);
-      return `
-        ${banda("var(--rot)", "Rotinas", grupo ? "Rotinas do grupo" : "Minhas rotinas", grupo
-            ? "Não têm dono: quem fizer a rodada, marca. Cada rotina continua ligada à frente ou ao projeto dela."
-            : "O que se repete e está no seu nome — em dia ou vencido. Cada rotina continua ligada à frente ou ao projeto dela.")}
-        ${bloco("var(--alerta)", "Vencidas", venc.length, venc.map(r => linhaRotina(r, { onde:true })).join(""), "<b>Nenhuma vencida.</b>")}
-        ${bloco("var(--rot)", "Em dia", dia.length, dia.map(r => linhaRotina(r, { onde:true })).join(""), "Nenhuma rotina em dia.", "com a data da próxima rodada")}`;
     }
     if (id === "chegou") {
       const nv = novos(), olhados = PEDIDOS.filter(p => p.situacao !== "novo");
       return `
-        ${banda("var(--azul)", "Caixa", "Pedidos das ferramentas", "O que as pessoas mandaram pelo canal de cada ferramenta e ninguém olhou ainda. É registro, não atendimento: ninguém recebe resposta. Depois de olhado, o pedido fica guardado no projeto da ferramenta.")}
+        ${banda("var(--azul)", "", "Pedidos das ferramentas", "")}
         ${bloco("var(--azul)", "Novos", nv.length, nv.map(p => linhaPedido(p, true)).join(""), "<b>Nada novo.</b> Todos os pedidos já foram olhados.")}
         ${olhados.length ? `<button type="button" class="link" data-acao="alternar-olhados">${verOlhados ? "esconder os já olhados" : `ver todos os ${olhados.length} já olhados, de todas as ferramentas`}</button>` : ""}
         ${verOlhados ? bloco("var(--off)", "Já olhados", olhados.length, olhados.map(p => linhaPedido(p)).join("")) : ""}`;
@@ -1676,15 +2382,15 @@
     if (id === "semdono") {
       const sd = semDono();
       return `
-        ${banda("var(--meio)", "Caixa", "Sem dono", "Trabalho que ninguém pegou ainda. Quem puder, pega.")}
+        ${banda("var(--meio)", "", "Sem dono", "")}
         ${bloco("var(--meio)", "Esperando alguém", sd.length,
             sd.map(t => linhaTarefa(t, { onde:true, atribuir:true })).join(""),
             "<b>Nada sem dono.</b> Tudo o que está aberto tem alguém.")}`;
     }
     if (id === "ideias") {
       return `
-        ${banda("var(--off)", "Caixa", "Não iniciado", "Ideias: o que ainda não virou trabalho. Para desenvolver, ou para agregar a um projeto.")}
-        ${bloco("var(--off)", "Ideias", IDEIAS.length, IDEIAS.map(i => `
+        ${banda("var(--off)", "", "Ideias", "")}
+        ${bloco("var(--off)", chefe ? "Ideias" : "As suas ideias", minhasIdeias().length, minhasIdeias().map(i => `
             <div class="linha" style="--fc:${i.frente ? frente(i.frente).cor : "transparent"}">
               <div class="linha-corpo" style="cursor:default">
                 <span class="mt-nome">${i.texto}</span>
@@ -1699,10 +2405,10 @@
             `<div class="nova-linha"><input type="text" data-nova="ideia" placeholder="Anotar uma ideia — escreva e dê Enter" aria-label="Anotar uma ideia"></div>`)}`;
     }
     if (id === "paralisado") {
-      const gs = guardados(), sus = suspensas(), arq = arquivados();
+      const gs = chefe ? guardados() : [], sus = suspensas().filter(ehMeu), arq = chefe ? arquivados() : [];
       return `
-        ${banda("var(--roxo)", "Caixa", "Paralisado", "O que alguém decidiu deixar parado, e por quê. É diferente de Parados, que é o que deveria estar andando.")}
-        ${bloco("var(--roxo)", "Projetos paralisados", gs.length, gs.map(p => `
+        ${banda("var(--roxo)", "", "Paralisadas", "")}
+        ${!chefe ? "" : bloco("var(--roxo)", "Projetos paralisados", gs.length, gs.map(p => `
             <div class="linha" ${corDe(p)}>
               <button type="button" class="linha-corpo" data-acao="vista" data-tipo="projeto" data-id="${p.id}">
                 <span class="item-topo"><span class="pill cheia s-depois">${MOTIVO[p.motivo]}</span>${voltaProjeto(p)}</span>
@@ -1715,8 +2421,8 @@
                 <button type="button" class="bt" data-acao="pj-arquivar" data-id="${p.id}">Arquivar</button>
               </div>
             </div>`).join(""), "Nenhum projeto paralisado.")}
-        ${bloco("var(--roxo)", "Tarefas paralisadas", sus.length,
-            sus.map(t => linhaTarefa(t, { onde:true, pessoa:true })).join(""), "Nenhuma tarefa paralisada.", "uma tarefa só, em compasso de espera")}
+        ${bloco("var(--roxo)", chefe ? "Tarefas paralisadas" : "Paralisadas com você", sus.length,
+            sus.map(t => linhaTarefa(t, { onde:true, pessoa:chefe })).join(""), "Nenhuma tarefa paralisada.")}
         ${arq.length ? `<button type="button" class="link" data-acao="alternar-arquivados">${verArquivados ? "esconder os arquivados" : `ver ${arq.length === 1 ? "o projeto arquivado" : `os ${arq.length} projetos arquivados`}`}</button>` : ""}
         ${verArquivados && arq.length ? bloco("var(--off)", "Arquivados", arq.length, arq.map(p => `
             <div class="linha" ${corDe(p)}>
@@ -1726,13 +2432,13 @@
                 <span class="mt-pe">arquivado ${quando(p.mexido)}</span>
               </button>
               <div class="linha-acoes"><button type="button" class="bt" data-acao="pj-desarquivar" data-id="${p.id}">Desarquivar</button></div>
-            </div>`).join(""), "", "o que não vai ser feito; nada foi apagado") : ""}`;
+            </div>`).join("")) : ""}`;
     }
     if (id === "feitas") {
-      const fs = TAREFAS.filter(t => t.estado === "concluida");
-      const ps = PROJETOS.filter(p => p.estado === "concluido");
+      const fs = minhasConcluidas();
+      const ps = chefe ? PROJETOS.filter(p => p.estado === "concluido") : [];
       return `
-        ${banda("var(--ok)", "Caixa", "Concluídas", "O que a equipe já fechou. Concluiu por engano? Reabra — a tarefa volta para quem estava com ela.")}
+        ${banda("var(--ok)", "", "Concluídas", "")}
         ${ps.length ? bloco("var(--ok)", "Projetos concluídos", ps.length, ps.map(p => `
             <div class="linha" ${corDe(p)}>
               <button type="button" class="linha-corpo" data-acao="vista" data-tipo="projeto" data-id="${p.id}">
@@ -1741,38 +2447,30 @@
               <div class="linha-acoes"><button type="button" class="bt" data-acao="pj-reabrir" data-id="${p.id}">Reabrir</button></div>
             </div>`).join("")) : ""}
         ${bloco("var(--ok)", "Tarefas concluídas", fs.length,
-            fs.map(t => linhaTarefa(t, { onde:true, pessoa:true })).join(""), "Nada concluído ainda.")}`;
+            fs.map(t => linhaTarefa(t, { onde:true, pessoa:chefe })).join(""), "Nada concluído ainda.")}`;
     }
     return `
-      ${banda("var(--off)", "Protótipo", "Para validar", "Não faz parte da tela final. É o que as suas catorze observações viraram, e o que eu decidi por conta própria para você confirmar.")}
+      ${banda("var(--off)", "Protótipo", "Para validar", "Não faz parte da tela final. No alto, o que mudou na versão 28; embaixo, o que veio antes. Em itálico, o que eu decidi por conta própria para você confirmar.")}
       <div class="bloco validar"><ol><li>Notas de revisão retiradas da versão publicada.</li></ol></div>`;
   }
 
   // A coluna da direita é o que é de quem está logado — e é a única porta do
   // Petrvs e das rotinas: o título de cada bloco abre a tela dele no centro.
   // Para o chefe o bloco do Petrvs é só um aviso: assinar e aprovar se faz na tela.
+  // Versão 24: a direita ficou só com o RH do Escritório e, quando há, os pedidos de
+  // andamento. Minhas tarefas já abre no centro; as rotinas viraram tarefas recorrentes.
   function desenharComigo() {
-    const mt = minhasTarefas();
-    const pedem = mt.filter(andamentoPendente), resto = mt.filter(t => !andamentoPendente(t));
-    const rs = rotinasDe(eu), rgTodas = rotinasDoGrupo(), rg = rgTodas.filter(r => estadoRotina(r).aberta);
-    const mes = petrvsDaDireita(true);
-    $("#comigo").innerHTML = mes +
-      (pedem.length ? bloco("var(--meio)", "Pediram andamento", pedem.length, pedem.map(t => linhaTarefa(t, { onde:true })).join("")) : "") +
-      bloco("var(--accent)", "Minhas tarefas", resto.length, resto.map(t => linhaTarefa(t, { onde:true })).join("") +
-            (resto.length ? "" : '<p class="vazio"><b>Nada no seu nome.</b> Dê uma olhada nos sem dono.</p>') + campoMinha(),
-            "", "", "minhas") +
-      bloco("var(--rot)", "Minhas rotinas", rs.length, rs.map(r => linhaRotina(r, { onde:true })).join(""),
-            "Nenhuma rotina no seu nome.", "", "rot-minhas") +
-      bloco("var(--rot)", "Rotinas do grupo", rgTodas.length, rg.map(r => linhaRotina(r, { onde:true })).join(""),
-            `<b>Nenhuma vencida.</b> ${rgTodas.length === 1 ? "A rotina do grupo está em dia." : `As ${rgTodas.length} rotinas do grupo estão em dia.`}`,
-            "", "rot-grupo");
+    const pedem = minhasTarefas().filter(andamentoPendente);
+    $("#comigo").innerHTML = petrvsDaDireita(true) + quadroAnotacoes() +
+      (pedem.length ? bloco("var(--meio)", "Pediram andamento", pedem.length, pedem.map(t => linhaTarefa(t, { onde:true })).join("")) : "");
   }
 
   function desenharTrabalho() {
     desenharFaixa(); desenharMenu(); desenharComigo();
     $("#meio").innerHTML =
       (avisoMsg ? `<p class="aviso">${avisoMsg}</p>` : "") +
-      (vista.tipo === "frente" ? vistaFrente(frente(vista.id))
+      (vista.tipo === "frentes" ? vistaFrentes()
+       : vista.tipo === "frente" ? vistaFrente(frente(vista.id))
        : vista.tipo === "projeto" ? vistaProjeto(projeto(vista.id))
        : vistaCaixa(vista.id));
   }
@@ -1783,27 +2481,61 @@
   //  ("Meu painel") mostra só o que é dela. Em cockpit: a página não rola, e
   //  cada contador escolhe o que o campo principal mostra.
   // ======================================================================
+  // Versão 28: os acessos às ferramentas publicadas, no painel de todos.
+  const desde = n => ha(n - 1);
+  const visitas = n => ACESSOS.filter(a => a.dia >= desde(n) && a.nova).length;
+  function vistaAcessos() {
+    const a30 = ACESSOS.filter(a => a.dia >= desde(30)), a7 = a30.filter(a => a.dia >= desde(7));
+    const conta = (lista, chave) => { const c = {}; lista.forEach(a => { const k = chave(a); c[k] = (c[k] || 0) + 1; });
+      return Object.entries(c).sort((x, y) => y[1] - x[1]); };
+    const fs = Object.keys(ROTULO_ACESSO).filter(f => a30.some(a => a.ferramenta === f))
+      .sort((x, y) => a30.filter(a => a.ferramenta === y && a.nova).length - a30.filter(a => a.ferramenta === x && a.nova).length);
+    const tabela = `<div class="tab-rolo"><table class="tab">
+        <thead><tr><th>Ferramenta</th><th class="n">Visitas 7 dias</th><th class="n">Visitas 30 dias</th>
+          <th class="n">Páginas vistas 30 dias</th><th class="n">No celular</th></tr></thead>
+        <tbody>${fs.map(f => { const t = a30.filter(a => a.ferramenta === f);
+          return `<tr><td>${ROTULO_ACESSO[f]}</td><td class="n">${a7.filter(a => a.ferramenta === f && a.nova).length}</td>
+            <td class="n">${t.filter(a => a.nova).length}</td><td class="n">${t.length}</td>
+            <td class="n">${Math.round(100 * t.filter(a => a.tela === "celular").length / t.length)}%</td></tr>`; }).join("")}</tbody></table></div>`;
+    const dias = []; for (let d = 13; d >= 0; d--) dias.push(ha(d));
+    const porDia = dias.map(d => a30.filter(a => a.dia === d && a.nova).length), maior = Math.max(1, ...porDia);
+    const barras = `<div class="acessos-dias">${dias.map((d, i) => `
+        <div class="acessos-dia" title="${ddmm(d)}: ${porDia[i]} ${porDia[i] === 1 ? "visita" : "visitas"}">
+          <span class="acessos-n">${porDia[i]}</span><i style="height:${Math.round(70 * porDia[i] / maior) + 2}px"></i><span>${ddmm(d)}</span></div>`).join("")}</div>`;
+    const paginas = conta(a30, a => a.pagina).slice(0, 10), origens = conta(a30.filter(a => a.nova), a => a.origem || "").slice(0, 8);
+    const lin = (txt, n) => `<div class="linha"><div class="linha-corpo"><span class="mt-nome">${txt}</span></div><span class="n acessos-cont">${n}</span></div>`;
+    return a30.length ? bloco("var(--azul)", "Visitas por ferramenta", fs.length, tabela)
+      + bloco("var(--azul)", "Visitas por dia — últimas duas semanas", "", barras)
+      + bloco("var(--azul)", "Páginas mais vistas — 30 dias", paginas.length, paginas.map(([p, n]) => lin(esc(p), n)).join(""))
+      + bloco("var(--azul)", "De onde vêm — 30 dias", origens.length,
+          origens.map(([o, n]) => lin(o ? esc(o) : "entrou direto, ou veio de outra página do Escritório", n)).join(""))
+      : bloco("var(--azul)", "Acessos às ferramentas", 0, "", "Nenhum acesso contado nos últimos 30 dias.");
+  }
   function desenharPainel() {
     const chefe = eu === CHEFE;
-    const meu = t => chefe || t.responsavel === eu;
+    const meu = t => chefe || comQuem(t) === eu;
     const abertasT = TAREFAS.filter(aberta), ab = abertasT.filter(meu).sort(porUrgencia);
     const par = paradosMeus(), sus = suspensas().filter(meu), gs = chefe ? guardados() : [];
     const sd = abertasT.filter(t => !t.responsavel);
     const ativos = PROJETOS.filter(p => p.estado === "ativo");
     const feitas = concluidoNoMes(eu, MES_ATUAL);
     const tiles = chefe ? [
-      ["parados",     par.length,              "parados",          "var(--alerta)"],
+      ["parados",     par.length,              "vencidas",         "var(--alerta)"],
+      ["prazos",      ab.filter(t => t.prazo).length, "com prazo", "var(--accent)"],
       ["abertas",     ab.length,               "tarefas abertas",  "var(--accent)"],
       ["projetos",    ativos.length,           "projetos ativos",  "var(--f2)"],
       ["semdono",     sd.length,               "sem dono",         "var(--meio)"],
       ["paralisados", sus.length + gs.length,  "paralisados",      "var(--roxo)"],
-      ["petrvs",      pendenciasMes(),         "petrvs em aberto", "var(--mes)"]
+      ["petrvs",      pendenciasMes(),         "RH em aberto",     "var(--mes)"],
+      ["acessos",     visitas(30),             "visitas em 30 dias", "var(--azul)"]
     ] : [
       ["abertas",     ab.length,               "abertas comigo",   "var(--accent)"],
-      ["parados",     par.length,              "paradas ou atrasadas", "var(--alerta)"],
+      ["prazos",      ab.filter(t => t.prazo).length, "com prazo", "var(--accent)"],
+      ["parados",     par.length,              "vencidas",         "var(--alerta)"],
       ["paralisados", sus.length,              "paralisadas",      "var(--roxo)"],
-      ["rotinas",     rotinasDe(eu).length,    "minhas rotinas",   "var(--rot)"],
-      ["feitas",      feitas.length,           `concluí em ${mesDe(MES_ATUAL.comp)}`, "var(--ok)"]
+      ["rotinas",     rotinasDe(eu).length,    "recorrentes",      "var(--rot)"],
+      ["feitas",      feitas.length,           `concluí em ${mesDe(MES_ATUAL.comp)}`, "var(--ok)"],
+      ["acessos",     visitas(30),             "visitas em 30 dias", "var(--azul)"]
     ];
     if (!tiles.some(t => t[0] === painelVista)) painelVista = chefe ? "parados" : "abertas";
     $("#resumo").innerHTML = tiles.map(([id, n, rot, cor]) =>
@@ -1811,9 +2543,22 @@
 
     let meio = "";
     if (painelVista === "parados") {
-      meio = bloco("var(--alerta)", chefe ? "O que está parado" : "Parado ou atrasado com você", par.length,
-        par.map(linhaParado).join(""), "<b>Nada parado.</b> Tudo o que está aberto andou nas últimas duas semanas.",
+      meio = bloco("var(--alerta)", chefe ? "O que está vencido" : "Vencido com você", par.length,
+        par.map(linhaParado).join(""), "<b>Nada vencido.</b> Tudo o que está aberto andou nas últimas duas semanas.",
         "prazo vencido, ou catorze dias sem movimento");
+    } else if (painelVista === "acessos") {
+      meio = vistaAcessos();
+    } else if (painelVista === "prazos") {
+      // Versão 27: as tarefas abertas na ordem do prazo, em três faixas; as sem prazo, à parte.
+      const cp = ab.filter(t => t.prazo).sort((a, b) => dData(a.prazo) - dData(b.prazo));
+      const dias = t => emDias(dData(t.prazo));
+      const lin = t => linhaTarefa(t, { onde:true, pessoa:chefe, prazo:true });
+      meio = [["Prazo vencido", "var(--alerta)", cp.filter(t => dias(t) < 0)],
+              ["Hoje e nos próximos 7 dias", "var(--accent)", cp.filter(t => dias(t) >= 0 && dias(t) <= 7)],
+              ["Mais adiante", "var(--accent)", cp.filter(t => dias(t) > 7)]]
+        .map(([tit, cor, ts]) => ts.length ? bloco(cor, tit, ts.length, ts.map(lin).join("")) : "").join("")
+        + (cp.length ? "" : `<p class="vazio">${chefe ? "Nenhuma tarefa aberta tem prazo." : "Nada seu tem prazo."}</p>`)
+        + secao("semprazo", "var(--off)", "Sem prazo", ab.filter(t => !t.prazo).map(lin));
     } else if (painelVista === "abertas") {
       meio = chefe
         ? EQUIPE.map(p => { const ts = ab.filter(t => t.responsavel === p);
@@ -1821,7 +2566,7 @@
         : bloco("var(--accent)", "Abertas com você", ab.length, ab.map(t => linhaTarefa(t, { onde:true })).join(""),
                 "<b>Nada aberto no seu nome.</b>");
     } else if (painelVista === "projetos") {
-      meio = FRENTES.map(f => { const pjs = ativos.filter(p => p.frente === f.id);
+      meio = frentesAtivas().map(f => { const pjs = ativos.filter(p => p.frente === f.id);
         return pjs.length ? bloco(f.cor, f.nome, pjs.length, pjs.map(p => `
           <div class="linha" ${corDe(p)}>
             <button type="button" class="linha-corpo" data-acao="vista" data-tipo="projeto" data-id="${p.id}">
@@ -1847,12 +2592,13 @@
     } else if (painelVista === "petrvs") {
       meio = mesesNaTela().map(m => `
         <div class="bloco" style="--bc:var(--mes)">
-          <p class="bloco-cab">${m === MES_ATUAL ? "Petrvs e frequência" : "Ainda aberto"} — ${nomeMes(m)} <small>— 5º dia útil em ${dBR(m.prazo)}</small><span class="n">${EQUIPE.filter(n => fechouEm(m, n)).length} de ${EQUIPE.length} fechados</span></p>
+          <p class="bloco-cab">${m === MES_ATUAL ? "Petrvs" : "Ainda aberto"} — ${nomeMes(m)}<span class="n">${EQUIPE.filter(n => fechouEm(m, n)).length} de ${EQUIPE.length} fechados</span></p>
           <div class="tab-rolo">${tabelaMes(m, m !== MES_ATUAL)}</div>
-        </div>`).join("");
+        </div>`).join("") + bloco("var(--mes)", "Frequência", mesesNaTela().filter(freqFalta).length, mesesNaTela().map(linhaFreq).join(""))
+        + blocoFerias();
     } else if (painelVista === "rotinas") {
       const rs = rotinasDe(eu);
-      meio = bloco("var(--rot)", "Minhas rotinas", rs.length, rs.map(r => linhaRotina(r, { onde:true })).join(""), "Nenhuma rotina no seu nome.");
+      meio = bloco("var(--rot)", "Tarefas recorrentes", rs.length, rs.map(r => linhaRotina(r, { onde:true })).join(""), "Nenhuma tarefa recorrente com você.");
     } else {
       meio = bloco("var(--ok)", `O que você concluiu em ${mesDe(MES_ATUAL.comp)}`, feitas.length, linhasConcluido(feitas),
         `Nada concluído em ${mesDe(MES_ATUAL.comp)} no seu nome.`);
@@ -1874,14 +2620,15 @@
         <p class="bloco-cab">Com quem está</p>
         <div class="tab-rolo"><table class="tab">
           <thead><tr><th>Pessoa</th><th class="n">Abertas</th><th class="n">Paradas</th>
-            <th class="n">Paralis.</th><th class="n">Rotinas</th></tr></thead>
+            <th class="n">Paralis.</th><th class="n">Recorr.</th></tr></thead>
           <tbody>${[...EQUIPE, null].map(p => {
-            const ts = abertasT.filter(t => (t.responsavel || null) === p);
+            const ts = abertasT.filter(t => (comQuem(t) || null) === p);
             const nPar = todosPar.filter(x => (x.quem || null) === p).length;
-            const nSus = todasSus.filter(t => (t.responsavel || null) === p).length;
-            const nRot = ROTINAS.filter(r => (r.responsavel || null) === p).length;
+            const nSus = todasSus.filter(t => (comQuem(t) || null) === p).length;
+            const nRot = ROTINAS.filter(r => (comQuem(r) || null) === p).length;
             if (!p && !ts.length && !nSus && !nRot) return "";
-            return `<tr><td title="${p || ""}">${p ? curto(p) : "<i>sem dono</i>"}</td><td class="n">${ts.length}</td>
+            const fora = p && ausenciaDe(p);
+            return `<tr><td title="${p || ""}">${p ? curto(p) : "<i>sem dono</i>"}${fora ? ` <span class="mt-pe">${ROTULO_AUSENCIA[fora.tipo]}</span>` : ""}</td><td class="n">${ts.length}</td>
               <td class="n ${nPar ? "ruim" : ""}">${nPar}</td><td class="n">${nSus}</td><td class="n">${nRot}</td></tr>`;
           }).join("")}</tbody></table></div>
       </div>
@@ -1890,7 +2637,7 @@
         <div class="tab-rolo"><table class="tab">
           <thead><tr><th>Frente</th><th class="n">Proj.</th><th class="n">Abertas</th>
             <th class="n">Paradas</th><th class="n">Sem dono</th></tr></thead>
-          <tbody>${FRENTES.map(f => {
+          <tbody>${frentesAtivas().map(f => {
             const ts = abertasT.filter(t => t.frente === f.id);
             const nPar = todosPar.filter(x => x.item.frente === f.id).length;
             return `<tr><td><i class="ponto" style="background:${f.cor}"></i>${f.nome}</td>
@@ -1913,11 +2660,10 @@
     $("#tela-trabalho").hidden = !noTrabalho;
     $("#tela-painel").hidden = noTrabalho;
     $("#mod-titulo").textContent = noTrabalho ? "Área de trabalho" : chefe ? "Painel dos trabalhos" : "Meu painel";
-    $("#mod-sub").textContent = noTrabalho ? "O trabalho da equipe, por frente"
-      : chefe ? "O que está parado, com quem e por quê" : "O que está com você, e como está";
     $("#ir").textContent = noTrabalho ? (chefe ? "Painel dos trabalhos →" : "Meu painel →") : "← Área de trabalho";
     desenharAvisos();
     if (noTrabalho) desenharTrabalho(); else desenharPainel();
+    if (REAL) REAL.salvar();          // grava o que mudou desde a última vez
   }
 
   // ======================================================================
@@ -1930,7 +2676,9 @@
     const st = estadoTarefa(t), f = frente(t.frente);
     $("#ft-estado").className = "pill s-" + st.chave + (st.cheia || t.estado !== "aberta" ? " cheia" : "");
     $("#ft-estado").textContent = t.estado === "suspensa" && st.chave !== "voltar" ? "paralisada — " + MOTIVO[t.motivo] : st.rotulo;
-    if (!$("#ficha-t").open) $("#ft-volta").value = "";
+    if (!$("#ficha-t").open) { $("#ft-volta").value = ""; paralisando = false; }
+    $("#ft-paralisar").hidden = !paralisando;
+    $("#ft-paralisar-bt").hidden = paralisando;
     $("#ft-volta2").value = t.volta || "";
     $("#ft-volta-txt").textContent = t.estado !== "suspensa" ? ""
       : !t.volta ? "Paralisada — " + MOTIVO[t.motivo] + ". Sem data de volta: só retorna quando alguém retomar."
@@ -1942,6 +2690,12 @@
     $("#ft-titulo").textContent = t.titulo;
     $("#ft-resp").innerHTML = opcoesEquipe(t.responsavel);
     $("#ft-resp").value = t.responsavel || "";
+    // Suplente: quem atribui é o chefe (versão 24).
+    $("#ft-sup").innerHTML = opcoesEquipe(t.suplente, "sem suplente");
+    $("#ft-sup").value = t.suplente || "";
+    $("#ft-sup").disabled = eu !== CHEFE;
+    $("#ft-rec").value = "";
+    $("#ft-rec-caixa").hidden = t.estado === "concluida";
     $("#ft-prazo").value = t.prazo || "";
     $("#ft-origem-caixa").hidden = !t.origem;
     $("#ft-origem").textContent = !t.origem ? ""
@@ -1955,10 +2709,20 @@
         `<div><time>${dBR(dData(n.quando))} · ${curto(n.quem)}</time><span>${n.texto}</span></div>`).join("") +
       `<div class="nota-nova">
          <input type="text" class="campo-linha" id="ft-nota" data-nova="nota" maxlength="200"
-                placeholder="${t.notas.length ? "outra observação" : "estou aguardando o fulano responder"}" aria-label="Nova observação">
-         <button type="button" class="bt pri" data-acao="f-nota">Incluir observação</button>
+                placeholder="${t.notas.length ? "outro comentário" : "estou aguardando o fulano responder"}" aria-label="Novo comentário">
+         <button type="button" class="bt pri" data-acao="f-nota">Incluir comentário</button>
        </div>`;
-    $("#ft-g-aberta").hidden = t.estado !== "aberta";
+    // O que foi entregue: passo antes de concluir, ou campo para dizer depois.
+    if (t.estado === "concluida") entregaModo = "editar";
+    else if (entregaModo === "editar" || !$("#ficha-t").open) entregaModo = null;
+    const e = t.entregue || {};
+    if (!$("#ficha-t").open || entregaModo === "editar") { $("#ft-produto").value = e.produto || ""; $("#ft-prova").value = e.prova || ""; }
+    $("#ft-g-entrega").hidden = !entregaModo;
+    $("#ft-entrega-tit").textContent = entregaModo === "editar"
+      ? "O que foi entregue — vai para o rascunho do Petrvs" : "O que foi entregue — vai para o rascunho do Petrvs; não é obrigatório";
+    $("#ft-entrega-ok").textContent = entregaModo === "editar" ? "Guardar o que foi entregue" : "Concluir tarefa";
+    $("#ft-entrega-volta").hidden = entregaModo !== "concluir";
+    $("#ft-g-aberta").hidden = t.estado !== "aberta" || entregaModo === "concluir";
     $("#ft-g-suspensa").hidden = t.estado !== "suspensa";
     $("#ft-g-feita").hidden = t.estado !== "concluida";
     $("#ft-andamento").hidden = !(eu === CHEFE && t.responsavel && t.responsavel !== eu && !andamentoPendente(t));
@@ -1984,7 +2748,7 @@
     if (!r) return;
     const st = estadoRotina(r), f = frente(r.frente), botoes = botoesRotina(r, st);
     const feitas = r.ocorrencias.slice().sort((a, b) => a.feita_em < b.feita_em ? 1 : -1);
-    $("#fr-topo").innerHTML = `${pill(st)}<span class="chip vazado c-rot">rotina</span>`;
+    $("#fr-topo").innerHTML = `${pill(st)}<span class="chip vazado c-rot">tarefa recorrente</span>`;
     $("#fr-corpo").innerHTML = `
       <div class="banda" style="--fc:${f.cor}">
         <span class="sobre">${r.projeto ? "Projeto · " + f.nome : "Frente de trabalho"}</span>
@@ -1992,14 +2756,16 @@
       </div>
       <p class="ficha-texto">${r.titulo}</p>
       <dl class="dados">
-        <div><dt>Com quem está</dt><dd>${r.responsavel || "É do grupo: quem fizer, marca"}</dd></div>
-        <div><dt>Quando</dt><dd>${descricao(r)}</dd></div>
+        <div><dt>Titular</dt><dd>${r.responsavel || "sem titular"}${substituindo(r) ? ` <small>(${ROTULO_AUSENCIA[ausenciaDe(r.responsavel).tipo]})</small>` : ""}</dd></div>
+        <div><dt>Suplente</dt><dd>${eu === CHEFE ? `<select class="mini" data-sup-rotina="${r.id}" aria-label="Suplente">${opcoesEquipe(r.suplente, "sem suplente")}</select>` : r.suplente || "sem suplente"}${substituindo(r) ? " <small>— está cobrindo</small>" : ""}</dd></div>
+        <div><dt>Repete</dt><dd>${descricao(r)}</dd></div>
         <div><dt>${st.aberta ? "Rodada em aberto" : "Próxima rodada"}</dt><dd>${st.aberta ? dBR(st.pendente) : st.proxima ? dBR(st.proxima) : "—"}</dd></div>
-        <div><dt>O que se espera</dt><dd>${r.natureza === "olhar" ? "Dar uma olhada e dizer se há trabalho a fazer" : "Fazer: a rotina já é o trabalho"}</dd></div>
+        <div><dt>O que se espera</dt><dd>${r.natureza === "olhar" ? "Dar uma olhada e ver se há trabalho a fazer" : "Fazer: a rodada já é o trabalho"}</dd></div>
       </dl>
-      ${botoes ? `<div class="grupo"><span>${st.chave === "hoje" ? "A rodada vence hoje" : "A rodada de " + dBR(st.pendente) + " não foi feita"}</span><div class="grupo-linha">${botoes}</div></div>`
-               : '<p class="mt-pe">Está em dia. Os botões da rodada aparecem quando ela vencer.</p>'}
-      <div class="historico"><b>Rodadas já feitas</b>${feitas.length
+      ${botoes ? `<div class="grupo"><span>${st.chave === "hoje" ? "A rodada vence hoje" : "A rodada de " + dBR(st.pendente) + " não foi concluída"}</span><div class="grupo-linha">${botoes}</div></div>`
+               : st.aberta ? `<p class="mt-pe">A rodada está em aberto com ${curto(comQuem(r))}.</p>`
+               : `<p class="mt-pe">${st.chave === "fechado" ? "Concluída nesta rodada." : "Em dia."} Volta sozinha em ${st.proxima ? dBR(st.proxima) : "—"}.</p>`}
+      <div class="historico"><b>Rodadas concluídas</b>${feitas.length
         ? feitas.map(o => `<span><time>${dBR(dData(o.feita_em))}</time> — ${curto(o.quem)} ${DESFECHO[o.desfecho] || "fez"} (rodada de ${dBR(dData(o.vencimento))})</span>`).join("")
         : "<span>Nenhuma rodada registrada ainda.</span>"}</div>`;
     if (!$("#ficha-r").open) $("#ficha-r").showModal();
@@ -2019,8 +2785,11 @@
     $("#fp-desfecho").textContent = p.situacao === "novo" ? "nada ainda"
       : p.virou ? "virou " + p.virou : p.aprendizado ? "guardado como aprendizado"
       : p.situacao === "descartado" ? "descartado" : "dado por tratado";
+    $("#fp-quem").innerHTML = p.situacao !== "novo" ? esc(p.responsavel || "—")
+      : eu === CHEFE ? `<select class="mini" data-atribuir-pedido="${p.id}" aria-label="Quem olha este pedido">${opcoesEquipe(p.responsavel || "", "ninguém ainda")}</select>`
+      : p.responsavel ? esc(p.responsavel) : `ninguém ainda — <button type="button" class="link" data-acao="pedido-pegar" data-id="${p.id}">pegar</button>`;
     $("#fp-acoes").hidden = p.situacao !== "novo";
-    $("#fp-virar").textContent = p.tipo === "mapeamento" ? "Virar projeto" : "Virar tarefa";
+    $("#fp-virar").textContent = p.tipo === "mapeamento" && eu === CHEFE ? "Virar projeto" : "Virar tarefa";
     $("#fp-hist").innerHTML = "<b>Histórico</b>" + (p.hist.length
       ? p.hist.map(h => `<span><time>${dBR(dData(h.quando))}</time> — ${curto(h.quem)} ${h.o}</span>`).join("")
       : "<span>Ninguém olhou ainda.</span>");
@@ -2032,22 +2801,25 @@
     const como = $("#dn-como").value, f = $("#dn-frente").value;
     const pjs = PROJETOS.filter(p => p.frente === f && p.estado === "ativo");
     const sel = novaCtx && novaCtx.projeto && pjs.some(p => p.id === novaCtx.projeto) ? novaCtx.projeto : "";
-    $("#dn-projeto").innerHTML = `<option value="">nenhum — tarefa solta da frente</option>` +
+    $("#dn-projeto").innerHTML = `<option value="">nenhum — tarefa avulsa</option>` +
       pjs.map(p => `<option value="${p.id}"${p.id === sel ? " selected" : ""}>${p.nome}</option>`).join("");
     $("#dn-projeto").value = sel;
     $("#dn-projeto-caixa").hidden = como === "projeto";
     $("#dn-resp-caixa").hidden = como === "projeto";
+    $("#dn-prazo-caixa").hidden = como === "projeto";
   }
   function pedirNova(ctx) {
     novaCtx = ctx;
     $("#dn-origem").textContent = ctx.rotulo;
-    $("#dn-como").value = ctx.como || "tarefa";
+    $("#dn-como").value = eu === CHEFE ? (ctx.como || "tarefa") : "tarefa";
+    $("#dn-como").closest("label").hidden = eu !== CHEFE;   // só o chefe abre projeto (versão 26)
     $("#dn-titulo").value = ctx.titulo || "";
-    $("#dn-frente").innerHTML = FRENTES.map(f =>
+    $("#dn-frente").innerHTML = frentesAtivas().map(f =>
       `<option value="${f.id}"${f.id === ctx.frente ? " selected" : ""}>${f.nome}</option>`).join("");
     $("#dn-frente").value = ctx.frente;
     $("#dn-resp").innerHTML = opcoesEquipe(ctx.responsavel);
     $("#dn-resp").value = ctx.responsavel || "";
+    $("#dn-prazo").value = ctx.prazo || "";
     ajustarNova();
     $("#dlg-nova").showModal();
     // O foco vai para "Abrir": sem isso ele cai no "×", e um segundo Enter fecharia sem gravar.
@@ -2078,6 +2850,31 @@
     t.andamento.resposta = texto; t.andamento.respondido = dISO(hoje);
     mexer(t, `respondeu ao pedido de andamento: “${texto}”`);
   }
+  function comentar(id) {
+    const campo = $("#com-" + id), texto = (campo.value || "").trim();
+    if (!texto) { campo.focus(); return false; }
+    anotar(tarefa(id), texto);
+    comentando = null;
+    avisoMsg = `Comentário guardado em <b>${tarefa(id).titulo}</b>.`;
+  }
+  function entregaOk() {
+    const produto = ($("#ft-produto").value || "").trim(), prova = ($("#ft-prova").value || "").trim();
+    const antes = tAtual.entregue;
+    tAtual.entregue = produto || prova ? { produto, prova } : null;
+    if (entregaModo === "concluir") {
+      entregaModo = null;
+      concluir(tAtual, produto ? `concluiu — entregou: ${produto}` : "concluiu");
+      $("#ficha-t").close();
+      avisoMsg = produto ? `Concluída, e o que foi entregue já está no rascunho do Petrvs de ${MESES[hoje.getMonth()]}.`
+                         : `Concluída. Para o Petrvs, dá para dizer depois o que foi entregue: abra a tarefa em Concluídas.`;
+      return;                                  // redesenha a tela
+    }
+    if (produto !== ((antes || {}).produto || "") || prova !== ((antes || {}).prova || ""))
+      tAtual.hist.push({ quando: dISO(hoje), quem: eu, o: produto ? `disse o que foi entregue: ${produto}` : "apagou o que foi entregue" });
+    abrirTarefaDeNovo();
+    $("#ft-entrega-ok").focus();
+    return false;
+  }
   function incluirNota() {
     const campo = $("#ft-nota"), texto = (campo.value || "").trim();
     if (!texto) { campo.focus(); return false; }
@@ -2094,14 +2891,97 @@
     nada()               { return false; },
     ir()                 { tela = tela === "trabalho" ? "painel" : "trabalho"; },
     fechar({ id })       { $("#" + id).close(); return false; },
-    vista({ tipo, id })  { tela = "trabalho"; vista = { tipo, id }; mesVer = null; },
+    vista({ tipo, id })  { tela = "trabalho"; vista = { tipo, id }; mesVer = null; notaDestaque = null; },
     "alternar-olhados"() { verOlhados = !verOlhados; },
     "alternar-arquivados"() { verArquivados = !verArquivados; },
+    "sair"() { if (REAL) REAL.sair(); return false; },
+
+    // ---- frentes (versão 27): só o chefe ----
+    "fr-editar"({ id }) { if (eu !== CHEFE) return false; editandoFrente = id;
+      setTimeout(() => { const c = $("#frd-nome"); if (c) c.focus(); }); },
+    "fr-cancelar"() { editandoFrente = null; },
+    "fr-salvar"({ id }) {
+      if (eu !== CHEFE) return false;
+      const f = frente(id), nome = $("#frd-nome").value.trim();
+      if (!nome) { $("#frd-nome").focus(); return false; }
+      if (FRENTES.some(g => g !== f && g.nome.toLowerCase() === nome.toLowerCase())) {
+        avisoMsg = `Já existe uma frente chamada <b>${esc(nome)}</b>.`; return; }
+      f.nome = nome; f.sub = $("#frd-sub").value.trim();
+      const e = $("#frd-entrega").value;
+      if (e) ENTREGA_DA_FRENTE[id] = e; else delete ENTREGA_DA_FRENTE[id];
+      editandoFrente = null;
+      avisoMsg = `Frente <b>${esc(nome)}</b> atualizada.`;
+    },
+    "fr-arquivar"({ id }) {
+      if (eu !== CHEFE) return false;
+      const f = frente(id), x = emAbertoNaFrente(id);
+      const falta = [x.tarefas && plural(x.tarefas, "tarefa aberta ou paralisada", "tarefas abertas ou paralisadas"),
+                     x.projetos && plural(x.projetos, "projeto ativo ou paralisado", "projetos ativos ou paralisados"),
+                     x.rotinas && plural(x.rotinas, "tarefa recorrente", "tarefas recorrentes")].filter(Boolean);
+      if (falta.length) {
+        avisoMsg = `<b>${esc(f.nome)}</b> ainda tem ${falta.join(", ")}. Só arquiva frente sem nada em aberto: conclua ou arquive antes.`;
+        return;
+      }
+      f.estado = "arquivada"; f.arquivada_em = dISO(hoje);
+      if (editandoFrente === id) editandoFrente = null;
+      avisoMsg = `<b>${esc(f.nome)}</b> foi arquivada. Nada foi apagado: está em "ver as arquivadas", logo abaixo.`;
+    },
+    "fr-desarquivar"({ id }) { if (eu !== CHEFE) return false; const f = frente(id); f.estado = "ativa"; f.arquivada_em = null;
+      avisoMsg = `<b>${esc(f.nome)}</b> voltou para as frentes ativas.`; },
+    "fr-ver-arq"() { verFrentesArq = !verFrentesArq; },
     painel({ id })       { painelVista = id; },
 
     // ---- quadro de avisos ----
     "aviso-novo"()       { novoAviso = !novoAviso; },
     "aviso-ver"()        { verAvisos = !verAvisos; },
+    "aviso-mais"({ id }) { avisoAberto[id] = !avisoAberto[id]; },
+    secao({ id })        { const k = eu + ":" + id; secoesAbertas[k] = !secoesAbertas[k]; },
+    iniciar({ id })      { const t = tarefa(id); t.iniciada = true; mexer(t, "iniciou");
+                           avisoMsg = `<b>${esc(t.titulo)}</b> passou para Em andamento.`; },
+    "f-paralisar"()      { paralisando = !paralisando; abrirTarefa(tAtual.id); return false; },
+    "pj-pedidos"({ id })   { tela = "trabalho"; vista = { tipo:"projeto", id }; desenhar();
+                             const b = document.getElementById("pedidos-" + id); if (b) b.scrollIntoView({ block:"start" }); return false; },
+    "pj-paralisar"({ id }) { pjParalisando = pjParalisando === id ? null : id; },
+
+    // ---- férias e recesso (versão 24): cada um marca, o chefe homologa ----
+    "fe-marcar"() {
+      const quem = eu === CHEFE && $("#fe-quem") ? $("#fe-quem").value : eu;
+      const de = $("#fe-de").value, ate = $("#fe-ate").value;
+      const tipo = $("#fe-tipo").value;
+      const erro = !de ? "Diga o primeiro dia." : !ate && tipo !== "afastamento" ? "Diga o último dia. Só o afastamento pode ficar sem prazo."
+        : ate && ate < de ? "O último dia está antes do primeiro." : "";
+      if (erro) { $("#fe-erro").textContent = erro; return false; }
+      // O que o chefe marca para si ou para outro já nasce homologado.
+      const situacao = eu === CHEFE ? "homologada" : "pedida";
+      FERIAS.push({ id:"fe" + (++seq), quem, tipo, de, ate: ate || null, situacao, pedida_em:dISO(hoje) });
+      const per = ate ? `de ${ddmm(de)} a ${ddmm(ate)}` : `desde ${ddmm(de)}, sem prazo`;
+      avisoMsg = situacao === "pedida" ? `Registrado: ${ROTULO_AUSENCIA[tipo]} ${per}. A chefia é avisada para homologar no SouGov.`
+                                       : `Marcado e homologado: ${curto(quem)}, ${ROTULO_AUSENCIA[tipo]} ${per}.`;
+    },
+    "fe-homologar"({ id }) { if (eu !== CHEFE) return false; const f = FERIAS.find(x => x.id === id); f.situacao = "homologada";
+      avisoMsg = `Homologado no SouGov: ${curto(f.quem)}, ${periodo(f)}. No período, o suplente assume as tarefas.`; },
+    "fe-devolver"({ id }) { if (eu !== CHEFE) return false; const k = FERIAS.findIndex(x => x.id === id); const f = FERIAS[k]; FERIAS.splice(k, 1);
+      AVISOS.unshift({ id:"av" + (++seq), texto:`${curto(eu)} não homologou ${ROTULO_AUSENCIA[f.tipo]} de ${periodo(f)}. Converse com a chefia.`,
+                       quem:eu, quando:dISO(hoje), ate:null, para:f.quem, tarefa:null });
+      avisoMsg = `Não homologado: ${curto(f.quem)}, ${periodo(f)}. A pessoa recebe um aviso.`; },
+    "fe-encerrar"({ id }) { if (eu !== CHEFE) return false; const f = FERIAS.find(x => x.id === id); f.ate = dISO(maisDias(hoje, -1));
+      avisoMsg = `${curto(f.quem)} voltou: o ${ROTULO_AUSENCIA[f.tipo]} foi encerrado e as tarefas voltam para o titular.`; },
+    "fe-tirar"({ id })   { const k = FERIAS.findIndex(x => x.id === id); if (k >= 0) FERIAS.splice(k, 1); },
+
+    // ---- minhas anotações (versão 24) ----
+    "nota-ver"({ id })    { tela = "trabalho"; vista = { tipo:"caixa", id:"anotacoes" }; notaDestaque = id; },
+    "nota-apagar"({ id }) { const k = ANOTACOES.findIndex(n => n.id === id && n.quem === eu); if (k >= 0) ANOTACOES.splice(k, 1); },
+    "nota-tarefa"({ id }) {
+      const n = ANOTACOES.find(x => x.id === id);
+      const p = n.projeto ? projeto(n.projeto) : null;
+      pedirNova({ rotulo:"era uma anotação sua", titulo:sugerirTitulo(n.texto), frente: p ? p.frente : frenteProvavel(),
+                  projeto: n.projeto, responsavel:eu, fica:true,
+                  depois() { ANOTACOES.splice(ANOTACOES.indexOf(n), 1); } });
+      return false;
+    },
+    "pedido-pegar"({ id }) { const p = PEDIDOS.find(x => x.id === id); if (!p.responsavel) { p.responsavel = eu;
+      p.hist.push({ quando:dISO(hoje), quem:eu, o:"pegou para olhar" }); }
+      if ($("#ficha-p").open) $("#ficha-p").close(); },
     // Tira o aviso quem o escreveu, ou o chefe.
     "aviso-tirar"({ id }) { const k = AVISOS.findIndex(a => a.id === id);
                             if (k >= 0 && (eu === CHEFE || AVISOS[k].quem === eu || AVISOS[k].para === eu)) AVISOS.splice(k, 1); },
@@ -2115,7 +2995,10 @@
     responder({ id })    { return responder(id); },
 
     // ---- tarefa, de dentro da ficha ----
-    "f-concluir"()       { concluir(tAtual); $("#ficha-t").close(); },
+    // Concluir na ficha passa por um passo: dizer o que foi entregue (opcional).
+    "f-concluir"()       { entregaModo = "concluir"; abrirTarefa(tAtual.id); $("#ft-produto").focus(); return false; },
+    "f-entrega-volta"()  { entregaModo = null; abrirTarefa(tAtual.id); return false; },
+    "f-entrega-ok"()     { return entregaOk(); },
     "f-reabrir"()        { reabrir(tAtual); $("#ficha-t").close(); },
     "f-suspender"({ motivo }) { suspender(tAtual, motivo, $("#ft-volta").value || null); $("#ficha-t").close(); },
     "f-retomar"()        { retomar(tAtual); $("#ficha-t").close(); },
@@ -2124,7 +3007,7 @@
     andamento({ id })    { pedirAndamento(tarefa(id)); },
 
     // ---- projeto ----
-    "pj-concluir"({ id }) {
+    "pj-concluir"({ id }) { if (eu !== CHEFE) return false;
       const p = projeto(id);
       tarefasDo(p.id).filter(t => t.estado === "aberta").forEach(t => concluir(t, "concluiu junto com o projeto"));
       estadoProjeto(id, "concluido");
@@ -2136,19 +3019,20 @@
         $("#dlg-spu").showModal();
       }
     },
-    "pj-depois"({ id, motivo }) {
+    "pj-depois"({ id, motivo }) { if (eu !== CHEFE) return false;
       const p = estadoProjeto(id, "depois", motivo);
       p.volta = $("#pj-volta").value || null;
+      pjParalisando = null;
       avisoMsg = `<b>${p.nome}</b> foi para Paralisado, com as tarefas dele.`;
     },
     "pj-dobrar"({ id })  { dobras[id] = !projetoAberto(projeto(id)); },
-    "pj-retomar"({ id }) { const p = estadoProjeto(id, "ativo"); p.volta = null; avisoMsg = `<b>${p.nome}</b> voltou para a frente, com as tarefas dele.`; },
+    "pj-retomar"({ id }) { if (eu !== CHEFE) return false; const p = estadoProjeto(id, "ativo"); p.volta = null; avisoMsg = `<b>${p.nome}</b> voltou para a frente, com as tarefas dele.`; },
     // Arquivar não é excluir: o projeto sai das contagens e fica em "ver os arquivados".
-    "pj-arquivar"({ id }) { const p = projeto(id); p.estado = "arquivado"; p.mexido = dISO(hoje);
+    "pj-arquivar"({ id }) { if (eu !== CHEFE) return false; const p = projeto(id); p.estado = "arquivado"; p.mexido = dISO(hoje);
       avisoMsg = `<b>${p.nome}</b> foi arquivado, com as tarefas dele. Nada foi apagado: está em Paralisado › ver os arquivados.`; },
-    "pj-desarquivar"({ id }) { const p = projeto(id); p.estado = "depois"; p.motivo = p.motivo || "prioridades"; p.mexido = dISO(hoje);
+    "pj-desarquivar"({ id }) { if (eu !== CHEFE) return false; const p = projeto(id); p.estado = "depois"; p.motivo = p.motivo || "prioridades"; p.mexido = dISO(hoje);
       avisoMsg = `<b>${p.nome}</b> voltou para Paralisado. Para trabalhar nele, retome.`; },
-    "pj-reabrir"({ id }) { const p = estadoProjeto(id, "ativo"); avisoMsg = `<b>${p.nome}</b> foi reaberto. As tarefas que foram concluídas com ele continuam concluídas; reabra as que precisar.`; },
+    "pj-reabrir"({ id }) { if (eu !== CHEFE) return false; const p = estadoProjeto(id, "ativo"); avisoMsg = `<b>${p.nome}</b> foi reaberto. As tarefas que foram concluídas com ele continuam concluídas; reabra as que precisar.`; },
     spu({ resposta }) {
       const p = spuCtx; spuCtx = null;
       $("#dlg-spu").close();
@@ -2164,17 +3048,25 @@
     "mes-desmarcar"({ mes, quem })  { const x = mesFech(mes).marcas[quem]; if (podeMarcar(quem) && !x.assinado) x.petrvs = null; },
     "mes-assinar"({ mes, quem })    { const x = mesFech(mes).marcas[quem]; if (eu === CHEFE && x.petrvs) x.assinado = dISO(hoje); },
     "mes-desassinar"({ mes, quem }) { if (eu === CHEFE) mesFech(mes).marcas[quem].assinado = null; },
-    "mes-aprovar"({ mes, quem })    { if (eu === CHEFE && quem !== CHEFE) mesFech(mes).marcas[quem].freq = dISO(hoje); },
-    "mes-desaprovar"({ mes, quem }) { if (eu === CHEFE) mesFech(mes).marcas[quem].freq = null; },
-    "mes-aprovar-todos"({ mes })    { if (eu !== CHEFE) return false; const m = mesFech(mes), n = aAprovar(m).length;
-                                      aAprovar(m).forEach(q => { m.marcas[q].freq = dISO(hoje); });
-                                      avisoMsg = `Frequência de ${mesDe(m.comp)} marcada como aprovada para <b>${n} ${n === 1 ? "pessoa" : "pessoas"}</b>.`; },
+    // A frequência é uma marca por mês, só do chefe (versão 24).
+    "mes-aprovar"({ mes })          { if (eu !== CHEFE) return false; const m = mesFech(mes); m.freq = dISO(hoje);
+                                      avisoMsg = `Frequência de ${mesDe(m.comp)} marcada como aprovada no SouGov.`; },
+    "mes-desaprovar"({ mes })       { if (eu === CHEFE) mesFech(mes).freq = null; },
     "mes-cobrar"({ mes, quem })     { if (eu !== CHEFE) return false; mesFech(mes).marcas[quem].cobrado = dISO(hoje);
                                       avisoMsg = `<b>${curto(quem)}</b> foi cobrado: o aviso aparece no alto da tela dessa pessoa.`; },
     "mes-ver"({ mes, quem })        { if (eu !== CHEFE) return false; tela = "trabalho"; vista = { tipo:"caixa", id:"mes" }; mesVer = { quem, mes }; },
     "mes-lembrar"()                 { if (eu !== CHEFE) return false; mesesNaTela().forEach(m => { m.lembrado = dISO(hoje); });
                                       desenhar(); abrirLembrete(); return false; },
     "mes-copiar"()                  { copiarLembrete(); return false; },
+    "pt-copiar"({ i })              { copiarLinha(i); return false; },
+    "pe-trocar"()                   { if (eu !== CHEFE) return false; trocandoPlano = !trocandoPlano; },
+    "pe-guardar"()                  { if (eu !== CHEFE) return false; return guardarPlano(); },
+    "pj-arq"({ id })                { verArqPed[id] = !verArqPed[id]; },
+    "pj-cofre"({ id })              { verCofre[id] = !verCofre[id]; },
+    comentar({ id })                { comentando = id; desenhar(); const c = $("#com-" + id); if (c) c.focus(); return false; },
+    "comentar-ok"({ id })           { return comentar(id); },
+    "comentar-fechar"()             { comentando = null; },
+    "pt-mes"({ corrente })          { ptCorrente = !!corrente; },
 
     // ---- rotina ----
     "abrir-r"({ id })    { abrirRotina(id); return false; },
@@ -2191,7 +3083,7 @@
     // ---- pedido ----
     "abrir-p"({ id })    { abrirPedido(id); return false; },
     "p-virar"() {
-      const p = pAtual, mapa = p.tipo === "mapeamento";
+      const p = pAtual, mapa = p.tipo === "mapeamento" && eu === CHEFE;
       $("#ficha-p").close();
       pedirNova({ rotulo:"vem do pedido de " + p.contato,
                   titulo: mapa ? "Mapeamento de " : sugerirTitulo(p.texto),
@@ -2234,7 +3126,8 @@
         vista = { tipo:"projeto", id:p.id };
       } else {
         const t = novaTarefa(f, titulo, { projeto: $("#dn-projeto").value || null,
-                                          responsavel: $("#dn-resp").value || null, origem: novaCtx.origem });
+                                          responsavel: $("#dn-resp").value || null, origem: novaCtx.origem,
+                                          prazo: $("#dn-prazo").value || null });
         avisarQuemRecebeu(t);
         if (novaCtx.depois) novaCtx.depois(t, "tarefa");
         avisoMsg = `Tarefa aberta em <b>${ondeDe(t)}</b>${t.responsavel === eu ? ", no seu nome" : t.responsavel ? ", com " + curto(t.responsavel) : ", sem dono"}: ${t.titulo}.`;
@@ -2258,22 +3151,45 @@
 
   // Escreve e dá Enter: é o cadastro inteiro de tarefa, projeto, ideia e nota.
   document.addEventListener("keydown", ev => {
-    const alvo = ev.target;
+    let alvo = ev.target;
+    // Versão 27: Enter na data do prazo grava a linha inteira, como no título.
+    if (ev.key === "Enter" && alvo && alvo.classList && alvo.classList.contains("nova-data")) {
+      if (ev.preventDefault) ev.preventDefault();
+      alvo = alvo.closest(".nova-linha").querySelector("input[data-nova]");
+      if (!alvo.value.trim()) { alvo.focus(); return; }
+    }
     if (ev.key !== "Enter" || !alvo || !alvo.dataset || !alvo.dataset.nova) return;
     if (ev.preventDefault) ev.preventDefault();   // o Enter é do campo: não aciona botão nenhum
     const texto = (alvo.value || "").trim();
-    if (!texto) return;
     const d = alvo.dataset;
+    if (d.nova === "entrega") { if (entregaOk() !== false) desenhar(); return; }   // pode concluir sem escrever
+    if (d.nova === "comentario") { if (comentar(d.id) !== false) desenhar(); return; }
+    if (!texto) return;
     if (d.nova === "nota") { incluirNota(); return; }
-    if (d.nova === "minha") {      // a tarefa é de quem escreveu; falta só dizer onde ela mora
-      pedirNova({ rotulo:"uma tarefa sua", titulo:texto, frente:frenteProvavel(), responsavel:eu, fica:true });
+    if (d.nova === "minha") {      // versão 24: nasce solta, em Minhas anotações, sem perguntar nada
+      ANOTACOES.push({ id:"n" + (++seq), quem:eu, texto, quando:dISO(hoje), projeto:null });
+      avisoMsg = vista.id === "anotacoes" ? "" : `Anotado em <b>Minhas anotações</b>. Só você vê; de lá dá para vincular a um projeto ou virar tarefa.`;
+      desenhar();
+      const c = document.querySelector('input[data-nova="minha"]'); if (c) c.focus();
       return;
     }
     if (d.nova === "tarefa") {
       // O chefe abre tarefa para distribuir: nasce sem dono. Os demais anotam o que vão fazer.
-      const t = novaTarefa(d.frente, texto, { projeto: d.projeto || null, responsavel: eu === CHEFE ? null : eu });
-      avisoMsg = `Tarefa aberta em <b>${ondeDe(t)}</b>, ${t.responsavel ? "no seu nome" : "sem dono"}: ${t.titulo}.`;
+      const dt = alvo.closest(".nova-linha").querySelector(".nova-data");
+      const prazo = dt && dt.value || null;
+      const t = novaTarefa(d.frente, texto, { projeto: d.projeto || null, responsavel: eu === CHEFE ? null : eu, prazo });
+      avisoMsg = `Tarefa aberta em <b>${ondeDe(t)}</b>, ${t.responsavel ? "no seu nome" : "sem dono"}${prazo ? `, prazo ${dBR(dData(prazo))}` : ", sem prazo"}: ${t.titulo}.`;
+    } else if (d.nova === "frente") {
+      if (eu !== CHEFE) return;              // só o chefe inclui frente (versão 27)
+      if (FRENTES.some(g => g.nome.toLowerCase() === texto.toLowerCase())) {
+        avisoMsg = `Já existe uma frente chamada <b>${esc(texto)}</b>.`; desenhar(); return; }
+      const f = { id:"fr-n" + (++seq), nome:texto, sub:"", estado:"ativa", arquivada_em:null, cor:proximaCor() };
+      FRENTES.push(f);
+      editandoFrente = f.id;                 // já abre para dizer o que cobre e a entrega do Petrvs
+      setTimeout(() => { const c = $("#frd-sub"); if (c) c.focus(); });
+      avisoMsg = `Frente <b>${esc(texto)}</b> incluída, já no menu. Diga o que ela cobre e a que entrega do Petrvs ela serve.`;
     } else if (d.nova === "projeto") {
+      if (eu !== CHEFE) return;              // só o chefe inclui projeto (versão 26)
       const p = novoProjeto(d.frente, texto);
       avisoMsg = `Projeto aberto em <b>${frente(d.frente).nome}</b>: ${p.nome}.`;
       vista = { tipo:"projeto", id:p.id };
@@ -2283,6 +3199,10 @@
     } else if (d.nova === "aviso") {
       AVISOS.unshift({ id:"av" + (++seq), texto, quem: eu, quando: dISO(hoje), ate: $("#aviso-ate").value || null });
       novoAviso = false; avisoMsg = "";
+    } else if (d.nova === "pj-nota") {
+      const p = projeto(d.id);
+      (p.notas = p.notas || []).push({ quando: dISO(hoje), quem: eu, texto });
+      avisoMsg = "";
     } else if (d.nova === "andamento") {
       if (responder(d.id) === false) return;
       avisoMsg = "";
@@ -2299,8 +3219,64 @@
     desenhar();
   });
 
+  // Versão 24: atribuir pedido (chefe), vincular anotação a projeto, suplente da recorrente.
+  document.addEventListener("change", ev => {
+    const alvo = ev.target, d = alvo && alvo.dataset;
+    if (!d) return;
+    if (d.atribuirPedido) {
+      const p = PEDIDOS.find(x => x.id === d.atribuirPedido);
+      if (eu !== CHEFE || (p.responsavel || "") === alvo.value) return;
+      p.responsavel = alvo.value || null;
+      p.hist.push({ quando:dISO(hoje), quem:eu, o: p.responsavel ? `atribuiu a ${curto(p.responsavel)}` : "tirou a atribuição" });
+      if (p.responsavel && p.responsavel !== eu)
+        AVISOS.unshift({ id:"av" + (++seq), texto:`${curto(eu)} passou para você um pedido: ${sugerirTitulo(p.texto)}`,
+                         quem:eu, quando:dISO(hoje), ate:null, para:p.responsavel, tarefa:null });
+      if ($("#ficha-p").open) $("#ficha-p").close();
+    } else if (d.vincular) {
+      const n = ANOTACOES.find(x => x.id === d.vincular);
+      n.projeto = alvo.value || null;
+      avisoMsg = n.projeto ? `Anotação vinculada a <b>${projeto(n.projeto).nome}</b>. Só você vê, também lá no projeto.` : "Anotação solta de novo.";
+    } else if (d.supRotina) {
+      if (eu !== CHEFE) return;
+      const r = rotina(d.supRotina); r.suplente = alvo.value || null;
+      desenhar(); abrirRotina(r.id); return;
+    } else return;
+    desenhar();
+  });
+
+  // Rascunho do Petrvs: o trabalho cuja entrega não está no plano vai para a linha escolhida.
+  document.addEventListener("change", ev => {
+    const alvo = ev.target;
+    if (!alvo || !alvo.dataset || !alvo.dataset.linhaDe || alvo.value === "") return;
+    const [tipo, id] = alvo.dataset.linhaDe.split(":");
+    const o = tipo === "t" ? tarefa(id) : rotina(id);
+    o.linhaPetrvs = { quem: eu, i: Number(alvo.value) };
+    avisoMsg = "";
+    desenhar();
+  });
+
   // Dentro da ficha: mudou, gravou.
   $("#ft-resp").addEventListener("change", ev => { passar(tAtual, ev.target.value || null); abrirTarefaDeNovo(); });
+  $("#ft-sup").addEventListener("change", ev => {
+    if (eu !== CHEFE) return;
+    tAtual.suplente = ev.target.value || null;
+    mexer(tAtual, tAtual.suplente ? `pôs ${curto(tAtual.suplente)} como suplente` : "tirou o suplente");
+    abrirTarefaDeNovo();
+  });
+  // Repete: a tarefa vira recorrente (versão 24). Por baixo, vira a regra de uma
+  // rotina, com o dia de hoje como referência; o histórico da tarefa vai junto.
+  $("#ft-rec").addEventListener("change", ev => {
+    const per = ev.target.value; if (!per) return;
+    const t = tAtual;
+    const r = { id:"r" + (++seq), frente:t.frente, projeto:t.projeto, natureza:"fazer", titulo:t.titulo,
+                periodicidade:per, modo:"dia_mes", dia_mes:hoje.getDate(), dia_semana:hoje.getDay() + 1,
+                inicio_em:dISO(maisDias(hoje, 1)), responsavel:t.responsavel || eu, suplente:t.suplente, ocorrencias:[] };
+    ROTINAS.push(r);
+    TAREFAS.splice(TAREFAS.indexOf(t), 1);
+    $("#ficha-t").close();
+    avisoMsg = `<b>${esc(t.titulo)}</b> virou tarefa recorrente: ${descricao(r)}. A primeira rodada vence em ${dBR(vencimentos(r, maisDias(hoje, 400))[0])}.`;
+    desenhar();
+  });
   $("#ft-prazo").addEventListener("change", ev => {
     tAtual.prazo = ev.target.value || null;
     mexer(tAtual, tAtual.prazo ? `pôs prazo para ${dBR(dData(tAtual.prazo))}` : "tirou o prazo");
@@ -2314,10 +3290,18 @@
   $("#dn-frente").addEventListener("change", ajustarNova);
   $("#dn-como").addEventListener("change", ajustarNova);
 
+  if (REAL) {
+    $("label.quem").hidden = true;      // na versão de verdade, é quem fez login
+    REAL.ligar({ FRENTES, PROJETOS, TAREFAS, ROTINAS, FERIAS, ANOTACOES, IDEIAS, AVISOS, PEDIDOS,
+                 MESES_FECH, PLANOS, ESTILO, ENTREGAS, ENTREGA_DA_FRENTE, PLANO_ENTREGAS, ACESSOS },
+               () => desenhar(), () => !!document.querySelector("dialog[open]"));
+  }
   $("#eu").innerHTML = EQUIPE.map(n =>
     `<option value="${n}">${n}${n === CHEFE ? " — chefe" : ""}</option>`).join("");
   $("#eu").value = eu;
-  $("#eu").addEventListener("change", ev => { eu = ev.target.value; avisoMsg = ""; mesVer = null; desenhar(); });
+  // Trocar o "vendo como" é entrar como outra pessoa: abre em Minhas tarefas.
+  $("#eu").addEventListener("change", ev => { eu = ev.target.value; avisoMsg = ""; mesVer = null;
+    tela = "trabalho"; vista = { tipo:"caixa", id:"minhas" }; comentando = null; desenhar(); });
 
   desenhar();
 })();

@@ -226,6 +226,8 @@
   /* Versão 31: título editável e excluir. */
   .titulo-campo { width:100%; font:inherit; font-size:inherit; font-weight:inherit; color:var(--fg); padding:6px 9px;
                   border:1.5px solid var(--border-forte); border-radius:8px; background:var(--surface); }
+  /* Versão 35: diz que o nome se muda ali mesmo. */
+  .titulo-dica { display:block; margin-top:4px; font-size:13.5px; font-weight:500; color:var(--fg-muted); }
   .bt.vermelho { background:var(--alerta); border-color:var(--alerta); color:#fff; }
   /* Versão 30: as linhas do plano de trabalho. */
   .pl-campos { display:grid; grid-template-columns:minmax(0,1.2fr) minmax(0,2fr) 90px; gap:10px; }
@@ -1051,7 +1053,7 @@
   const verArqPed = {}, verCofre = {};   // por projeto: o arquivo dos pedidos e o cofre das concluídas
   let trocandoPlano = false;            // o campo para subir o plano de entregas está aberto
   let verArquivados = false, verAvisos = false, novoAviso = false;
-  let editandoFrente = null, verFrentesArq = false;   // versão 27: a tela das frentes
+  let editandoFrente = null, verFrentesArq = false, editandoProjeto = null;   // versão 27: a tela das frentes
   let planoEditando = null;
   let excluindo = null;                               // versão 31: a tarefa ou recorrente cuja exclusão está sendo confirmada                           // versão 30: { quem, i } da linha do plano aberta
   const avisoAberto = {};                // versão 24: os avisos longos que a pessoa expandiu
@@ -2194,7 +2196,7 @@
     $("#pe").innerHTML = `<b>CGGES</b> — Escritório de Processos da SPU.
         ${REAL ? `<span class="versao">Home EPP · área da equipe · entrou como ${curto(eu)}</span>
         <button type="button" class="link" data-acao="sair">Sair</button>`
-        : `<span class="versao">Home EPP · área logada · protótipo de 19/11/2026 (versão 34) · dados de exemplo</span>`}`;
+        : `<span class="versao">Home EPP · área logada · protótipo de 19/11/2026 (versão 35) · dados de exemplo</span>`}`;
   }
 
   // Na frente os projetos vêm recolhidos. Abre sozinho só o que tem alerta: tarefa
@@ -2233,7 +2235,9 @@
     const guardadosAqui = PROJETOS.filter(p => p.frente === f.id && p.estado === "depois").length;
     return `
       <button type="button" class="link" data-acao="vista" data-tipo="frentes" data-id="">← Frentes de trabalho</button>
-      ${banda(f.cor, "", f.nome, "")}
+      ${eu === CHEFE && editandoFrente === f.id ? `<div class="banda" style="--fc:${f.cor}">${formFrente(f)}</div>`
+        : banda(f.cor, "", f.nome, esc(f.sub || ""), eu !== CHEFE ? "" : `<div class="grupo-linha">
+            <button type="button" class="bt" data-acao="fr-editar" data-id="${f.id}">Editar a frente</button></div>`)}
       ${pjs.length ? grupos : ""}
       ${eu !== CHEFE ? "" : `<div class="nova-linha solta">
         <input type="text" data-nova="projeto" data-frente="${f.id}"
@@ -2254,7 +2258,22 @@
   //  some do menu e das contagens, e o trabalho em andamento não pode sumir junto.
   // ======================================================================
   const attr = t => esc(t).replace(/"/g, "&quot;");
-  const plural = (n, um, varios) => `${n} ${n === 1 ? um : varios}`;
+  // Versão 35: o mesmo formulário edita a frente na tela das frentes e na tela da própria frente.
+  const formFrente = f => `
+          <div class="fr-edita">
+            <label class="campo" for="frd-nome">Nome da frente
+              <input type="text" id="frd-nome" maxlength="80" value="${attr(f.nome)}"></label>
+            <label class="campo" for="frd-sub">O que ela cobre
+              <input type="text" id="frd-sub" maxlength="200" value="${attr(f.sub || "")}"></label>
+            <label class="campo" for="frd-entrega">Entrega do Petrvs que ela alimenta
+              <select id="frd-entrega"><option value="">nenhuma</option>${Object.keys(ENTREGAS).map(k =>
+                `<option value="${k}"${k === ENTREGA_DA_FRENTE[f.id] ? " selected" : ""}>${ENTREGAS[k]}</option>`).join("")}</select></label>
+            <div class="grupo-linha">
+              <button type="button" class="bt pri" data-acao="fr-salvar" data-id="${f.id}">Salvar</button>
+              <button type="button" class="bt" data-acao="fr-cancelar">Cancelar</button>
+            </div>
+          </div>`;
+  const plural =(n, um, varios) => `${n} ${n === 1 ? um : varios}`;
   function emAbertoNaFrente(id) {
     return {
       tarefas: TAREFAS.filter(t => t.frente === id && t.estado !== "concluida").length,
@@ -2267,21 +2286,7 @@
     const linha = f => {
       const ent = ENTREGA_DA_FRENTE[f.id];
       if (chefe && editandoFrente === f.id) return `
-        <div class="linha" style="--fc:${f.cor}">
-          <div class="fr-edita">
-            <label class="campo" for="frd-nome">Nome da frente
-              <input type="text" id="frd-nome" maxlength="80" value="${attr(f.nome)}"></label>
-            <label class="campo" for="frd-sub">O que ela cobre
-              <input type="text" id="frd-sub" maxlength="200" value="${attr(f.sub || "")}"></label>
-            <label class="campo" for="frd-entrega">Entrega do Petrvs que ela alimenta
-              <select id="frd-entrega"><option value="">nenhuma</option>${Object.keys(ENTREGAS).map(k =>
-                `<option value="${k}"${k === ent ? " selected" : ""}>${ENTREGAS[k]}</option>`).join("")}</select></label>
-            <div class="grupo-linha">
-              <button type="button" class="bt pri" data-acao="fr-salvar" data-id="${f.id}">Salvar</button>
-              <button type="button" class="bt" data-acao="fr-cancelar">Cancelar</button>
-            </div>
-          </div>
-        </div>`;
+        <div class="linha" style="--fc:${f.cor}">${formFrente(f)}</div>`;
       const ab = TAREFAS.filter(t => t.frente === f.id && aberta(t)).length;
       const venc = par.filter(x => x.item.frente === f.id).length;
       const pjs = PROJETOS.filter(p => p.frente === f.id && p.estado === "ativo").length;
@@ -2364,7 +2369,20 @@
       .filter(Boolean).join(" · ");
     return `
       <button type="button" class="link" data-acao="vista" data-tipo="frente" data-id="${f.id}">← ${f.nome}</button>
-      ${banda(f.cor, "Projeto · " + f.nome, p.nome, resumo, linkFerramenta(p) + acoes)}
+      ${eu === CHEFE && editandoProjeto === p.id ? `
+        <div class="banda" style="--fc:${f.cor}">
+          <span class="sobre">Projeto · ${f.nome}</span>
+          <div class="fr-edita">
+            <label class="campo" for="pjd-nome">Nome do projeto
+              <input type="text" id="pjd-nome" maxlength="120" value="${attr(p.nome)}"></label>
+            <div class="grupo-linha">
+              <button type="button" class="bt pri" data-acao="pj-nome-salvar" data-id="${p.id}">Salvar</button>
+              <button type="button" class="bt" data-acao="pj-nome-cancelar">Cancelar</button>
+            </div>
+          </div>
+        </div>`
+      : banda(f.cor, "Projeto · " + f.nome, p.nome, resumo, linkFerramenta(p) + acoes +
+          (eu === CHEFE ? `<div class="grupo-linha"><button type="button" class="link fino" data-acao="pj-nome" data-id="${p.id}">Mudar o nome do projeto</button></div>` : ""))}
       ${rots.length ? bloco(f.cor, "Tarefas recorrentes", rots.length, rots.map(x => linhaRotina(x, { pessoa:true })).join("")) : ""}
       ${bloco(f.cor, "Tarefas abertas", r.abertas.length,
           r.abertas.sort(porUrgencia).map(t => linhaTarefa(t, { pessoa:true, atribuir:true })).join("") +
@@ -2552,7 +2570,7 @@
             fs.map(t => linhaTarefa(t, { onde:true, pessoa:chefe })).join(""), "Nada concluído ainda.")}`;
     }
     return `
-      ${banda("var(--off)", "Protótipo", "Para validar", "Não faz parte da tela final. No alto, o que mudou na versão 34; embaixo, o que veio antes. Em itálico, o que eu decidi por conta própria para você confirmar.")}
+      ${banda("var(--off)", "Protótipo", "Para validar", "Não faz parte da tela final. No alto, o que mudou na versão 35; embaixo, o que veio antes. Em itálico, o que eu decidi por conta própria para você confirmar.")}
       <div class="bloco validar"><ol><li>Notas de revisão retiradas da versão publicada.</li></ol></div>`;
   }
 
@@ -2792,7 +2810,8 @@
     $("#ft-frente").textContent = t.projeto ? "Projeto · " + f.nome : "Frente de trabalho";
     $("#ft-projeto").textContent = t.projeto ? projeto(t.projeto).nome : f.nome;
     if (podeMexer(t)) $("#ft-titulo").innerHTML = `<input type="text" class="titulo-campo" data-titulo-t="${t.id}" maxlength="300"
-        value="${esc(t.titulo).replace(/"/g, "&quot;")}" aria-label="Título da tarefa — escreva e saia do campo para gravar">`;
+        value="${esc(t.titulo).replace(/"/g, "&quot;")}" aria-label="Nome da tarefa — escreva e saia do campo para gravar">
+        <span class="titulo-dica">Para mudar o nome, escreva no campo; grava ao dar Enter ou sair dele.</span>`;
     else $("#ft-titulo").textContent = t.titulo;
     $("#ft-excluir").innerHTML = !podeMexer(t) ? ""
       : excluindo === t.id ? `<span class="pt-trab"><b>Excluir de vez?</b> Some da área para todos e não dá para desfazer.</span>
@@ -2868,7 +2887,8 @@
         <h2>${r.projeto ? projeto(r.projeto).nome : f.nome}</h2>
       </div>
       ${podeMexer(r) ? `<p class="ficha-texto"><input type="text" class="titulo-campo" data-titulo-r="${r.id}" maxlength="300"
-          value="${esc(r.titulo).replace(/"/g, "&quot;")}" aria-label="Título da tarefa recorrente — escreva e saia do campo para gravar"></p>`
+          value="${esc(r.titulo).replace(/"/g, "&quot;")}" aria-label="Nome da tarefa recorrente — escreva e saia do campo para gravar">
+          <span class="titulo-dica">Para mudar o nome, escreva no campo; grava ao dar Enter ou sair dele.</span></p>`
         : `<p class="ficha-texto">${esc(r.titulo)}</p>`}
       <dl class="dados">
         <div><dt>Titular</dt><dd>${eu === CHEFE ? `<select class="mini" data-resp-rotina="${r.id}" aria-label="Titular">${opcoesEquipe(r.responsavel, "sem titular")}</select>` : r.responsavel || "sem titular"}${substituindo(r) ? ` <small>(${ROTULO_AUSENCIA[ausenciaDe(r.responsavel).tipo]})</small>` : ""}</dd></div>
@@ -3053,6 +3073,21 @@
     "fr-editar"({ id }) { if (eu !== CHEFE) return false; editandoFrente = id;
       setTimeout(() => { const c = $("#frd-nome"); if (c) c.focus(); }); },
     "fr-cancelar"() { editandoFrente = null; },
+    // ---- nome do projeto (versão 35): só o chefe, como as demais decisões do projeto ----
+    "pj-nome"({ id }) { if (eu !== CHEFE) return false; editandoProjeto = id;
+      setTimeout(() => { const c = $("#pjd-nome"); if (c) { c.focus(); c.select(); } }); },
+    "pj-nome-cancelar"() { editandoProjeto = null; },
+    "pj-nome-salvar"({ id }) {
+      if (eu !== CHEFE) return false;
+      const p = projeto(id), nome = $("#pjd-nome").value.trim();
+      if (!nome) { $("#pjd-nome").focus(); return false; }
+      if (PROJETOS.some(q => q !== p && q.nome.toLowerCase() === nome.toLowerCase())) {
+        avisoMsg = `Já existe um projeto chamado <b>${esc(nome)}</b>.`; return; }
+      editandoProjeto = null;
+      if (nome === p.nome) return;
+      avisoMsg = `Projeto <b>${esc(p.nome)}</b> passou a se chamar <b>${esc(nome)}</b>.`;
+      p.nome = nome; p.mexido = dISO(hoje);
+    },
     "fr-salvar"({ id }) {
       if (eu !== CHEFE) return false;
       const f = frente(id), nome = $("#frd-nome").value.trim();
@@ -3356,6 +3391,17 @@
   // Escreve e dá Enter: é o cadastro inteiro de tarefa, projeto, ideia e nota.
   document.addEventListener("keydown", ev => {
     let alvo = ev.target;
+    // Versão 35: nos formulários de nome, Enter salva e Esc cancela; no nome da tarefa, Enter grava.
+    if (alvo && alvo.closest && alvo.closest(".fr-edita") && alvo.tagName === "INPUT" && (ev.key === "Enter" || ev.key === "Escape")) {
+      if (ev.preventDefault) ev.preventDefault();
+      const b = alvo.closest(".fr-edita").querySelector(ev.key === "Enter" ? ".bt.pri" : '[data-acao$="cancelar"]');
+      if (b) b.click();
+      return;
+    }
+    if (ev.key === "Enter" && alvo && alvo.classList && alvo.classList.contains("titulo-campo")) {
+      if (ev.preventDefault) ev.preventDefault();
+      alvo.dispatchEvent(new Event("change", { bubbles: true })); return;
+    }
     // Versão 27: Enter na data do prazo grava a linha inteira, como no título.
     if (ev.key === "Enter" && alvo && alvo.classList && alvo.classList.contains("nova-data")) {
       if (ev.preventDefault) ev.preventDefault();
@@ -3443,7 +3489,8 @@
     } else if (d.tituloT) {
       const t = tarefa(d.tituloT), novo = alvo.value.trim();
       if (!t || !podeMexer(t) || !novo || novo === t.titulo) return;
-      t.titulo = novo; mexer(t, "mudou o título");
+      t.titulo = novo; mexer(t, "mudou o nome");
+      if ($("#ficha-t").open) { desenhar(); abrirTarefa(t.id); return; }
     } else if (d.tituloR) {
       const x = rotina(d.tituloR), novo = alvo.value.trim();
       if (!x || !podeMexer(x) || !novo || novo === x.titulo) return;

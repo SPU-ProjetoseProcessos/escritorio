@@ -2510,8 +2510,8 @@ window.iniciarArea = () => {
     $("#pe").innerHTML = `<b>CGGES</b> — Escritório de Processos da SPU.
         ${REAL ? `<span class="versao">Home EPP · área da equipe · entrou como ${curto(eu)}</span>
         <button type="button" class="link" data-acao="sair">Sair</button>`
-        : `<span class="versao">Home EPP · área logada · protótipo de 18/11/2026 (versão 32) · dados de exemplo</span>
-        <button type="button" class="link" data-acao="vista" data-tipo="caixa" data-id="validar">Para validar nesta versão (32) →</button>`}`;
+        : `<span class="versao">Home EPP · área logada · protótipo de 19/11/2026 (versão 33) · dados de exemplo</span>
+        <button type="button" class="link" data-acao="vista" data-tipo="caixa" data-id="validar">Para validar nesta versão (33) →</button>`}`;
   }
 
   // Na frente os projetos vêm recolhidos. Abre sozinho só o que tem alerta: tarefa
@@ -2869,7 +2869,7 @@ window.iniciarArea = () => {
             fs.map(t => linhaTarefa(t, { onde:true, pessoa:chefe })).join(""), "Nada concluído ainda.")}`;
     }
     return `
-      ${banda("var(--off)", "Protótipo", "Para validar", "Não faz parte da tela final. No alto, o que mudou na versão 32; embaixo, o que veio antes. Em itálico, o que eu decidi por conta própria para você confirmar.")}
+      ${banda("var(--off)", "Protótipo", "Para validar", "Não faz parte da tela final. No alto, o que mudou na versão 33; embaixo, o que veio antes. Em itálico, o que eu decidi por conta própria para você confirmar.")}
       <div class="bloco validar"><ol><li>Notas de revisão retiradas da versão publicada.</li></ol></div>`;
   }
 
@@ -3076,6 +3076,7 @@ window.iniciarArea = () => {
   }
 
   function desenhar() {
+    limparAvisosMortos();
     const chefe = eu === CHEFE, noTrabalho = tela === "trabalho";
     $("#tela-trabalho").hidden = !noTrabalho;
     $("#tela-painel").hidden = noTrabalho;
@@ -3285,6 +3286,24 @@ window.iniciarArea = () => {
   // Versão 31: editar o título, mudar a repetição e excluir — o chefe, o titular ou quem criou.
   const criadoPor = x => x.criado_por || (x.hist && x.hist[0] && x.hist[0].quem) || null;
   const podeMexer = x => eu === CHEFE || x.responsavel === eu || criadoPor(x) === eu;
+  // Versão 33: o aviso pessoal que nasce de uma tarefa ou de um pedido ("passou para você")
+  // vive enquanto aquilo continua com a pessoa. Passou para outro, concluiu, tratou, excluiu:
+  // o aviso some, para ninguém, e sai do banco.
+  function avisoMorto(a) {
+    if (a.tarefa) {
+      const t = tarefa(a.tarefa);
+      if (!t || t.estado === "concluida") return true;
+      return !!a.para && t.responsavel !== a.para && t.suplente !== a.para && !outrosDe(t).includes(a.para);
+    }
+    if (a.pedido) {
+      const p = PEDIDOS.find(x => x.id === a.pedido);
+      return !p || p.situacao !== "novo" || p.responsavel !== a.para;
+    }
+    return false;
+  }
+  function limparAvisosMortos() {
+    for (let k = AVISOS.length - 1; k >= 0; k--) if (avisoMorto(AVISOS[k])) AVISOS.splice(k, 1);
+  }
   const PERIODICIDADES = [["semanal","toda semana"],["quinzenal","a cada duas semanas"],["mensal","todo mês"],["bimestral","a cada dois meses"],["trimestral","a cada três meses"],["semestral","a cada seis meses"],["anual","todo ano"]];
   const rotina = id => ROTINAS.find(r => r.id === id);
 
@@ -3726,7 +3745,7 @@ window.iniciarArea = () => {
       p.hist.push({ quando:dISO(hoje), quem:eu, o: p.responsavel ? `atribuiu a ${curto(p.responsavel)}` : "tirou a atribuição" });
       if (p.responsavel && p.responsavel !== eu)
         AVISOS.unshift({ id:"av" + (++seq), texto:`${curto(eu)} passou para você um pedido: ${sugerirTitulo(p.texto)}`,
-                         quem:eu, quando:dISO(hoje), ate:null, para:p.responsavel, tarefa:null });
+                         quem:eu, quando:dISO(hoje), ate:null, para:p.responsavel, tarefa:null, pedido:p.id });
       if ($("#ficha-p").open) $("#ficha-p").close();
     } else if (d.vincular) {
       const n = ANOTACOES.find(x => x.id === d.vincular);

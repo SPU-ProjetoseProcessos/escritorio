@@ -678,6 +678,8 @@
       url:"https://spu-projetoseprocessos.github.io/tabelas-taxonomicas-spu/" },
     { id:"p-org",    frente:"ferramentas",  nome:"SPUOrganograma",
       url:"https://spu-projetoseprocessos.github.io/SPUProcessos/organograma/" },
+    { id:"p-form",   frente:"ferramentas",  nome:"Formulários de Instrução de Destinação",
+      url:"https://spu-projetoseprocessos.github.io/formularios-instrucao-destinacao/" },
     { id:"p-cglep",  frente:"ferramentas",  nome:"Aplicativo CGLEP" },
     { id:"p-cgov",   frente:"servicos",     nome:"CentralGov" },
     { id:"p-portal", frente:"servicos",     nome:"Portal de Serviços" },
@@ -699,7 +701,7 @@
 
   // O pedido guarda o código da ferramenta; aqui ele acha o projeto dela.
   const PROJETO_DA_FERRAMENTA = { spuprocessos:"p-spup", cade:"p-cade", simulador:"p-gov",
-                                  taxonomias:"p-tax", organograma:"p-org" };
+                                  taxonomias:"p-tax", organograma:"p-org", formularios:"p-form" };
 
   // Dois motivos, por decisão de 12/11/2026.
   const MOTIVO = { aguardando:"aguardando o retorno de outra área",
@@ -969,7 +971,7 @@
   const ROTULO_FERRAMENTA = {
     spuprocessos:"SPUProcessos", cade:"Cadê?", taxonomias:"Tabelas Taxonômicas",
     simulador:"Governança da Destinação", organograma:"SPUOrganograma", home:"Página do Escritório",
-    desenho:"Desenho Organizacional", outra:"outra"
+    desenho:"Desenho Organizacional", formularios:"Formulários de Instrução de Destinação", outra:"outra"
   };
   // ======================================================================
   //  ACESSOS ÀS FERRAMENTAS (versão 28)
@@ -1864,6 +1866,16 @@
   const minhasIdeias = () => IDEIAS.filter(i => eu === CHEFE || i.quem === eu);
   const minhasConcluidas = () => TAREFAS.filter(t => t.estado === "concluida" && (eu === CHEFE || doNome(t, eu)));
   const minhasAnotacoes = () => ANOTACOES.filter(n => n.quem === eu);
+  // Versão 36: o pedido olhado (tratado, virou trabalho, aprendizado ou descartado) vai para
+  // Concluídas. O chefe vê todos; o servidor, os que estavam com ele ou que ele fechou.
+  const fechouPedido = p => { const h = (p.hist || []).slice().reverse()
+      .find(x => /^(virou|deu por tratado|guardou|descartou)/.test(x.o || "")); return h || null; };
+  const comoFechou = o => /^virou/.test(o) ? o.split(":")[0] : /^guardou/.test(o) ? "guardado como aprendizado"
+      : /^descartou/.test(o) ? "descartado" : "tratado";
+  const quandoFechou = p => (fechouPedido(p) || {}).quando || p.criado || "";
+  const meusPedidosTratados = () => PEDIDOS.filter(p => p.situacao !== "novo" &&
+      (eu === CHEFE || p.responsavel === eu || (fechouPedido(p) || {}).quem === eu))
+    .sort((a, b) => quandoFechou(a) < quandoFechou(b) ? 1 : -1);
   const pedidosDo = id => PEDIDOS.filter(x => PROJETO_DA_FERRAMENTA[x.ferramenta] === id);
   function parados() {
     const de = [];
@@ -2006,8 +2018,9 @@
             ${p.responsavel ? `<span class="chip">com ${curto(p.responsavel)}</span>` : ""}
             ${marca}
           </span>
-          <span class="mt-nome" style="font-weight:600">${p.texto}</span>
-          <span class="mt-pe">${p.contato} · ${quando(p.criado)}</span>
+          <span class="mt-nome" style="font-weight:600">${esc(String(p.texto || "").split(/\s*-{5,}\s*O caso/)[0])}</span>
+          <span class="mt-pe">${p.contato} · chegou ${quando(p.criado)}${p.situacao !== "novo" && fechouPedido(p)
+            ? ` · ${comoFechou(fechouPedido(p).o)} por ${curto(fechouPedido(p).quem)} ${quando(fechouPedido(p).quando)}` : ""}</span>
         </button>
         ${p.situacao === "novo" ? `<div class="linha-acoes">${eu === CHEFE
           ? `<select class="mini" data-atribuir-pedido="${p.id}" aria-label="Atribuir o pedido">${opcoesEquipe(p.responsavel || "", "atribuir a…")}</select>`
@@ -2137,7 +2150,7 @@
       ["chegou",     novos().length,                          "pedidos novos",  "var(--azul)"],
       ["ideias",     minhasIdeias().length,                   "ideias",         "var(--off)"],
       ["paralisado", (chefe ? guardados().length : 0) + suspensas().filter(ehMeu).length, "paralisados", "var(--roxo)"],
-      ["feitas",     minhasConcluidas().length,               "concluídas",     "var(--ok)"]
+      ["feitas",     minhasConcluidas().length + meusPedidosTratados().length, "concluídas", "var(--ok)"]
     ].filter(Boolean).map(([id, n, rot, cor]) =>
       `<button type="button" class="tile ${n ? "" : "zero"}" style="--tc:${cor}" data-acao="vista" data-tipo="caixa" data-id="${id}" aria-current="${vista.tipo === "caixa" && vista.id === id}"><b>${n}</b><span>${rot}</span></button>`
     ).join("");
@@ -2196,7 +2209,7 @@
     $("#pe").innerHTML = `<b>CGGES</b> — Escritório de Processos da SPU.
         ${REAL ? `<span class="versao">Home EPP · área da equipe · entrou como ${curto(eu)}</span>
         <button type="button" class="link" data-acao="sair">Sair</button>`
-        : `<span class="versao">Home EPP · área logada · protótipo de 19/11/2026 (versão 35) · dados de exemplo</span>`}`;
+        : `<span class="versao">Home EPP · área logada · protótipo de 19/11/2026 (versão 36) · dados de exemplo</span>`}`;
   }
 
   // Na frente os projetos vêm recolhidos. Abre sozinho só o que tem alerta: tarefa
@@ -2555,7 +2568,7 @@
             </div>`).join("")) : ""}`;
     }
     if (id === "feitas") {
-      const fs = minhasConcluidas();
+      const fs = minhasConcluidas(), pt = meusPedidosTratados();
       const ps = chefe ? PROJETOS.filter(p => p.estado === "concluido") : [];
       return `
         ${banda("var(--ok)", "", "Concluídas", "")}
@@ -2567,10 +2580,12 @@
               <div class="linha-acoes"><button type="button" class="bt" data-acao="pj-reabrir" data-id="${p.id}">Reabrir</button></div>
             </div>`).join("")) : ""}
         ${bloco("var(--ok)", "Tarefas concluídas", fs.length,
-            fs.map(t => linhaTarefa(t, { onde:true, pessoa:chefe })).join(""), "Nada concluído ainda.")}`;
+            fs.map(t => linhaTarefa(t, { onde:true, pessoa:chefe })).join(""), "Nada concluído ainda.")}
+        ${pt.length ? bloco("var(--azul)", chefe ? "Pedidos das ferramentas já tratados" : "Pedidos que você tratou", pt.length,
+            pt.map(p => linhaPedido(p)).join("")) : ""}`;
     }
     return `
-      ${banda("var(--off)", "Protótipo", "Para validar", "Não faz parte da tela final. No alto, o que mudou na versão 35; embaixo, o que veio antes. Em itálico, o que eu decidi por conta própria para você confirmar.")}
+      ${banda("var(--off)", "Protótipo", "Para validar", "Não faz parte da tela final. No alto, o que mudou na versão 36; embaixo, o que veio antes. Em itálico, o que eu decidi por conta própria para você confirmar.")}
       <div class="bloco validar"><ol><li>Notas de revisão retiradas da versão publicada.</li></ol></div>`;
   }
 

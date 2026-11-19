@@ -1097,6 +1097,7 @@
   const outrosDe = t => (t.outros || []).filter(n => n && n !== t.responsavel);
   const comigo = t => comQuem(t) === eu || outrosDe(t).includes(eu);
   const doNome = (t, n) => t.responsavel === n || outrosDe(t).includes(n);
+  const rodadaConta = (r, o, nome) => (r.responsavel || o.quem) === nome || (o.quem === nome && outrosDe(r).includes(nome));
 
   // Tarefa de projeto guardado some das filas junto com o projeto.
   const noAr = t => !t.projeto || projeto(t.projeto).estado === "ativo";
@@ -1400,9 +1401,10 @@
     const no = iso => !!iso && iso.slice(0, 7) === m.id;
     const fora = TAREFAS.filter(t => t.estado === "concluida" && doNome(t, nome) && no(t.concluida_em))
       .map(t => ({ titulo:t.titulo, onde:ondeDe(t), frente:t.frente, quando:t.concluida_em, rotina:false }));
-    // A rodada conta para o titular, mesmo feita pelo suplente (decisão de 13/11/2026).
+    // A rodada conta para o titular, mesmo feita pelo suplente (decisão de 13/11/2026), e
+    // para quem dos "também responsáveis" a fez (versão 34).
     ROTINAS.forEach(r => r.ocorrencias.forEach(o => {
-      if ((r.responsavel || o.quem) === nome && no(o.feita_em))
+      if (rodadaConta(r, o, nome) && no(o.feita_em))
         fora.push({ titulo:r.titulo, onde:ondeDe(r), frente:r.frente, quando:o.feita_em, rotina:true });
     }));
     return fora.sort((a, b) => a.quando < b.quando ? -1 : 1);
@@ -1452,7 +1454,7 @@
     TAREFAS.filter(t => (t.estado === "aberta" || t.estado === "suspensa") && doNome(t, nome) && noAr(t))
       .forEach(t => por(t, "andando", { t, tipo:"andando" }));
     ROTINAS.forEach(r => {
-      const n = r.ocorrencias.filter(o => (r.responsavel || o.quem) === nome && no(o.feita_em)).length;
+      const n = r.ocorrencias.filter(o => rodadaConta(r, o, nome) && no(o.feita_em)).length;
       if (n) por(r, "rotinas", { r, n, tipo:"rotinas" });
     });
     return { mes, linhas, sem };
@@ -1846,7 +1848,7 @@
   // Versão 24: "minhas" é o que está comigo HOJE — as minhas como titular, e as de
   // quem está de férias quando eu sou o suplente.
   const minhasTarefas = () => TAREFAS.filter(t => (aberta(t) || voltou(t)) && comigo(t)).sort(porUrgencia);
-  const rotinasDe = quem => ROTINAS.filter(r => (comQuem(r) || null) === quem)
+  const rotinasDe = quem => ROTINAS.filter(r => (comQuem(r) || null) === quem || (quem && outrosDe(r).includes(quem)))
     .sort((a, b) => estadoRotina(b).aberta - estadoRotina(a).aberta);    // as vencidas primeiro
   const minhasRotinas = () => rotinasDe(eu).filter(r => estadoRotina(r).aberta);   // as que pedem ação
   const semDono = () => TAREFAS.filter(t => aberta(t) && !t.responsavel).sort(porUrgencia);
@@ -1874,7 +1876,7 @@
     return de.sort((a, b) => b.dias - a.dias);
   }
   // O chefe vê os parados de todos; cada pessoa, só os dela.
-  const paradosMeus = () => eu === CHEFE ? parados() : parados().filter(x => x.quem === eu || (x.tipo === "tarefa" && outrosDe(x.item).includes(eu)));
+  const paradosMeus = () => eu === CHEFE ? parados() : parados().filter(x => x.quem === eu || outrosDe(x.item).includes(eu));
 
   // ======================================================================
   //  PEDAÇOS DE TELA
@@ -1965,7 +1967,7 @@
   // Versão 24: a rotina é uma tarefa recorrente. Conclui-se "nesta rodada"; quando a
   // tarefa é de olhar, dá para concluir e já abrir o trabalho que apareceu.
   function botoesRotina(r, st) {
-    if (!st.aberta || (comQuem(r) && comQuem(r) !== eu)) return "";
+    if (!st.aberta || (comQuem(r) && comQuem(r) !== eu && !outrosDe(r).includes(eu))) return "";
     return `<button type="button" class="bt verde" data-acao="rot-feita" data-id="${r.id}">Concluir nesta rodada</button>` +
       (r.natureza === "olhar" ? `<button type="button" class="bt" data-acao="rot-trabalho" data-id="${r.id}">Concluir e abrir tarefa</button>` : "");
   }
@@ -2192,7 +2194,7 @@
     $("#pe").innerHTML = `<b>CGGES</b> — Escritório de Processos da SPU.
         ${REAL ? `<span class="versao">Home EPP · área da equipe · entrou como ${curto(eu)}</span>
         <button type="button" class="link" data-acao="sair">Sair</button>`
-        : `<span class="versao">Home EPP · área logada · protótipo de 19/11/2026 (versão 33) · dados de exemplo</span>`}`;
+        : `<span class="versao">Home EPP · área logada · protótipo de 19/11/2026 (versão 34) · dados de exemplo</span>`}`;
   }
 
   // Na frente os projetos vêm recolhidos. Abre sozinho só o que tem alerta: tarefa
@@ -2550,7 +2552,7 @@
             fs.map(t => linhaTarefa(t, { onde:true, pessoa:chefe })).join(""), "Nada concluído ainda.")}`;
     }
     return `
-      ${banda("var(--off)", "Protótipo", "Para validar", "Não faz parte da tela final. No alto, o que mudou na versão 33; embaixo, o que veio antes. Em itálico, o que eu decidi por conta própria para você confirmar.")}
+      ${banda("var(--off)", "Protótipo", "Para validar", "Não faz parte da tela final. No alto, o que mudou na versão 34; embaixo, o que veio antes. Em itálico, o que eu decidi por conta própria para você confirmar.")}
       <div class="bloco validar"><ol><li>Notas de revisão retiradas da versão publicada.</li></ol></div>`;
   }
 
@@ -2725,7 +2727,7 @@
             const ts = abertasT.filter(t => (comQuem(t) || null) === p || (p && outrosDe(t).includes(p)));
             const nPar = todosPar.filter(x => (x.quem || null) === p).length;
             const nSus = todasSus.filter(t => (comQuem(t) || null) === p || (p && outrosDe(t).includes(p))).length;
-            const nRot = ROTINAS.filter(r => (comQuem(r) || null) === p).length;
+            const nRot = ROTINAS.filter(r => (comQuem(r) || null) === p || (p && outrosDe(r).includes(p))).length;
             if (!p && !ts.length && !nSus && !nRot) return "";
             const fora = p && ausenciaDe(p);
             return `<tr><td title="${p || ""}">${p ? curto(p) : "<i>sem dono</i>"}${fora ? ` <span class="mt-pe">${ROTULO_AUSENCIA[fora.tipo]}</span>` : ""}</td><td class="n">${ts.length}</td>
@@ -2871,6 +2873,8 @@
       <dl class="dados">
         <div><dt>Titular</dt><dd>${eu === CHEFE ? `<select class="mini" data-resp-rotina="${r.id}" aria-label="Titular">${opcoesEquipe(r.responsavel, "sem titular")}</select>` : r.responsavel || "sem titular"}${substituindo(r) ? ` <small>(${ROTULO_AUSENCIA[ausenciaDe(r.responsavel).tipo]})</small>` : ""}</dd></div>
         <div><dt>Suplente</dt><dd>${eu === CHEFE ? `<select class="mini" data-sup-rotina="${r.id}" aria-label="Suplente">${opcoesEquipe(r.suplente, "sem suplente")}</select>` : r.suplente || "sem suplente"}${substituindo(r) ? " <small>— está cobrindo</small>" : ""}</dd></div>
+        <div><dt>Também responsáveis</dt><dd class="outros-escolha">${EQUIPE.filter(n => n !== r.responsavel).map(n =>
+            `<label class="outro"><input type="checkbox" data-outro-rotina="${r.id}" data-nome="${n}"${outrosDe(r).includes(n) ? " checked" : ""}${eu === CHEFE ? "" : " disabled"}> ${curto(n)}</label>`).join("")}</dd></div>
         <div><dt>Repete</dt><dd>${podeMexer(r) ? `<select class="mini" data-per-rotina="${r.id}" aria-label="Com que frequência repete">
             ${PERIODICIDADES.map(([v, t]) => `<option value="${v}"${v === r.periodicidade ? " selected" : ""}>${t}</option>`).join("")}</select>
             <small>${descricao(r)}</small>` : descricao(r)}</dd></div>
@@ -2975,6 +2979,10 @@
       const t = tarefa(a.tarefa);
       if (!t || t.estado === "concluida") return true;
       return !!a.para && t.responsavel !== a.para && t.suplente !== a.para && !outrosDe(t).includes(a.para);
+    }
+    if (a.rotina) {
+      const x = rotina(a.rotina);
+      return !x || (!!a.para && x.responsavel !== a.para && x.suplente !== a.para && !outrosDe(x).includes(a.para));
     }
     if (a.pedido) {
       const p = PEDIDOS.find(x => x.id === a.pedido);
@@ -3234,7 +3242,7 @@
       const x = rotina(id); if (!x || !podeMexer(x)) return false;
       const st = estadoRotina(x), dia = st.aberta ? st.pendente : st.proxima;
       const t = novaTarefa(x.frente, x.titulo, { projeto:x.projeto, responsavel:x.responsavel || null, suplente:x.suplente || null,
-                                                 prazo: dia ? dISO(dia) : null });
+                                                 outros: outrosDe(x), prazo: dia ? dISO(dia) : null });
       t.hist.push({ quando:dISO(hoje), quem:eu, o:"deixou de ser recorrente" });
       ROTINAS.splice(ROTINAS.indexOf(x), 1);
       $("#ficha-r").close();
@@ -3445,6 +3453,15 @@
       const x = rotina(d.respRotina); x.responsavel = alvo.value || null;
       if (x.suplente === x.responsavel) x.suplente = null;
       desenhar(); abrirRotina(x.id); return;
+    } else if (d.outroRotina) {
+      // Versão 34: também responsáveis na recorrente — só o chefe; quem entra recebe aviso.
+      const x = rotina(d.outroRotina), n = d.nome; if (!x || eu !== CHEFE) return;
+      const lista = outrosDe(x);
+      x.outros = alvo.checked ? [...lista.filter(y => y !== n), n] : lista.filter(y => y !== n);
+      if (alvo.checked && n !== eu)
+        AVISOS.unshift({ id:"av" + (++seq), texto:`${curto(eu)} pôs você também como responsável pela tarefa recorrente: ${x.titulo}`,
+                         quem:eu, quando:dISO(hoje), ate:null, para:n, tarefa:null, rotina:x.id });
+      desenhar(); abrirRotina(x.id); return;
     } else if (d.inicioRotina) {
       // Versão 32: "a partir de" — a data da primeira rodada define também o dia da repetição.
       const x = rotina(d.inicioRotina); if (!x || !podeMexer(x) || !alvo.value) return;
@@ -3506,7 +3523,7 @@
     const r = { id:"r" + (++seq), frente:t.frente, projeto:t.projeto, natureza:"fazer", titulo:t.titulo,
                 periodicidade:per, modo:"dia_mes", dia_mes:hoje.getDate(), dia_semana:hoje.getDay() + 1,
                 inicio_em:dISO(maisDias(hoje, 1)), responsavel:t.responsavel || eu, suplente:t.suplente, ocorrencias:[],
-                criado_por: criadoPor(t) || eu };
+                criado_por: criadoPor(t) || eu, outros: outrosDe(t) };
     ROTINAS.push(r);
     TAREFAS.splice(TAREFAS.indexOf(t), 1);
     $("#ficha-t").close();

@@ -164,6 +164,48 @@
   .mt-onde { font-size:13px; font-weight:700; color:var(--fc); overflow-wrap:anywhere; }
   .vazio { padding:16px 12px; text-align:center; color:var(--fg-muted); background:var(--surface); font-size:14px; }
   .vazio b { color:var(--ok); font-weight:700; }
+  /* Versão 37: a linha do tempo das férias. Uma linha por pessoa, um mês por coluna;
+     a barra cheia é homologada, a tracejada aguarda homologação; embaixo, quando há
+     duas ou mais pessoas fora ao mesmo tempo. */
+  .lt { min-width:540px; padding:10px 12px 12px; background:var(--surface); display:grid; gap:4px; }
+  .lt-linha { display:grid; grid-template-columns:110px minmax(0,1fr); align-items:center; gap:8px; min-height:34px; }
+  .lt-nome { font-size:14.5px; font-weight:700; position:sticky; left:0; background:var(--surface); z-index:2; padding-right:4px; }
+  .lt-nome small { display:block; font-size:12px; font-weight:500; color:var(--fg-muted); }
+  .lt-trilho { position:relative; height:30px; }
+  .lt-div { position:absolute; top:-3px; bottom:-3px; width:0; border-left:1px solid var(--border); }
+  .lt-rot { position:absolute; top:0; line-height:30px; font-size:13px; font-weight:700; white-space:nowrap; color:var(--fg); padding:0 6px; }
+  .lt-rot.antes { text-align:right; }
+  .lt-lista { padding:4px 12px 10px; background:var(--surface); font-size:14.5px; display:grid; gap:4px; }
+  .lt-lista b { font-weight:800; }
+  .lt-meses .lt-trilho { height:auto; background:none; display:grid; }
+  .lt-mes { font-size:12.5px; font-weight:700; color:var(--fg-muted); text-transform:uppercase; letter-spacing:.04em; padding-left:4px; }
+  .lt-barra { position:absolute; top:3px; bottom:3px; border-radius:6px; min-width:6px;
+              background:color-mix(in srgb, var(--mes) 28%, var(--surface)); border:1.5px solid var(--mes); }
+  .lt-barra.pedida { background:var(--surface); border-style:dashed; }
+  .lt-barra.aberta { border-right:0; border-radius:6px 0 0 6px; }
+  .lt-junto { position:absolute; top:3px; bottom:3px; border-radius:6px; min-width:18px; overflow:hidden;
+              font-size:13px; font-weight:800; line-height:24px; text-align:center; color:var(--fg);
+              background:color-mix(in srgb, var(--aviso) 22%, var(--surface)); border:1.5px solid var(--aviso); }
+  .lt-hoje { position:absolute; top:-4px; bottom:-4px; width:0; border-left:2px solid var(--alerta); z-index:1; }
+  .lt-legenda { display:flex; gap:14px; flex-wrap:wrap; font-size:13px; color:var(--fg-muted); padding:8px 12px 10px; background:var(--surface); }
+  .lt-legenda i { display:inline-block; width:22px; height:12px; border-radius:3px; vertical-align:-1px; margin-right:5px;
+                  background:color-mix(in srgb, var(--mes) 28%, var(--surface)); border:1.5px solid var(--mes); }
+  .lt-legenda i.pedida { background:var(--surface); border-style:dashed; }
+  .lt-legenda i.junto { background:color-mix(in srgb, var(--aviso) 22%, var(--surface)); border-color:var(--aviso); }
+  .lt-legenda i.hoje { width:0; height:14px; border:0; border-left:2px solid var(--alerta); border-radius:0; }
+  /* Versão 37: atalhos. Cada um é um botão largo, com borda, para acertar de primeira. */
+  .atalhos { display:grid; grid-template-columns:repeat(2, minmax(0,1fr)); gap:8px; padding:10px; background:var(--surface); }
+  .atalho { display:flex; align-items:center; justify-content:space-between; gap:6px; min-height:42px; padding:8px 12px;
+            border:1.5px solid var(--border-forte); border-radius:8px; background:var(--surface); color:var(--fg);
+            font-size:15px; font-weight:700; text-decoration:none; overflow-wrap:anywhere; }
+  a.atalho:hover { border-color:var(--accent); color:var(--accent); }
+  .atalho.sem { color:var(--fg-muted); font-weight:500; border-style:dashed; }
+  .atalho small { font-size:12px; font-weight:500; }
+  .atalhos-pe { padding:6px 10px 10px; background:var(--surface); display:flex; gap:12px; flex-wrap:wrap; }
+  .at-edita { display:grid; gap:8px; padding:10px; background:var(--surface); }
+  .at-linha { display:grid; grid-template-columns:minmax(0,1fr) minmax(0,2fr) auto; gap:6px; align-items:center; }
+  .at-linha input { font:inherit; font-size:14px; padding:7px 9px; border:1.5px solid var(--border-forte); border-radius:8px;
+                    background:var(--surface); color:var(--fg); min-width:0; }
   .estreita .linha-corpo { flex-basis:100%; }
 
   .pediu { flex-basis:100%; display:flex; flex-direction:column; gap:6px; padding:9px 10px; border-radius:8px; background:color-mix(in srgb, var(--laranja) 14%, var(--surface)); border:1.5px solid var(--laranja); font-size:13.5px; }
@@ -925,6 +967,14 @@
   // O plano de entregas da unidade é trocado a cada três meses (versão 23): o chefe sobe
   // o novo em "Petrvs e frequência", e as entregas abaixo passam a ser as dele.
   // A vigência é exemplo — falta a data certa.
+  // Versão 37: os atalhos da coluna da direita. A lista é do chefe; os demais só clicam.
+  // O endereço do Petrvs do MGI ainda falta: sem endereço, o atalho aparece apagado.
+  const ATALHOS = REAL ? REAL.atalhos : { lista: [
+    { nome:"SouGov", url:"https://sougov.sigepe.gov.br/sougov/" },
+    { nome:"Petrvs", url:"" },
+    { nome:"SEI", url:"https://colaboragov.sei.gov.br/" },
+    { nome:"SPUProcessos", url:"https://spu-projetoseprocessos.github.io/SPUProcessos/" }
+  ] };
   const PLANO_ENTREGAS = REAL ? REAL.plano_entregas : { inicio:"2026-11-01", fim:"2027-01-31", carregado_em:"2026-11-01", quem:CHEFE };
   const ENTREGAS = REAL ? REAL.entregas : {
     A10:"A10. Ferramenta de gestão do portfólio de processos de trabalho da SPU instituída",
@@ -1060,7 +1110,7 @@
   const verArqPed = {}, verCofre = {};   // por projeto: o arquivo dos pedidos e o cofre das concluídas
   let trocandoPlano = false;            // o campo para subir o plano de entregas está aberto
   let verArquivados = false, verAvisos = false, novoAviso = false;
-  let editandoFrente = null, verFrentesArq = false, editandoProjeto = null;   // versão 27: a tela das frentes
+  let editandoFrente = null, verFrentesArq = false, editandoProjeto = null, editandoAtalhos = false;   // versão 27: a tela das frentes
   let planoEditando = null;
   let excluindo = null;                               // versão 31: a tarefa ou recorrente cuja exclusão está sendo confirmada                           // versão 30: { quem, i } da linha do plano aberta
   const avisoAberto = {};                // versão 24: os avisos longos que a pessoa expandiu
@@ -1768,7 +1818,65 @@
           <span class="mt-nome">${curto(f.quem)}</span>
           <span class="mt-pe">${agora ? (f.ate ? "volta depois de " + ddmm(f.ate) : "sem data de volta") : periodo(f)}</span>
         </div>
-      </div>`; }).join(""), "Ninguém com férias ou ausência marcada daqui para a frente.");
+      </div>`; }).join("") + (tela === "painel" && painelVista !== "ferias" ? `<div class="atalhos-pe"><button type="button" class="link fino" data-acao="painel" data-id="ferias">ver na linha do tempo →</button></div>` : ""),
+      "Ninguém com férias ou ausência marcada daqui para a frente.");
+  }
+  // Versão 37: a linha do tempo das férias da equipe, como um Gantt. Seis meses a partir
+  // do mês atual (até doze, se houver férias marcadas mais longe). Todos veem.
+  function linhaTempoFerias() {
+    const ini = new Date(hoje.getFullYear(), hoje.getMonth(), 1);
+    const valem = FERIAS.filter(aindaVale);
+    const ultimo = valem.reduce((m, f) => f.ate && dData(f.ate) > m ? dData(f.ate) : m, ini);
+    const nMeses = Math.min(12, Math.max(4, (ultimo.getFullYear() - ini.getFullYear()) * 12 + ultimo.getMonth() - ini.getMonth() + 1));
+    const fim = new Date(ini.getFullYear(), ini.getMonth() + nMeses, 1);   // exclusivo
+    const DIA = 864e5, total = Math.round((fim - ini) / DIA);
+    const pos = d => Math.max(0, Math.min(total, Math.round((d - ini) / DIA)));
+    const pct = n => (n / total * 100).toFixed(3) + "%";
+    const meses = Array.from({ length: nMeses }, (_, i) => new Date(ini.getFullYear(), ini.getMonth() + i, 1));
+    const larg = meses.map((m, i) => pos(meses[i + 1] || fim) - pos(m));
+    const colunas = larg.map(n => n + "fr").join(" ");
+    const hojeX = pos(hoje);
+    const barra = f => {
+      const a = pos(dData(f.de)), aberta = !f.ate, b = aberta ? total : pos(dData(f.ate)) + 1;
+      if (b <= 0 || a >= total) return "";
+      const rot = `${ROTULO_AUSENCIA[f.tipo]} ${ddmm(f.de)}${f.ate ? " a " + ddmm(f.ate) : " — sem data de volta"}`;
+      const dica = `${curto(f.quem)}: ${rot}${f.situacao === "homologada" ? "" : " (aguarda homologação)"}`;
+      // O texto vai ao lado da barra: depois dela, ou antes, se a barra chega perto do fim.
+      const txt = aberta ? `${ROTULO_AUSENCIA[f.tipo]} desde ${ddmm(f.de)}, sem volta marcada` : `${ddmm(f.de)} a ${ddmm(f.ate)}`;
+      const rotulo = aberta ? `<span class="lt-rot" style="left:${pct(a)}">${txt}</span>`
+        : b > total * .65 ? `<span class="lt-rot antes" style="right:calc(100% - ${pct(a)})">${txt}</span>`
+        : `<span class="lt-rot" style="left:${pct(b)}">${txt}</span>`;
+      return `<span class="lt-barra${f.situacao === "homologada" ? "" : " pedida"}${aberta ? " aberta" : ""}"
+        style="left:${pct(a)};width:${pct(Math.max(1, b - a))}" title="${dica}"></span>${rotulo}`;
+    };
+    // Quem está fora em cada dia; trechos com duas ou mais pessoas viram a linha "ao mesmo tempo".
+    const fora = Array.from({ length: total }, (_, d) => {
+      const dia = new Date(ini.getTime() + d * DIA + 12 * 36e5);
+      return [...new Set(valem.filter(f => dData(f.de) <= dia && (!f.ate || dia <= new Date(dData(f.ate).getTime() + DIA - 1))).map(f => curto(f.quem)))].sort();
+    });
+    const juntos = [];
+    const deAte = j => `${ddmm(dISO(new Date(ini.getTime() + j.a * DIA)))} a ${ddmm(dISO(new Date(ini.getTime() + (j.b - 1) * DIA)))}`;
+    fora.forEach((ns, d) => {
+      const k = ns.join(", "), ult = juntos[juntos.length - 1];
+      if (ns.length < 2) return;
+      if (ult && ult.k === k && ult.b === d) ult.b = d + 1; else juntos.push({ k, n: ns.length, a: d, b: d + 1 });
+    });
+    const divs = meses.slice(1).map(m => `<span class="lt-div" style="left:${pct(pos(m))}"></span>`).join("");
+    const trilho = conteudo => `<div class="lt-trilho">${divs}${conteudo}${hojeX > 0 && hojeX < total ? `<span class="lt-hoje" style="left:${pct(hojeX)}"></span>` : ""}</div>`;
+    const pessoas = EQUIPE.map(n => {
+      const fs = valem.filter(f => f.quem === n);
+      return `<div class="lt-linha"><span class="lt-nome">${curto(n)}${fs.length ? "" : "<small>nada marcado</small>"}</span>${trilho(fs.map(barra).join(""))}</div>`;
+    }).join("");
+    return bloco("var(--mes)", "Férias da equipe — linha do tempo", "", `
+      <div class="tab-rolo"><div class="lt">
+        <div class="lt-linha lt-meses"><span class="lt-nome"></span>
+          <div class="lt-trilho" style="grid-template-columns:${colunas}">${meses.map(m => `<span class="lt-mes">${MESES[m.getMonth()].slice(0, 3)}${m.getMonth() === 0 || m === meses[0] ? " " + String(m.getFullYear()).slice(2) : ""}</span>`).join("")}</div></div>
+        ${pessoas}
+        <div class="lt-linha"><span class="lt-nome">Ao mesmo tempo${juntos.length ? "" : "<small>ninguém junto</small>"}</span>${trilho(juntos.map(j =>
+          `<span class="lt-junto" style="left:${pct(j.a)};width:${pct(j.b - j.a)}" title="${j.k} — ${deAte(j)}">${j.n}</span>`).join(""))}</div>
+      </div></div>
+      ${juntos.length ? `<div class="lt-lista">${juntos.map(j => `<span><b>${deAte(j)}:</b> ${j.k.replace(/, ([^,]*)$/, " e $1")} fora ao mesmo tempo</span>`).join("")}</div>` : ""}
+      <div class="lt-legenda"><span><i></i>homologada</span><span><i class="pedida"></i>aguarda homologação</span><span><i class="junto"></i>duas ou mais pessoas fora</span><span><i class="hoje"></i>hoje</span></div>`);
   }
   // Cada pessoa vê as suas; o chefe vê o quadro de todos, por data de início.
   function blocoFerias() {
@@ -2108,6 +2216,33 @@
           </button>
         </div>`).join("") + campoMinha(), "", "", "anotacoes");
   }
+  // Versão 37: atalhos, embaixo de Minhas anotações. Abrem em outra aba.
+  function quadroAtalhos() {
+    const chefe = eu === CHEFE, lista = ATALHOS.lista || [];
+    if (chefe && editandoAtalhos) return bloco("var(--off)", "Atalhos", "", `
+      <div class="at-edita">
+        ${lista.map((a, i) => `
+          <div class="at-linha" data-at="${i}">
+            <input type="text" class="at-nome" maxlength="30" value="${attr(a.nome)}" aria-label="Nome do atalho ${i + 1}">
+            <input type="url" class="at-url" maxlength="300" value="${attr(a.url || "")}" placeholder="https://…" aria-label="Endereço do atalho ${i + 1}">
+            <button type="button" class="link fino" data-acao="at-tirar" data-id="${i}">tirar</button>
+          </div>`).join("")}
+        <button type="button" class="link" data-acao="at-mais">+ outro atalho</button>
+        <div class="grupo-linha">
+          <button type="button" class="bt pri" data-acao="at-salvar">Salvar</button>
+          <button type="button" class="bt" data-acao="at-cancelar">Cancelar</button>
+        </div>
+      </div>`);
+    return bloco("var(--off)", "Atalhos", "", `
+      <div class="atalhos">${lista.map(a => a.url
+          ? `<a class="atalho" href="${attr(a.url)}" target="_blank" rel="noopener" title="Abrir ${attr(a.nome)} em outra aba">${esc(a.nome)} <span aria-hidden="true">↗</span></a>`
+          : `<span class="atalho sem" title="Falta o endereço">${esc(a.nome)} <small>sem endereço</small></span>`).join("")}</div>
+      ${chefe ? `<div class="atalhos-pe"><button type="button" class="link fino" data-acao="at-editar">editar atalhos</button></div>` : ""}`,
+      "Nenhum atalho.");
+  }
+  // Lê o que está escrito no formulário dos atalhos, sem gravar.
+  const atalhosDoForm = () => [...document.querySelectorAll(".at-linha")].map(l =>
+    ({ nome: l.querySelector(".at-nome").value.trim(), url: l.querySelector(".at-url").value.trim() }));
   let notaDestaque = null;   // versão 26: a anotação clicada no quadrinho da direita
   function linhaAnotacao(n) {
     const pjs = PROJETOS.filter(p => p.estado === "ativo");
@@ -2214,7 +2349,7 @@
     $("#pe").innerHTML = `<b>CGGES</b> — Escritório de Processos da SPU.
         ${REAL ? `<span class="versao">Home EPP · área da equipe · entrou como ${curto(eu)}</span>
         <button type="button" class="link" data-acao="sair">Sair</button>`
-        : `<span class="versao">Home EPP · área logada · protótipo de 19/11/2026 (versão 36) · dados de exemplo</span>`}`;
+        : `<span class="versao">Home EPP · área logada · protótipo de 20/11/2026 (versão 37) · dados de exemplo</span>`}`;
   }
 
   // Na frente os projetos vêm recolhidos. Abre sozinho só o que tem alerta: tarefa
@@ -2478,6 +2613,7 @@
           ${banda("var(--mes)", "", "RH do Escritório", "")}
           ${antigos.filter(a => !fechouEm(a, eu)).map(a => meuPetrvs(a).replace("Petrvs — ", "Ainda aberto — ")).join("")}
           ${meuPetrvs(m)}
+          ${linhaTempoFerias()}
           ${blocoFerias()}
           ${concluiu}`;
       }
@@ -2506,6 +2642,7 @@
           <div class="tab-rolo">${tabelaMes(m)}</div>
         </div>
         ${bloco("var(--mes)", "Frequência", ms.filter(freqFalta).length, ms.map(linhaFreq).join(""))}
+        ${linhaTempoFerias()}
         ${blocoFerias()}
         ${concluiu}`;
     }
@@ -2590,7 +2727,7 @@
             pt.map(p => linhaPedido(p)).join("")) : ""}`;
     }
     return `
-      ${banda("var(--off)", "Protótipo", "Para validar", "Não faz parte da tela final. No alto, o que mudou na versão 36; embaixo, o que veio antes. Em itálico, o que eu decidi por conta própria para você confirmar.")}
+      ${banda("var(--off)", "Protótipo", "Para validar", "Não faz parte da tela final. No alto, o que mudou na versão 37; embaixo, o que veio antes. Em itálico, o que eu decidi por conta própria para você confirmar.")}
       <div class="bloco validar"><ol><li>Notas de revisão retiradas da versão publicada.</li></ol></div>`;
   }
 
@@ -2601,7 +2738,7 @@
   // andamento. Minhas tarefas já abre no centro; as rotinas viraram tarefas recorrentes.
   function desenharComigo() {
     const pedem = minhasTarefas().filter(andamentoPendente);
-    $("#comigo").innerHTML = petrvsDaDireita(true) + quadroAnotacoes() +
+    $("#comigo").innerHTML = petrvsDaDireita(true) + quadroAnotacoes() + quadroAtalhos() +
       (pedem.length ? bloco("var(--meio)", "Pediram andamento", pedem.length, pedem.map(t => linhaTarefa(t, { onde:true })).join("")) : "");
   }
 
@@ -2667,6 +2804,7 @@
       ["semdono",     sd.length,               "sem dono",         "var(--meio)"],
       ["paralisados", sus.length + gs.length,  "paralisados",      "var(--roxo)"],
       ["petrvs",      pendenciasMes(),         "RH em aberto",     "var(--mes)"],
+      ["ferias",      FERIAS.filter(aindaVale).length, "férias marcadas", "var(--mes)"],
       ["acessos",     visitas(30),             "visitas em 30 dias", "var(--azul)"]
     ] : [
       ["abertas",     ab.length,               "abertas comigo",   "var(--accent)"],
@@ -2675,6 +2813,7 @@
       ["paralisados", sus.length,              "paralisadas",      "var(--roxo)"],
       ["rotinas",     rotinasDe(eu).length,    "recorrentes",      "var(--rot)"],
       ["feitas",      feitas.length,           `concluí em ${mesDe(MES_ATUAL.comp)}`, "var(--ok)"],
+      ["ferias",      FERIAS.filter(aindaVale).length, "férias da equipe", "var(--mes)"],
       ["acessos",     visitas(30),             "visitas em 30 dias", "var(--azul)"]
     ];
     if (!tiles.some(t => t[0] === painelVista)) painelVista = chefe ? "parados" : "abertas";
@@ -2736,6 +2875,8 @@
           <div class="tab-rolo">${tabelaMes(m, m !== MES_ATUAL)}</div>
         </div>`).join("") + bloco("var(--mes)", "Frequência", mesesNaTela().filter(freqFalta).length, mesesNaTela().map(linhaFreq).join(""))
         + blocoFerias();
+    } else if (painelVista === "ferias") {
+      meio = linhaTempoFerias();
     } else if (painelVista === "rotinas") {
       const rs = rotinasDe(eu);
       meio = bloco("var(--rot)", "Tarefas recorrentes", rs.length, rs.map(r => linhaRotina(r, { onde:true })).join(""), "Nenhuma tarefa recorrente com você.");
@@ -3093,6 +3234,20 @@
     "fr-editar"({ id }) { if (eu !== CHEFE) return false; editandoFrente = id;
       setTimeout(() => { const c = $("#frd-nome"); if (c) c.focus(); }); },
     "fr-cancelar"() { editandoFrente = null; },
+    // ---- atalhos (versão 37): só o chefe edita ----
+    "at-editar"() { if (eu !== CHEFE) return false; editandoAtalhos = true; },
+    "at-cancelar"() { editandoAtalhos = false; },
+    "at-mais"() { if (eu !== CHEFE) return false; ATALHOS.lista = [...atalhosDoForm(), { nome:"", url:"" }];
+      setTimeout(() => { const c = [...document.querySelectorAll(".at-nome")].pop(); if (c) c.focus(); }); },
+    "at-tirar"({ id }) { if (eu !== CHEFE) return false; const l = atalhosDoForm(); l.splice(+id, 1); ATALHOS.lista = l; },
+    "at-salvar"() {
+      if (eu !== CHEFE) return false;
+      const l = atalhosDoForm().filter(a => a.nome || a.url);
+      const ruim = l.find(a => !a.nome || (a.url && !/^https?:\/\/\S+\.\S+/.test(a.url)));
+      if (ruim) { avisoMsg = !ruim.nome ? "Falta o nome de um atalho." : `O endereço de <b>${esc(ruim.nome)}</b> precisa começar com https://`; return; }
+      ATALHOS.lista = l; editandoAtalhos = false;
+      avisoMsg = "Atalhos atualizados.";
+    },
     // ---- nome do projeto (versão 35): só o chefe, como as demais decisões do projeto ----
     "pj-nome"({ id }) { if (eu !== CHEFE) return false; editandoProjeto = id;
       setTimeout(() => { const c = $("#pjd-nome"); if (c) { c.focus(); c.select(); } }); },
@@ -3614,7 +3769,7 @@
   if (REAL) {
     $("label.quem").hidden = true;      // na versão de verdade, é quem fez login
     REAL.ligar({ FRENTES, PROJETOS, TAREFAS, ROTINAS, FERIAS, ANOTACOES, IDEIAS, AVISOS, PEDIDOS,
-                 MESES_FECH, PLANOS, ESTILO, ENTREGAS, ENTREGA_DA_FRENTE, PLANO_ENTREGAS, ACESSOS },
+                 MESES_FECH, PLANOS, ESTILO, ENTREGAS, ENTREGA_DA_FRENTE, PLANO_ENTREGAS, ACESSOS, ATALHOS },
                () => desenhar(), () => !!document.querySelector("dialog[open]"));
   }
   $("#eu").innerHTML = EQUIPE.map(n =>

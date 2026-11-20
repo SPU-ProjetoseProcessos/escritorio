@@ -636,8 +636,9 @@
                   "Luiz", "Vinícius"];
   const curto = n => n ? n.split(" ")[0] : "ninguém";
 
-  // As frentes da EQUIPE, definidas pela chefia em 12/11/2026. O que é pessoal dela —
-  // Indexador, normativos, regimento, Desenho Organizacional — não entra.
+  // As frentes da EQUIPE, definidas pela chefia em 12/11/2026. O que era pessoal dela —
+  // normativos, regimento, Desenho Organizacional — não entra. O Indexador entrou depois:
+  // em 18-19/11/2026 ganhou a frente "Memória SPU" no banco, e em 20/11 a caixinha.
   // Cada frente tem a sua cor (--f1 … --f9): é ela que orienta o olho.
   const FRENTES = REAL ? REAL.frentes : [
     { id:"ferramentas",  nome:"Ferramentas de TI",                sub:"Sites, sisteminhas e painéis que a equipe constrói, publica e mantém. Cada ferramenta é um projeto." },
@@ -700,8 +701,11 @@
   const projeto = id => PROJETOS.find(p => p.id === id);
 
   // O pedido guarda o código da ferramenta; aqui ele acha o projeto dela.
+  // O id do Indexador é o que a própria área gerou ao criar o projeto, em 19/11/2026,
+  // na frente "Memória SPU": não é bonito, mas é o que está no banco.
   const PROJETO_DA_FERRAMENTA = { spuprocessos:"p-spup", cade:"p-cade", simulador:"p-gov",
-                                  taxonomias:"p-tax", organograma:"p-org", formularios:"p-form" };
+                                  taxonomias:"p-tax", organograma:"p-org", formularios:"p-form",
+                                  indexador:"p-n1795103412803582" };
 
   // Dois motivos, por decisão de 12/11/2026.
   const MOTIVO = { aguardando:"aguardando o retorno de outra área",
@@ -971,7 +975,8 @@
   const ROTULO_FERRAMENTA = {
     spuprocessos:"SPUProcessos", cade:"Cadê?", taxonomias:"Tabelas Taxonômicas",
     simulador:"Governança da Destinação", organograma:"SPUOrganograma", home:"Página do Escritório",
-    desenho:"Desenho Organizacional", formularios:"Formulários de Instrução de Destinação", outra:"outra"
+    desenho:"Desenho Organizacional", formularios:"Formulários de Instrução de Destinação",
+    indexador:"Indexador", outra:"outra"
   };
   // ======================================================================
   //  ACESSOS ÀS FERRAMENTAS (versão 28)

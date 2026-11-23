@@ -869,7 +869,7 @@
    ["servicos", "Revisar o texto do serviço de certidão", "Karin", 20,
      { projeto:"p-cgov", ...E("Texto do serviço de certidão revisado em linguagem simples", "enviado à equipe do CentralGov") }],
    ["mapeamento", "Levantar os documentos do processo", "Luiz", 16, { projeto:"p-m1" }],
-   // A entrega da Criticidade (A11) não está no plano do Luiz: cai em "Sem linha no plano".
+   // A entrega da Criticidade (A06) não está no plano do Luiz: cai em "Sem linha no plano".
    ["criticidade", "Aplicar o questionário ao processo de Demarcação", "Luiz", 23,
      E("Criticidade da Demarcação calculada")],
    ["criticidade", "Aplicar o questionário ao processo de Aforamento", "Fernando", 27,
@@ -969,49 +969,47 @@
   // o novo em "Petrvs e frequência", e as entregas abaixo passam a ser as dele.
   // A vigência é exemplo — falta a data certa.
   // Versão 37: os atalhos da coluna da direita. A lista é do chefe; os demais só clicam.
-  // O endereço do Petrvs do MGI ainda falta: sem endereço, o atalho aparece apagado.
+  // Sem endereço, o atalho aparece apagado.
   const ATALHOS = REAL ? REAL.atalhos : { lista: [
     { nome:"SouGov", url:"https://sougov.sigepe.gov.br/sougov/" },
-    { nome:"Petrvs", url:"" },
+    { nome:"Petrvs", url:"https://mgi.pgd.gestao.gov.br/login" },
     { nome:"SEI", url:"https://colaboragov.sei.gov.br/" },
     { nome:"SPUProcessos", url:"https://spu-projetoseprocessos.github.io/SPUProcessos/" }
   ] };
-  const PLANO_ENTREGAS = REAL ? REAL.plano_entregas : { inicio:"2026-11-01", fim:"2027-01-31", carregado_em:"2026-11-01", quem:CHEFE };
+  // 23/11/2026: o plano de entregas vigente é o nº 2051 da CGGES (a CEPRO não tem plano próprio),
+  // de 01/07 a 31/12/2026, com 25 entregas. Aqui ficam só as cinco a que o Escritório contribui.
+  const PLANO_ENTREGAS = REAL ? REAL.plano_entregas : { inicio:"2026-07-01", fim:"2026-12-31", carregado_em:"2026-11-23", quem:CHEFE, numero:"2051", unidade:"CGGES" };
   const ENTREGAS = REAL ? REAL.entregas : {
-    A10:"A10. Ferramenta de gestão do portfólio de processos de trabalho da SPU instituída",
-    A11:"A11. Modelo de gestão de processos de trabalho da SPU elaborado",
-    A12:"A12. Artefatos de padronização e melhoria de processos elaborados",
-    A13:"A13. Processos de trabalho mapeados ou redesenhados",
-    A30:"A30. Coleções do Repositório Institucional do MemóriaSPU curadas"
+    A06:"A06. Artefatos de padronização e melhoria de processos elaborados",
+    A07:"A07. Processos de trabalho mapeados ou redesenhados",
+    A08:"A08. Aplicativos elaborados em Power Apps e painéis de informação elaborados (em Power BI)",
+    A09:"A09. Formulários de serviços internos e externos elaborados ou revisados",
+    A19:"A19. Coleções compartilhadas curadas, publicadas e geridas — Repositório Institucional do MemóriaSPU"
   };
-  const ENTREGA_DA_FRENTE = REAL ? REAL.entrega_frente : { ferramentas:"A10", servicos:"A12", mapeamento:"A13", criticidade:"A11",
-    conformidade:"A11", artefatos:"A12", prototipacao:"A12", instrucao:"A12", curadoria:"A30" };
-  // As linhas do plano de cada pessoa, como estão no Petrvs. As do Juarez vêm do
-  // modelo que ele trouxe; as demais são exemplo. Na versão de verdade, cada pessoa
+  const ENTREGA_DA_FRENTE = REAL ? REAL.entrega_frente : { ferramentas:"A08", servicos:"A09", mapeamento:"A07", criticidade:"A06",
+    conformidade:"A06", artefatos:"A06", prototipacao:"A06", instrucao:"A06", curadoria:"A19" };
+  // As linhas do plano de cada pessoa, como estão no Petrvs. As do Juarez são as do
+  // plano dele (out–dez/2026); as demais são exemplo. Na versão de verdade, cada pessoa
   // cadastra as suas uma vez por plano.
   const L = (entrega, trabalho, pct) => ({ entrega, trabalho, pct });
   const PLANOS = REAL ? REAL.planos : {
-    "Juarez":   [L("A13", "Participar de reuniões com o dono de processo e internas para consolidação de fluxo.", 35),
-                 L(null, "Assessorar a Coordenação-Geral e a Diretoria.", 15),
-                 L(null, "Coordenação e trabalhos administrativos.", 15),
-                 L("A10", "Elaborar documentos.", 3),
-                 L("A11", "Elaborar e revisar texto.", 8),
-                 L("A12", "Revisar e sugerir alterações.", 20),
-                 L("A30", "Curadoria da coleção Fluxos e Procedimentos.", 4)],
-    "Eder":     [L("A30", "Inserir e revisar documentos na coleção Fluxos e Procedimentos.", 40),
-                 L("A11", "Analisar a conformidade dos processos de destinação.", 40),
-                 L("A12", "Revisar textos de serviços.", 20)],
-    "Fábio":    [L("A10", "Desenvolver e manter as ferramentas do Escritório.", 60),
-                 L("A12", "Validar telas com as áreas.", 40)],
-    "Fernando": [L("A13", "Desenhar os fluxos no Bizagi.", 40),
-                 L("A11", "Aplicar o questionário de criticidade.", 40),
-                 L("A12", "Ajustar protótipos.", 20)],
-    "Karin":    [L("A12", "Elaborar formulários, textos de serviços e especificações para a TI.", 70),
+    "Juarez":   [L("A09", "Elaboração, supervisão e acompanhamento dos serviços no Portal de Serviços e CENTRALGOV", 25),
+                 L("A06", "Artefatos diversos elaborados", 35),
+                 L("A08", "Elaborar e contribuir no desenvolvimento de aplicativos e ferramentas de auxílio aos servidores da SPU", 40)],
+    "Eder":     [L("A19", "Inserir e revisar documentos na coleção Fluxos e Procedimentos.", 40),
+                 L("A06", "Analisar a conformidade dos processos de destinação.", 40),
+                 L("A09", "Revisar textos de serviços.", 20)],
+    "Fábio":    [L("A08", "Desenvolver e manter as ferramentas do Escritório.", 60),
+                 L("A06", "Validar telas com as áreas.", 40)],
+    "Fernando": [L("A07", "Desenhar os fluxos no Bizagi.", 40),
+                 L("A06", "Aplicar o questionário de criticidade.", 40),
+                 L("A08", "Ajustar protótipos.", 20)],
+    "Karin":    [L("A09", "Elaborar formulários, textos de serviços e especificações para a TI.", 70),
                  L(null, "Atendimento às áreas e reuniões internas.", 30)],
-    "Luiz":     [L("A13", "Conduzir o mapeamento com o dono do processo.", 60),
-                 L("A12", "Validar protótipos com as áreas.", 40)],
-    "Vinícius": [L("A10", "Desenvolver e manter as ferramentas do Escritório.", 70),
-                 L("A12", "Roteirizar manuais interativos.", 30)]
+    "Luiz":     [L("A07", "Conduzir o mapeamento com o dono do processo.", 60),
+                 L("A09", "Revisar formulários com as áreas.", 40)],
+    "Vinícius": [L("A08", "Desenvolver e manter as ferramentas do Escritório.", 70),
+                 L("A06", "Roteirizar manuais interativos.", 30)]
   };
   const ESTILO = REAL ? REAL.estilo : {};          // por pessoa: "lista" ou "corrido" — escolhido uma vez
 
@@ -1656,7 +1654,7 @@
     const lista = Object.values(ENTREGAS).map(e => `<li>${esc(e)}</li>`).join("");
     const campo = trocandoPlano ? `
       <div class="grupo">
-        <span>Cole as entregas do plano novo, uma por linha, começando pelo código (A13. …)</span>
+        <span>Cole as entregas do plano novo, uma por linha, começando pelo código (A07. …)</span>
         <textarea class="plano-campo" id="pe-texto" aria-label="Entregas do plano novo">${esc(Object.values(ENTREGAS).join("\n"))}</textarea>
         <div class="grupo-linha">
           <label class="volta">vale de <input type="date" id="pe-inicio" value="${dISO(proximaTroca())}" aria-label="Início da vigência"></label>
@@ -1670,7 +1668,7 @@
       </div>` : chefe ? `<div class="grupo-linha"><button type="button" class="bt${d <= 15 ? " pri" : ""}" data-acao="pe-trocar">Subir o plano de entregas novo</button></div>` : "";
     return bloco("var(--mes)", "Plano de entregas da unidade", "", `
       <div class="pt-corpo">
-        <div class="grupo-linha">${situ}<span class="pt-trab">Vale de <b>${dBR(dData(PLANO_ENTREGAS.inicio))}</b> a <b>${dBR(dData(PLANO_ENTREGAS.fim))}</b>.</span></div>
+        <div class="grupo-linha">${situ}<span class="pt-trab">${PLANO_ENTREGAS.numero ? `Plano nº ${esc(PLANO_ENTREGAS.numero)}${PLANO_ENTREGAS.unidade ? " da " + esc(PLANO_ENTREGAS.unidade) : ""}. ` : ""}Vale de <b>${dBR(dData(PLANO_ENTREGAS.inicio))}</b> a <b>${dBR(dData(PLANO_ENTREGAS.fim))}</b>.</span></div>
         <ul class="pt-trab" style="margin:0;padding-left:20px">${lista}</ul>
         ${campo}
       </div>`);
@@ -1680,12 +1678,12 @@
     const novas = {};
     linhas.forEach(x => { const m = x.match(/^([A-Z]{1,3}\d{1,3})\b[.\s–-]*(.+)$/); if (m) novas[m[1]] = `${m[1]}. ${m[2].trim()}`; });
     const ini = $("#pe-inicio").value, fim = $("#pe-fim").value;
-    const erro = !Object.keys(novas).length ? "Nenhuma linha começa com o código da entrega (A13. …)."
+    const erro = !Object.keys(novas).length ? "Nenhuma linha começa com o código da entrega (A07. …)."
       : !ini || !fim ? "Diga de quando a quando o plano vale." : fim < ini ? "O fim da vigência está antes do início." : "";
     if (erro) { $("#pe-erro").textContent = erro; return false; }
     Object.keys(ENTREGAS).forEach(k => delete ENTREGAS[k]);
     Object.assign(ENTREGAS, novas);
-    Object.assign(PLANO_ENTREGAS, { inicio:ini, fim, carregado_em:dISO(hoje), quem:eu });
+    Object.assign(PLANO_ENTREGAS, { inicio:ini, fim, carregado_em:dISO(hoje), quem:eu, numero:null });   // o número do plano novo não vem na colagem
     trocandoPlano = false;
     avisoMsg = `Plano de entregas guardado: <b>${Object.keys(novas).length} entregas</b>, de ${dBR(dData(ini))} a ${dBR(dData(fim))}.`;
   }

@@ -129,6 +129,12 @@
   button.bloco-cab:hover .abre, button.bloco-cab:focus-visible .abre { text-decoration:underline; }
   .bloco-cab .abre { margin-left:auto; font-size:12.5px; font-weight:700; letter-spacing:0; text-transform:none; white-space:nowrap; }
   .bloco-cab .abre + .n { margin-left:0; }
+  /* Versão 40: o botão de criar fica no cabeçalho do bloco, ao lado da contagem. */
+  .bloco-cab .bt-cab { margin-left:10px; font-size:13.5px; font-weight:700; letter-spacing:0; text-transform:none;
+                       padding:5px 11px; border-radius:7px; border:1.5px solid var(--accent); background:var(--surface);
+                       color:var(--accent); cursor:pointer; font-family:inherit; white-space:nowrap; }
+  .bloco-cab .bt-cab:hover { background:color-mix(in srgb, var(--accent) 10%, var(--surface)); }
+  .projeto-corpo .nova-tarefa-pj { padding:8px 12px; background:var(--surface); }
 
   /* ---------- Menu da esquerda ---------- */
   .nav { --nc: var(--off); display:flex; align-items:center; gap:9px; width:100%; text-align:left; padding:6px 10px 6px 8px; border:0; border-left:5px solid transparent;
@@ -1170,6 +1176,37 @@
   // Tarefa de projeto guardado some das filas junto com o projeto.
   const noAr = t => !t.projeto || projeto(t.projeto).estado === "ativo";
   const aberta = t => t.estado === "aberta" && noAr(t);
+  // Versão 40: o que foi criado, por quem e quando. Projeto e tarefa novos guardam criado_por e
+  // criado_as (com hora); os antigos caem no primeiro registro do histórico, sem hora.
+  function criadosRecentes() {
+    const q = x => ({ quem: x.criado_por || (x.hist && x.hist[0] && x.hist[0].quem) || null,
+                      as: x.criado_as || (x.hist && x.hist[0] && x.hist[0].quando) || null });
+    return [...PROJETOS.filter(p => p.criado_as).map(p => ({ tipo:"projeto", x:p, ...q(p) })),
+            ...TAREFAS.map(t => ({ tipo:"tarefa", x:t, ...q(t) }))]
+      .filter(c => c.as && c.quem && frente(c.x.frente) && vejoFrente(frente(c.x.frente)))
+      .sort((a, b) => a.as < b.as ? 1 : -1);
+  }
+  const quandoCriado = as => as.length > 10
+    ? `${quando(dISO(new Date(as)))}, às ${new Date(as).toLocaleTimeString("pt-BR", { hour:"2-digit", minute:"2-digit" })}` : quando(as);
+  // Versão 40: os projetos e tarefas criados, para o chefe, no painel dos trabalhos.
+  function listaCriados() {
+    const cs = criadosRecentes().slice(0, 40);
+    return bloco("var(--f2)", "Novos projetos e tarefas — os últimos criados", cs.length, cs.map(c => {
+          const x = c.x, f = frente(x.frente);
+          const estado = c.tipo === "projeto" ? (x.estado === "ativo" ? "" : x.estado === "depois" ? "paralisado" : x.estado === "concluido" ? "concluído" : x.estado)
+            : x.estado === "concluida" ? "concluída" : x.estado === "suspensa" ? "paralisada" : "";
+          return `
+          <div class="linha" style="--fc:${f.cor}">
+            <button type="button" class="linha-corpo" ${c.tipo === "projeto" ? `data-acao="vista" data-tipo="projeto" data-id="${x.id}"` : `data-acao="abrir-t" data-id="${x.id}"`}>
+              <span class="item-topo"><span class="chip${c.tipo === "projeto" ? "" : " vazado"}">${c.tipo === "projeto" ? "projeto" : "tarefa"}</span>${estado ? `<span class="chip vazado">${estado}</span>` : ""}</span>
+              <span class="mt-nome">${esc(c.tipo === "projeto" ? x.nome : x.titulo)}</span>
+              <span class="mt-onde">${c.tipo === "projeto" ? f.nome : ondeDe(x)}</span>
+              <span class="mt-pe"><b style="color:var(--fg)">${curto(c.quem)}</b> ${c.tipo === "projeto" ? "criou" : "abriu"} ${quandoCriado(c.as)}</span>
+            </button>
+          </div>`; }).join(""), "Nada criado ainda.")
+      + `<p class="mt-pe" style="padding:4px 2px">Do mais recente ao mais antigo. O número da caixa conta os que a equipe criou nos últimos 7 dias.</p>`;
+  }
+  const novosDeOutros = () => criadosRecentes().filter(c => c.quem !== eu && emDias(dData(c.as.slice(0, 10))) >= -7);
   const ondeDe = x => x.projeto ? `${frente(x.frente).nome} › ${projeto(x.projeto).nome}` : frente(x.frente).nome;
 
   function estadoTarefa(t) {
@@ -1212,7 +1249,7 @@
   const porUrgencia = (a, b) => PESO[estadoTarefa(a).chave] - PESO[estadoTarefa(b).chave];
 
   function novaTarefa(frenteId, titulo, o = {}) {
-    const t = T(frenteId, titulo, { mexido: dISO(hoje), iniciada:false, ...o });
+    const t = T(frenteId, titulo, { mexido: dISO(hoje), iniciada:false, criado_por: eu, criado_as: new Date().toISOString(), ...o });
     t.hist.push({ quando: dISO(hoje), quem: eu, o: "abriu a tarefa" + (t.prazo ? ", com prazo para " + dBR(dData(t.prazo)) : "") });
     TAREFAS.push(t);
     return t;
@@ -2187,6 +2224,13 @@
       <div class="bloco-corpo">${corpo || (vazio ? `<p class="vazio">${vazio}</p>` : "")}</div>
     </div>`;
   };
+  // Versão 40: o mesmo bloco, com um botão no cabeçalho (Nova tarefa, Nova tarefa avulsa).
+  const blocoBotao = (cor, titulo, n, corpo, vazio, botao) => `
+    <div class="bloco" style="--bc:${cor}">
+      <div class="bloco-cab">${titulo}<span class="n">${n}</span>${botao}</div>
+      <div class="bloco-corpo">${corpo || (vazio ? `<p class="vazio">${vazio}</p>` : "")}</div>
+    </div>`;
+  const btNovaTarefa = (rotulo, f, p) => `<button type="button" class="bt-cab" data-acao="nova-tarefa" data-frente="${f}" data-projeto="${p || ""}">${rotulo}</button>`;
   const banda = (cor, sobre, titulo, texto, extra = "") => `
     <div class="banda" style="--fc:${cor}">
       ${sobre ? `<span class="sobre">${sobre}</span>` : ""}<h2>${titulo}</h2>${texto ? `<p>${texto}</p>` : ""}${extra}
@@ -2361,7 +2405,7 @@
     $("#pe").innerHTML = `<b>CGGES</b> — Escritório de Processos da SPU.
         ${REAL ? `<span class="versao">Home EPP · área da equipe · entrou como ${curto(eu)}</span>
         <button type="button" class="link" data-acao="sair">Sair</button>`
-        : `<span class="versao">Home EPP · área logada · protótipo de 23/11/2026 (versão 39) · dados de exemplo</span>`}`;
+        : `<span class="versao">Home EPP · área logada · protótipo de 23/11/2026 (versão 40) · dados de exemplo</span>`}`;
   }
 
   // Na frente os projetos vêm recolhidos. Abre sozinho só o que tem alerta: tarefa
@@ -2393,7 +2437,7 @@
           ${aberto ? `<div class="projeto-corpo">
             ${rots.map(x => linhaRotina(x, { pessoa:true })).join("")}
             ${r.abertas.sort(porUrgencia).map(t => linhaTarefa(t, { pessoa:true, atribuir:true })).join("")}
-            ${campoNova("tarefa", f.id, p.id, "Nova tarefa neste projeto — escreva e dê Enter")}
+            <div class="nova-tarefa-pj"><button type="button" class="link" data-acao="nova-tarefa" data-frente="${f.id}" data-projeto="${p.id}">+ Nova tarefa neste projeto</button></div>
           </div>` : ""}
         </div>`;
     }).join("");
@@ -2401,18 +2445,15 @@
     return `
       <button type="button" class="link" data-acao="vista" data-tipo="frentes" data-id="">← Frentes de trabalho</button>
       ${eu === CHEFE && editandoFrente === f.id ? `<div class="banda" style="--fc:${f.cor}">${formFrente(f)}</div>`
-        : banda(f.cor, "", f.nome, esc(f.sub || ""), eu !== CHEFE ? "" : `<div class="grupo-linha">
-            <button type="button" class="bt" data-acao="fr-editar" data-id="${f.id}">Editar a frente</button></div>`)}
+        : banda(f.cor, "", f.nome, esc(f.sub || ""), `<div class="grupo-linha">
+            ${eu === CHEFE ? `<button type="button" class="bt" data-acao="fr-editar" data-id="${f.id}">Editar a frente</button>` : ""}
+            <button type="button" class="bt pri" data-acao="novo-projeto" data-frente="${f.id}">Novo projeto</button></div>`)}
       ${pjs.length ? grupos : ""}
-      ${eu !== CHEFE ? "" : `<div class="nova-linha solta">
-        <input type="text" data-nova="projeto" data-frente="${f.id}"
-               placeholder="Novo projeto nesta frente — escreva o nome e dê Enter" aria-label="Novo projeto em ${f.nome}">
-      </div>`}
-      ${bloco(f.cor, pjs.length ? "Tarefas avulsas" : "Tarefas", rotSoltas.length + soltas.length,
+      ${blocoBotao(f.cor, pjs.length ? "Tarefas avulsas" : "Tarefas", rotSoltas.length + soltas.length,
           rotSoltas.map(r => linhaRotina(r, { pessoa:true })).join("") +
-          soltas.map(t => linhaTarefa(t, { pessoa:true, atribuir:true })).join("") +
-          campoNova("tarefa", f.id, "", "Nova tarefa nesta frente — escreva e dê Enter"),
-          "")}
+          soltas.map(t => linhaTarefa(t, { pessoa:true, atribuir:true })).join(""),
+          pjs.length ? "Nenhuma tarefa avulsa." : "Nenhuma tarefa nesta frente.",
+          btNovaTarefa(pjs.length ? "Nova tarefa avulsa" : "Nova tarefa", f.id, ""))}
       ${guardadosAqui ? `<button type="button" class="link" data-acao="vista" data-tipo="caixa" data-id="paralisado">${guardadosAqui} ${guardadosAqui === 1 ? "projeto desta frente está paralisado" : "projetos desta frente estão paralisados"} →</button>` : ""}`;
   }
 
@@ -2550,10 +2591,9 @@
       : banda(f.cor, "Projeto · " + f.nome, p.nome, resumo, linkFerramenta(p) + acoes +
           (eu === CHEFE ? `<div class="grupo-linha"><button type="button" class="link fino" data-acao="pj-nome" data-id="${p.id}">Mudar o nome do projeto</button></div>` : ""))}
       ${rots.length ? bloco(f.cor, "Tarefas recorrentes", rots.length, rots.map(x => linhaRotina(x, { pessoa:true })).join("")) : ""}
-      ${bloco(f.cor, "Tarefas abertas", r.abertas.length,
-          r.abertas.sort(porUrgencia).map(t => linhaTarefa(t, { pessoa:true, atribuir:true })).join("") +
-          (p.estado === "ativo" ? campoNova("tarefa", f.id, p.id, "Nova tarefa neste projeto — escreva e dê Enter") : ""),
-          p.estado === "ativo" ? "" : "Nenhuma tarefa aberta.")}
+      ${blocoBotao(f.cor, "Tarefas abertas", r.abertas.length,
+          r.abertas.sort(porUrgencia).map(t => linhaTarefa(t, { pessoa:true, atribuir:true })).join(""),
+          "Nenhuma tarefa aberta.", p.estado === "ativo" ? btNovaTarefa("Nova tarefa", f.id, p.id) : "")}
       ${r.guardadas.length ? bloco("var(--roxo)", "Tarefas paralisadas", r.guardadas.length,
           r.guardadas.map(t => linhaTarefa(t, { pessoa:true })).join("")) : ""}
       ${bloco(f.cor, "Comentários", notas.length, `
@@ -2740,7 +2780,7 @@
             pt.map(p => linhaPedido(p)).join("")) : ""}`;
     }
     return `
-      ${banda("var(--off)", "Protótipo", "Para validar", "Não faz parte da tela final. No alto, o que mudou na versão 39; embaixo, o que veio antes. Em itálico, o que eu decidi por conta própria para você confirmar.")}
+      ${banda("var(--off)", "Protótipo", "Para validar", "Não faz parte da tela final. No alto, o que mudou na versão 40; embaixo, o que veio antes. Em itálico, o que eu decidi por conta própria para você confirmar.")}
       <div class="bloco validar"><ol><li>Notas de revisão retiradas da versão publicada.</li></ol></div>`;
   }
 
@@ -2814,6 +2854,7 @@
       ["prazos",      ab.filter(t => t.prazo).length, "com prazo", "var(--accent)"],
       ["abertas",     ab.length,               "tarefas abertas",  "var(--accent)"],
       ["projetos",    ativos.length,           "projetos ativos",  "var(--f2)"],
+      ["novos",       novosDeOutros().length,  "novos projetos e tarefas", "var(--f2)"],
       ["semdono",     sd.length,               "sem dono",         "var(--meio)"],
       ["paralisados", sus.length + gs.length,  "paralisados",      "var(--roxo)"],
       ["petrvs",      pendenciasMes(),         "RH em aberto",     "var(--mes)"],
@@ -2888,6 +2929,8 @@
           <div class="tab-rolo">${tabelaMes(m, m !== MES_ATUAL)}</div>
         </div>`).join("") + bloco("var(--mes)", "Frequência", mesesNaTela().filter(freqFalta).length, mesesNaTela().map(linhaFreq).join(""))
         + blocoFerias();
+    } else if (painelVista === "novos") {
+      meio = listaCriados();
     } else if (painelVista === "ferias") {
       meio = linhaTempoFerias();
     } else if (painelVista === "rotinas") {
@@ -3132,8 +3175,10 @@
   function pedirNova(ctx) {
     novaCtx = ctx;
     $("#dn-origem").textContent = ctx.rotulo;
-    $("#dn-como").value = eu === CHEFE ? (ctx.como || "tarefa") : "tarefa";
-    $("#dn-como").closest("label").hidden = eu !== CHEFE;   // só o chefe abre projeto (versão 26)
+    $("#dn-como").value = ctx.como || "tarefa";
+    // Versão 40: todos abrem projeto (antes, só o chefe). O chefe acompanha em "Novos projetos e tarefas".
+    $("#dn-como").closest("label").hidden = !!ctx.fixo;
+    $('#dlg-nova [data-acao="dn-salvar"]').textContent = ctx.fixo ? (ctx.como === "projeto" ? "Criar o projeto" : "Criar a tarefa") : "Abrir";
     $("#dn-titulo").value = ctx.titulo || "";
     $("#dn-frente").innerHTML = frentesAtivas().map(f =>
       `<option value="${f.id}"${f.id === ctx.frente ? " selected" : ""}>${f.nome}</option>`).join("");
@@ -3144,10 +3189,12 @@
     ajustarNova();
     $("#dlg-nova").showModal();
     // O foco vai para "Abrir": sem isso ele cai no "×", e um segundo Enter fecharia sem gravar.
-    $('#dlg-nova [data-acao="dn-salvar"]').focus();
+    // Versão 40: criando do zero (pelo botão), o foco vai para o nome, que está vazio.
+    if (ctx.fixo) $("#dn-titulo").focus(); else $('#dlg-nova [data-acao="dn-salvar"]').focus();
   }
   function novoProjeto(frenteId, nome) {
-    const p = { id:"p-n" + (++seq), frente:frenteId, nome, estado:"ativo", motivo:null, mexido:dISO(hoje) };
+    const p = { id:"p-n" + (++seq), frente:frenteId, nome, estado:"ativo", motivo:null, mexido:dISO(hoje),
+                criado_por: eu, criado_as: new Date().toISOString() };   // versão 40: quem criou e quando
     PROJETOS.push(p);
     return p;
   }
@@ -3247,6 +3294,16 @@
     "fr-editar"({ id }) { if (eu !== CHEFE) return false; editandoFrente = id;
       setTimeout(() => { const c = $("#frd-nome"); if (c) c.focus(); }); },
     "fr-cancelar"() { editandoFrente = null; },
+    // ---- versão 40: criar por botão, no diálogo de novo trabalho ----
+    "novo-projeto"({ frente: f }) {
+      pedirNova({ rotulo:"Novo projeto em " + frente(f).nome, como:"projeto", fixo:true, frente:f });
+      return false;
+    },
+    "nova-tarefa"({ frente: f, projeto: p }) {
+      pedirNova({ rotulo: p ? "Nova tarefa em " + projeto(p).nome : "Nova tarefa avulsa em " + frente(f).nome,
+                  como:"tarefa", fixo:true, frente:f, projeto:p || null, responsavel: eu === CHEFE ? null : eu });
+      return false;
+    },
     // ---- atalhos (versão 37): só o chefe edita ----
     "at-editar"() { if (eu !== CHEFE) return false; editandoAtalhos = true; },
     "at-cancelar"() { editandoAtalhos = false; },
@@ -3580,6 +3637,11 @@
   // Escreve e dá Enter: é o cadastro inteiro de tarefa, projeto, ideia e nota.
   document.addEventListener("keydown", ev => {
     let alvo = ev.target;
+    // Versão 40: Enter no nome do novo trabalho cria.
+    if (ev.key === "Enter" && alvo && alvo.id === "dn-titulo") {
+      if (ev.preventDefault) ev.preventDefault();
+      $('#dlg-nova [data-acao="dn-salvar"]').click(); return;
+    }
     // Versão 35: nos formulários de nome, Enter salva e Esc cancela; no nome da tarefa, Enter grava.
     if (alvo && alvo.closest && alvo.closest(".fr-edita") && alvo.tagName === "INPUT" && (ev.key === "Enter" || ev.key === "Escape")) {
       if (ev.preventDefault) ev.preventDefault();

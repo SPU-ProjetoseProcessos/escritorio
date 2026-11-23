@@ -270,6 +270,10 @@
   .titulo-campo { width:100%; font:inherit; font-size:inherit; font-weight:inherit; color:var(--fg); padding:6px 9px;
                   border:1.5px solid var(--border-forte); border-radius:8px; background:var(--surface); }
   /* Versão 35: diz que o nome se muda ali mesmo. */
+  /* Versão 39: frente só do chefe. */
+  .so-eu { font-size:11.5px; font-weight:700; color:var(--fg-muted); letter-spacing:.02em; }
+  .caixa-marca { display:flex; gap:8px; align-items:center; font-size:14.5px; font-weight:600; }
+  .caixa-marca input { width:18px; height:18px; }
   .titulo-dica { display:block; margin-top:4px; font-size:13.5px; font-weight:500; color:var(--fg-muted); }
   .bt.vermelho { background:var(--alerta); border-color:var(--alerta); color:#fff; }
   /* Versão 30: as linhas do plano de trabalho. */
@@ -692,13 +696,19 @@
     { id:"artefatos",    nome:"Artefatos de melhoria processual", sub:"POPs, manuais interativos e modelos de documento." },
     { id:"prototipacao", nome:"Prototipação de sistemas",         sub:"A prévia do sistema que outro vai construir, feita com a área finalística antes da TI." },
     { id:"instrucao",    nome:"Módulo de Instrução de Destinação", sub:"As tarefas da vez, e o que a equipe deve à TI." },
-    { id:"curadoria",    nome:"Curadoria",                        sub:"Coleção Fluxos e Procedimentos e o catálogo do SPUProcessos." }
+    { id:"curadoria",    nome:"Curadoria",                        sub:"Coleção Fluxos e Procedimentos e o catálogo do SPUProcessos." },
+    // Versão 39: o trabalho de coordenador da área — só o chefe vê.
+    { id:"coordenacao",  nome:"Coordenação",                      sub:"O meu trabalho de coordenador da área.", so_chefe:true }
   ].map((f, i) => ({ estado:"ativa", arquivada_em:null, ...f, cor:`var(--f${i + 1})` }));
   const frente = id => FRENTES.find(f => f.id === id);
   // Versão 27: o chefe inclui, edita e arquiva frentes. Arquivada, a frente sai do menu,
   // das contagens e das listas de escolha, mas nada se apaga.
-  const frentesAtivas = () => FRENTES.filter(f => f.estado === "ativa");
-  const frentesArquivadas = () => FRENTES.filter(f => f.estado === "arquivada");
+  // Versão 39: a frente "só do chefe" (so_chefe) não aparece para o resto da equipe —
+  // nem no menu, nem na tela das frentes, nem nas contagens. É filtro de tela: o banco
+  // continua legível para a equipe, como todo o resto da área.
+  const vejoFrente = f => !f.so_chefe || eu === CHEFE;
+  const frentesAtivas = () => FRENTES.filter(f => f.estado === "ativa" && vejoFrente(f));
+  const frentesArquivadas = () => FRENTES.filter(f => f.estado === "arquivada" && vejoFrente(f));
   const CORES_FRENTE = 12;
   const proximaCor = () => {
     const usadas = new Set(frentesAtivas().map(f => f.cor));
@@ -2344,14 +2354,14 @@
               || (vista.tipo === "projeto" && projeto(vista.id).frente === f.id);
             const ruim = par.filter(x => x.item.frente === f.id).length;
             return `<button type="button" class="nav" style="--nc:${f.cor}" data-acao="vista" data-tipo="frente" data-id="${f.id}" aria-current="${atual}">
-              <i class="ponto"></i><span>${f.nome}</span>${ruim ? `<b class="n ruim" title="vencidas">${ruim}</b>` : ""}<b class="n">${TAREFAS.filter(t => t.frente === f.id && aberta(t)).length}</b></button>`;
+              <i class="ponto"></i><span>${f.nome}${f.so_chefe ? ' <small class="so-eu">só você</small>' : ""}</span>${ruim ? `<b class="n ruim" title="vencidas">${ruim}</b>` : ""}<b class="n">${TAREFAS.filter(t => t.frente === f.id && aberta(t)).length}</b></button>`;
           }).join("")}
         </div>
       </div>`;
     $("#pe").innerHTML = `<b>CGGES</b> — Escritório de Processos da SPU.
         ${REAL ? `<span class="versao">Home EPP · área da equipe · entrou como ${curto(eu)}</span>
         <button type="button" class="link" data-acao="sair">Sair</button>`
-        : `<span class="versao">Home EPP · área logada · protótipo de 20/11/2026 (versão 38) · dados de exemplo</span>`}`;
+        : `<span class="versao">Home EPP · área logada · protótipo de 23/11/2026 (versão 39) · dados de exemplo</span>`}`;
   }
 
   // Na frente os projetos vêm recolhidos. Abre sozinho só o que tem alerta: tarefa
@@ -2423,6 +2433,7 @@
             <label class="campo" for="frd-entrega">Entrega do Petrvs que ela alimenta
               <select id="frd-entrega"><option value="">nenhuma</option>${Object.keys(ENTREGAS).map(k =>
                 `<option value="${k}"${k === ENTREGA_DA_FRENTE[f.id] ? " selected" : ""}>${ENTREGAS[k]}</option>`).join("")}</select></label>
+            <label class="caixa-marca"><input type="checkbox" id="frd-so"${f.so_chefe ? " checked" : ""}> Só eu vejo esta frente — o resto da equipe não a vê</label>
             <div class="grupo-linha">
               <button type="button" class="bt pri" data-acao="fr-salvar" data-id="${f.id}">Salvar</button>
               <button type="button" class="bt" data-acao="fr-cancelar">Cancelar</button>
@@ -2449,7 +2460,7 @@
         <div class="linha" style="--fc:${f.cor}">
           <button type="button" class="linha-corpo" data-acao="vista" data-tipo="frente" data-id="${f.id}">
             ${venc ? `<span class="item-topo"><span class="pill cheia s-falta">${plural(venc, "vencida", "vencidas")}</span></span>` : ""}
-            <span class="mt-nome">${esc(f.nome)}</span>
+            <span class="mt-nome">${esc(f.nome)}${f.so_chefe ? ' <span class="chip vazado">só você vê</span>' : ""}</span>
             ${f.sub ? `<span class="mt-pe">${esc(f.sub)}</span>` : ""}
             <span class="mt-onde">${[pjs && plural(pjs, "projeto", "projetos"), plural(ab, "tarefa aberta", "tarefas abertas"), ent && "Petrvs " + ent].filter(Boolean).join(" · ")}</span>
           </button>
@@ -2729,7 +2740,7 @@
             pt.map(p => linhaPedido(p)).join("")) : ""}`;
     }
     return `
-      ${banda("var(--off)", "Protótipo", "Para validar", "Não faz parte da tela final. No alto, o que mudou na versão 38; embaixo, o que veio antes. Em itálico, o que eu decidi por conta própria para você confirmar.")}
+      ${banda("var(--off)", "Protótipo", "Para validar", "Não faz parte da tela final. No alto, o que mudou na versão 39; embaixo, o que veio antes. Em itálico, o que eu decidi por conta própria para você confirmar.")}
       <div class="bloco validar"><ol><li>Notas de revisão retiradas da versão publicada.</li></ol></div>`;
   }
 
@@ -3272,6 +3283,7 @@
       if (FRENTES.some(g => g !== f && g.nome.toLowerCase() === nome.toLowerCase())) {
         avisoMsg = `Já existe uma frente chamada <b>${esc(nome)}</b>.`; return; }
       f.nome = nome; f.sub = $("#frd-sub").value.trim();
+      if ($("#frd-so")) f.so_chefe = $("#frd-so").checked || undefined;
       const e = $("#frd-entrega").value;
       if (e) ENTREGA_DA_FRENTE[id] = e; else delete ENTREGA_DA_FRENTE[id];
       editandoFrente = null;

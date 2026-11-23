@@ -13,7 +13,7 @@
     --fg: #23262b; --fg-muted: #4f5660;
     --accent: #1b2b85; --accent-escuro: #121d5e; --accent-claro: #5992ed; --accent-fg: #ffffff; --accent-soft: #e4ecff;
     --ok: #15803d; --meio: #a16207; --off: #5b6572; --alerta: #b3261e; --laranja: #c2410c;
-    --roxo: #6d28d9; --azul: #1351b4; --mes: #0f766e; --rot: #8a4b08; --aviso: #b45309;
+    --roxo: #6d28d9; --azul: #1351b4; --mes: #0f766e; --rot: #8a4b08; --aviso: #b45309; --recesso: #f59e0b;
     --tinta-solida: #ffffff;
     --marca-1: #1351b4; --marca-2: #2e9e4f; --marca-3: #f2b705; --marca-4: #e8771f;
     /* Uma cor por frente. Nenhuma é o vermelho do alerta nem o laranja do parado. */
@@ -31,7 +31,7 @@
       --fg: #eef0f7; --fg-muted: #aab2c8;
       --accent: #9db8ff; --accent-escuro: #c2d3ff; --accent-claro: #5992ed; --accent-fg: #0d1430; --accent-soft: #1d274d;
       --ok: #4ccb78; --meio: #e6b44c; --off: #98a3b8; --alerta: #ff8a80; --laranja: #ffa35c;
-      --roxo: #b49cff; --azul: #7aa2ff; --mes: #5eead4; --rot: #f5b56b; --aviso: #fbbf24;
+      --roxo: #b49cff; --azul: #7aa2ff; --mes: #5eead4; --rot: #f5b56b; --aviso: #fbbf24; --recesso: #fbbf24;
       --tinta-solida: #0d1430;
       --f1: #7aa2ff; --f2: #4fd1e0; --f3: #5fd38a; --f4: #c3d35a; --f5: #e6b44c;
       --f6: #e58cf0; --f7: #b49cff; --f8: #f27fb2; --f9: #a8b3c7;
@@ -46,7 +46,7 @@
     --fg: #eef0f7; --fg-muted: #aab2c8;
     --accent: #9db8ff; --accent-escuro: #c2d3ff; --accent-claro: #5992ed; --accent-fg: #0d1430; --accent-soft: #1d274d;
     --ok: #4ccb78; --meio: #e6b44c; --off: #98a3b8; --alerta: #ff8a80; --laranja: #ffa35c;
-    --roxo: #b49cff; --azul: #7aa2ff; --mes: #5eead4; --rot: #f5b56b; --aviso: #fbbf24;
+    --roxo: #b49cff; --azul: #7aa2ff; --mes: #5eead4; --rot: #f5b56b; --aviso: #fbbf24; --recesso: #fbbf24;
     --tinta-solida: #0d1430;
     --f1: #7aa2ff; --f2: #4fd1e0; --f3: #5fd38a; --f4: #c3d35a; --f5: #e6b44c;
     --f6: #e58cf0; --f7: #b49cff; --f8: #f27fb2; --f9: #a8b3c7;
@@ -174,7 +174,7 @@
      (--dw de largura), o número do dia no alto, fim de semana com leve sombreado; o dia marcado
      é um quadradinho cheio (homologado) ou contornado (aguarda homologação). Os nomes ficam
      numa coluna parada; cada pessoa tem uma faixa, sombreada uma sim, uma não. */
-  .lt2 { --dw:16px; display:grid; grid-template-columns:118px minmax(0,1fr); background:var(--surface); padding:8px 0 6px; }
+  .lt2 { --dw:24px; display:grid; grid-template-columns:118px minmax(0,1fr); background:var(--surface); padding:8px 0 6px; }
   .lt-nomes { border-right:1.5px solid var(--border-forte); }
   .lt-rolo { overflow-x:auto; }
   .lt-l { height:34px; display:flex; flex-direction:column; justify-content:center; position:relative; }
@@ -196,19 +196,23 @@
   .lt-dnum { position:absolute; top:0; width:var(--dw); line-height:22px; text-align:center; font-size:11px; font-weight:700; color:var(--fg-muted); }
   .lt-dnum.fds { color:color-mix(in srgb, var(--fg-muted) 70%, var(--surface)); }
   .lt-dnum.hoje { color:#fff; background:var(--alerta); border-radius:4px; }
-  .lt-q { position:absolute; top:calc(50% - (var(--dw) - 4px) / 2); width:calc(var(--dw) - 4px); height:calc(var(--dw) - 4px);
-          border-radius:3px; background:var(--mes); }
-  .lt-q.pedida { background:color-mix(in srgb, var(--mes) 18%, var(--surface)); border:1.5px dashed var(--mes); }
-  .lt-q.junto { background:var(--aviso); }
+  /* Versão 43: a cor diz o tipo — férias em verde, recesso em amarelo, afastamento em cinza.
+     Cheio = homologado ou aprovado; tracejado = ainda não. */
+  .lt-q { --qc:var(--ok); --qs:min(calc(var(--dw) - 6px), 22px); position:absolute; top:calc(50% - var(--qs) / 2);
+          width:var(--qs); height:var(--qs); border-radius:4px; background:var(--qc); }
+  .lt-q.recesso { --qc:var(--recesso); }
+  .lt-q.afastamento { --qc:var(--off); }
+  .lt-q.pedida { background:color-mix(in srgb, var(--qc) 16%, var(--surface)); border:2px dashed var(--qc); }
   .lt-hoje { position:absolute; top:0; bottom:0; width:var(--dw); outline:2px solid var(--alerta); outline-offset:-1px; z-index:1; pointer-events:none; }
   .lt-dica { padding:8px 12px 0; background:var(--surface); font-size:13.5px; color:var(--fg-muted); }
   .lt-lista { padding:6px 12px 10px; background:var(--surface); font-size:14.5px; display:grid; gap:5px; }
   .lt-lista b { font-weight:800; }
   .lt-lista .lt-tit { font-size:12.5px; font-weight:800; text-transform:uppercase; letter-spacing:.04em; color:var(--fg-muted); padding-top:4px; }
   .lt-legenda { display:flex; gap:14px; flex-wrap:wrap; font-size:13px; color:var(--fg-muted); padding:8px 12px 10px; background:var(--surface); }
-  .lt-legenda i { display:inline-block; width:12px; height:12px; border-radius:3px; vertical-align:-1px; margin-right:5px; background:var(--mes); }
-  .lt-legenda i.pedida { background:color-mix(in srgb, var(--mes) 18%, var(--surface)); border:1.5px dashed var(--mes); }
-  .lt-legenda i.junto { background:var(--aviso); }
+  .lt-legenda i { display:inline-block; width:14px; height:14px; border-radius:3px; vertical-align:-2px; margin-right:5px; background:var(--ok); }
+  .lt-legenda i.recesso { background:var(--recesso); }
+  .lt-legenda i.afastamento { background:var(--off); }
+  .lt-legenda i.pedida { background:var(--surface); border:2px dashed var(--fg-muted); }
   .lt-legenda i.hoje { background:var(--surface); outline:2px solid var(--alerta); outline-offset:-1px; }
   /* Versão 37: atalhos. Cada um é um botão largo, com borda, para acertar de primeira. */
   .atalhos { display:grid; grid-template-columns:repeat(2, minmax(0,1fr)); gap:8px; padding:10px; background:var(--surface); }
@@ -1836,13 +1840,17 @@
   const aindaVale = f => !f.ate || dData(f.ate) >= hoje;
   // "Karin — férias até 24/11" · "Vinícius — afastamento, sem prazo" (versão 26)
   const foraAte = f => `${ROTULO_AUSENCIA[f.tipo]}${f.ate ? " até " + ddmm(f.ate) : ", sem prazo"}`;
+  // Versão 43: recesso não se homologa — é escolhido e o chefe aprova. Férias e afastamento, sim.
+  const AUS = f => f.tipo === "recesso"
+    ? { ok:"aprovado", fazer:"aprovar", espera:"aguarda aprovação", bt:"Aprovar", nao:"Não aprovar", feito:"aprovado" }
+    : { ok:"homologada", fazer:"homologar no SouGov", espera:"aguarda homologação no SouGov", bt:"Homologuei no SouGov", nao:"Não homologar", feito:"homologada" };
   function linhaFerias(f, comNome) {
     const chefe = eu === CHEFE, agora = dData(f.de) <= hoje && aindaVale(f);
     const passam = f.situacao === "homologada"
       ? TAREFAS.filter(t => t.estado !== "concluida" && t.responsavel === f.quem && t.suplente).length : 0;
     const botoes = chefe && f.situacao === "pedida"
-      ? `<button type="button" class="bt pri" data-acao="fe-homologar" data-id="${f.id}">Homologuei no SouGov</button>
-         <button type="button" class="bt" data-acao="fe-devolver" data-id="${f.id}">Não homologar</button>`
+      ? `<button type="button" class="bt pri" data-acao="fe-homologar" data-id="${f.id}">${AUS(f).bt}</button>
+         <button type="button" class="bt" data-acao="fe-devolver" data-id="${f.id}">${AUS(f).nao}</button>`
       : chefe && !f.ate ? `<button type="button" class="bt" data-acao="fe-encerrar" data-id="${f.id}">Encerrar hoje</button>`
       : (f.quem === eu && f.situacao === "pedida") || (chefe && f.situacao === "homologada")
         ? `<button type="button" class="link fino" data-acao="fe-tirar" data-id="${f.id}">${f.situacao === "pedida" ? "desmarcar" : "desfazer"}</button>` : "";
@@ -1851,12 +1859,12 @@
         <div class="linha-corpo" style="cursor:default">
           <span class="item-topo">
             ${agora && f.situacao === "homologada" ? '<span class="pill s-avencer">fora agora</span>' : ""}
-            <span class="pill ${f.situacao === "homologada" ? "s-fechado" : "s-avencer"}">${f.situacao === "homologada" ? "homologada" : chefe ? "homologar no SouGov" : "aguarda homologação no SouGov"}</span>
+            <span class="pill ${f.situacao === "homologada" ? "s-fechado" : "s-avencer"}">${f.situacao === "homologada" ? AUS(f).ok : chefe ? AUS(f).fazer : AUS(f).espera}</span>
             <span class="chip">${ROTULO_AUSENCIA[f.tipo]}</span>
           </span>
           <span class="mt-nome">${comNome ? curto(f.quem) + " — " : ""}${periodo(f)}</span>
           ${passam ? `<span class="mt-pe">No período, ${passam} ${passam === 1 ? "tarefa passa" : "tarefas passam"} para o suplente.</span>`
-            : f.situacao === "pedida" ? `<span class="mt-pe">Registrada ${quando(f.pedida_em)}. Só depois de homologada o suplente assume.</span>` : ""}
+            : f.situacao === "pedida" ? `<span class="mt-pe">Registrada ${quando(f.pedida_em)}. Só depois de ${AUS(f).feito} o suplente assume.</span>` : ""}
         </div>
         <div class="linha-acoes">${botoes}</div>
       </div>`;
@@ -1870,7 +1878,7 @@
       return `
       <div class="linha">
         <div class="linha-corpo">
-          <span class="item-topo">${agora ? '<span class="pill s-avencer">fora agora</span>' : ""}${f.situacao === "homologada" ? "" : '<span class="pill s-off">aguarda homologação</span>'}<span class="chip">${ROTULO_AUSENCIA[f.tipo]}</span></span>
+          <span class="item-topo">${agora ? '<span class="pill s-avencer">fora agora</span>' : ""}${f.situacao === "homologada" ? "" : `<span class="pill s-off">${AUS(f).espera.replace(" no SouGov", "")}</span>`}<span class="chip">${ROTULO_AUSENCIA[f.tipo]}</span></span>
           <span class="mt-nome">${curto(f.quem)}</span>
           <span class="mt-pe">${agora ? (f.ate ? "volta depois de " + ddmm(f.ate) : "sem data de volta") : periodo(f)}</span>
         </div>
@@ -1903,48 +1911,38 @@
     const quadros = f => {
       const a = Math.max(0, idx(dData(f.de))), b = f.ate ? Math.min(total, idx(dData(f.ate)) + 1) : total;
       if (b <= a) return "";
-      const cls = "lt-q" + (f.situacao === "homologada" ? "" : " pedida");
-      const dica = `${curto(f.quem)}: ${rotulo(f)}${f.situacao === "homologada" ? "" : " (aguarda homologação)"}`;
-      return Array.from({ length: b - a }, (_, k) => `<span class="${cls}" style="left:calc(${x(a + k)} + 1px)" title="${dica}"></span>`).join("");
+      const cls = `lt-q ${f.tipo}` + (f.situacao === "homologada" ? "" : " pedida");
+      const dica = `${curto(f.quem)}: ${rotulo(f)}${f.situacao === "homologada" ? "" : ` (${AUS(f).espera.replace(" no SouGov", "")})`}`;
+      return Array.from({ length: b - a }, (_, k) => `<span class="${cls}" style="left:calc(${x(a + k)} + (var(--dw) - var(--qs)) / 2)" title="${dica}"></span>`).join("");
     };
-    // Quem está fora em cada dia; dias com duas ou mais pessoas viram a linha "Ao mesmo tempo".
-    const fora = dias.map(d => [...new Set(valem.filter(f => dData(f.de) <= d && (!f.ate || d <= dData(f.ate))).map(f => curto(f.quem)))].sort());
-    const juntos = [];
-    fora.forEach((ns, d) => {
-      const k = ns.join(", "), ult = juntos[juntos.length - 1];
-      if (ns.length < 2) return;
-      if (ult && ult.k === k && ult.b === d) ult.b = d + 1; else juntos.push({ k, a: d, b: d + 1 });
-    });
-    const deAte = j => j.b - j.a === 1 ? ddmm(dISO(dias[j.a])) : `${ddmm(dISO(dias[j.a]))} a ${ddmm(dISO(dias[j.b - 1]))}`;
     const faixa = i => i % 2 === 0 ? " faixa" : "";
     const nomes = EQUIPE.map((n, i) => `<div class="lt-l lt-nome${faixa(i)}">${curto(n)}${valem.some(f => f.quem === n) ? "" : "<small>nada marcado</small>"}</div>`).join("");
     const linhas = EQUIPE.map((n, i) => `<div class="lt-l${faixa(i)}"><div class="lt-dias">${fundo}${valem.filter(f => f.quem === n).map(quadros).join("")}</div></div>`).join("");
     const lista = EQUIPE.map(n => { const fs = valem.filter(f => f.quem === n).sort((a, b) => a.de < b.de ? -1 : 1);
-      return fs.length ? `<span><b>${curto(n)}:</b> ${fs.map(f => rotulo(f) + (f.situacao === "homologada" ? "" : " (aguarda homologação)")).join(" · ")}</span>` : ""; }).join("");
+      return fs.length ? `<span><b>${curto(n)}:</b> ${fs.map(f => rotulo(f) + (f.situacao === "homologada" ? "" : ` (${AUS(f).espera.replace(" no SouGov", "")})`)).join(" · ")}</span>` : ""; }).join("");
     // Abre na semana de hoje; depois, fica onde a pessoa deixou.
+    // Versão 43: três semanas na largura — o dia tem a largura da área dividida por 21 (mínimo 22 px).
     setTimeout(() => document.querySelectorAll(".lt-rolo").forEach(r => {
-      r.scrollLeft = ltRolagem != null ? ltRolagem : Math.max(0, (hojeI - 3) * 16);
+      const dw = Math.max(22, Math.floor(r.clientWidth / 21));
+      r.closest(".lt2").style.setProperty("--dw", dw + "px");
+      r.scrollLeft = ltRolagem != null ? ltRolagem : Math.max(0, (hojeI - 2) * dw);
       r.onscroll = () => { ltRolagem = r.scrollLeft; };
     }));
     return bloco("var(--mes)", "Férias da equipe — linha do tempo", "", `
-      <p class="lt-dica">Cada quadradinho é um dia. Role as marcações para o lado → (os nomes ficam parados). As datas estão por extenso embaixo.</p>
+      <p class="lt-dica">Cada quadradinho é um dia; cabem três semanas. Role as marcações para o lado → (os nomes ficam parados). As datas estão por extenso embaixo.</p>
       <div class="lt2">
         <div class="lt-nomes">
           <div class="lt-l cab-m"></div><div class="lt-l cab-d"></div>
           ${nomes}
-          <div class="lt-l lt-nome junto-l">Ao mesmo tempo${juntos.length ? "" : "<small>ninguém junto</small>"}</div>
         </div>
         <div class="lt-rolo"><div style="width:${x(total)};position:relative">
           <div class="lt-l cab-m"><div class="lt-meses2">${mesesI.map((i, k) => `<div class="lt-mes2" style="width:${x((mesesI[k + 1] ?? total) - i)}"><span class="lt-mesnome">${MESES[dias[i].getMonth()]}${dias[i].getMonth() === 0 || i === 0 ? " " + dias[i].getFullYear() : ""}</span></div>`).join("")}</div></div>
           <div class="lt-l cab-d">${dias.map((d, i) => `<span class="lt-dnum${d.getDay() % 6 === 0 ? " fds" : ""}${i === hojeI ? " hoje" : ""}" style="left:${x(i)}">${d.getDate()}</span>`).join("")}</div>
           ${linhas}
-          <div class="lt-l junto-l"><div class="lt-dias">${fundo}${juntos.map(j =>
-            Array.from({ length: j.b - j.a }, (_, k) => `<span class="lt-q junto" style="left:calc(${x(j.a + k)} + 1px)" title="${j.k} — ${deAte(j)}"></span>`).join("")).join("")}</div></div>
         </div></div>
       </div>
-      <div class="lt-legenda"><span><i></i>homologada</span><span><i class="pedida"></i>aguarda homologação</span><span><i class="junto"></i>duas ou mais pessoas fora</span><span><i class="hoje"></i>hoje</span></div>
-      ${lista ? `<div class="lt-lista"><span class="lt-tit">As datas</span>${lista}</div>` : ""}
-      ${juntos.length ? `<div class="lt-lista"><span class="lt-tit">Fora ao mesmo tempo</span>${juntos.map(j => `<span><b>${deAte(j)}:</b> ${j.k.replace(/, ([^,]*)$/, " e $1")}</span>`).join("")}</div>` : ""}`);
+      <div class="lt-legenda"><span><i></i>férias</span><span><i class="recesso"></i>recesso</span><span><i class="afastamento"></i>afastamento</span><span><i class="pedida"></i>tracejado: ainda não homologado ou aprovado</span><span><i class="hoje"></i>hoje</span></div>
+      ${lista ? `<div class="lt-lista"><span class="lt-tit">As datas</span>${lista}</div>` : ""}`);
   }
   // Cada pessoa vê as suas; o chefe vê o quadro de todos, por data de início.
   function blocoFerias() {
@@ -1963,7 +1961,7 @@
         <span class="mt-pe" id="fe-erro"></span>
       </div>`,
       chefe ? "Ninguém marcou férias ou recesso daqui para a frente." : "Você não tem férias ou recesso marcados.",
-      chefe && pend ? `${pend} para homologar no SouGov` : "");
+      chefe && pend ? `${pend} para homologar ou aprovar` : "");
   }
 
   function petrvsDaDireita(abre) {
@@ -1995,7 +1993,7 @@
           <span class="item-topo"><span class="pill ${diasParaTroca() < 0 ? "cheia s-falta" : "s-avencer"}">${diasParaTroca() < 0 ? "venceu" : "troca em " + diasParaTroca() + " dias"}</span></span>
           <span class="mt-nome">Plano de entregas da unidade: subir o novo até ${dBR(proximaTroca())}</span></div></div>` : "") + (fePend.length || foraAgora.length ? `
         <div class="linha"><div class="linha-corpo" style="cursor:default">
-          <span class="item-topo"><span class="chip">férias e recesso</span>${fePend.length ? `<span class="pill s-avencer">${fePend.length} para homologar no SouGov</span>` : ""}</span>
+          <span class="item-topo"><span class="chip">férias e recesso</span>${fePend.length ? `<span class="pill s-avencer">${fePend.length} para homologar ou aprovar</span>` : ""}</span>
           ${foraAgora.length ? foraAgora.map(n => `<span class="mt-nome" style="font-weight:600">${curto(n)} — ${foraAte(ausenciaDe(n))}</span>`).join("")
             : '<span class="mt-nome" style="font-weight:600">Ninguém fora agora</span>'}</div></div>` : "") + (haAcao ? `
         <div class="linha"><div class="linha-corpo" style="cursor:default">
@@ -2424,7 +2422,7 @@
     $("#pe").innerHTML = `<b>CGGES</b> — Escritório de Processos da SPU.
         ${REAL ? `<span class="versao">Home EPP · área da equipe · entrou como ${curto(eu)}</span>
         <button type="button" class="link" data-acao="sair">Sair</button>`
-        : `<span class="versao">Home EPP · área logada · protótipo de 23/11/2026 (versão 42) · dados de exemplo</span>`}`;
+        : `<span class="versao">Home EPP · área logada · protótipo de 23/11/2026 (versão 43) · dados de exemplo</span>`}`;
   }
 
   // Na frente os projetos vêm recolhidos. Abre sozinho só o que tem alerta: tarefa
@@ -2799,7 +2797,7 @@
             pt.map(p => linhaPedido(p)).join("")) : ""}`;
     }
     return `
-      ${banda("var(--off)", "Protótipo", "Para validar", "Não faz parte da tela final. No alto, o que mudou na versão 42; embaixo, o que veio antes. Em itálico, o que eu decidi por conta própria para você confirmar.")}
+      ${banda("var(--off)", "Protótipo", "Para validar", "Não faz parte da tela final. No alto, o que mudou na versão 43; embaixo, o que veio antes. Em itálico, o que eu decidi por conta própria para você confirmar.")}
       <div class="bloco validar"><ol><li>Notas de revisão retiradas da versão publicada.</li></ol></div>`;
   }
 
@@ -3408,15 +3406,15 @@
       const situacao = eu === CHEFE ? "homologada" : "pedida";
       FERIAS.push({ id:"fe" + (++seq), quem, tipo, de, ate: ate || null, situacao, pedida_em:dISO(hoje) });
       const per = ate ? `de ${ddmm(de)} a ${ddmm(ate)}` : `desde ${ddmm(de)}, sem prazo`;
-      avisoMsg = situacao === "pedida" ? `Registrado: ${ROTULO_AUSENCIA[tipo]} ${per}. A chefia é avisada para homologar no SouGov.`
-                                       : `Marcado e homologado: ${curto(quem)}, ${ROTULO_AUSENCIA[tipo]} ${per}.`;
+      avisoMsg = situacao === "pedida" ? `Registrado: ${ROTULO_AUSENCIA[tipo]} ${per}. A chefia é avisada para ${tipo === "recesso" ? "aprovar" : "homologar no SouGov"}.`
+                                       : `Marcado e ${tipo === "recesso" ? "aprovado" : "homologado"}: ${curto(quem)}, ${ROTULO_AUSENCIA[tipo]} ${per}.`;
     },
     "fe-homologar"({ id }) { if (eu !== CHEFE) return false; const f = FERIAS.find(x => x.id === id); f.situacao = "homologada";
-      avisoMsg = `Homologado no SouGov: ${curto(f.quem)}, ${periodo(f)}. No período, o suplente assume as tarefas.`; },
+      avisoMsg = `${f.tipo === "recesso" ? "Recesso aprovado" : "Homologado no SouGov"}: ${curto(f.quem)}, ${periodo(f)}. No período, o suplente assume as tarefas.`; },
     "fe-devolver"({ id }) { if (eu !== CHEFE) return false; const k = FERIAS.findIndex(x => x.id === id); const f = FERIAS[k]; FERIAS.splice(k, 1);
-      AVISOS.unshift({ id:"av" + (++seq), texto:`${curto(eu)} não homologou ${ROTULO_AUSENCIA[f.tipo]} de ${periodo(f)}. Converse com a chefia.`,
+      AVISOS.unshift({ id:"av" + (++seq), texto:`${curto(eu)} não ${f.tipo === "recesso" ? "aprovou" : "homologou"} ${ROTULO_AUSENCIA[f.tipo]} de ${periodo(f)}. Converse com a chefia.`,
                        quem:eu, quando:dISO(hoje), ate:null, para:f.quem, tarefa:null });
-      avisoMsg = `Não homologado: ${curto(f.quem)}, ${periodo(f)}. A pessoa recebe um aviso.`; },
+      avisoMsg = `Não ${f.tipo === "recesso" ? "aprovado" : "homologado"}: ${curto(f.quem)}, ${periodo(f)}. A pessoa recebe um aviso.`; },
     "fe-encerrar"({ id }) { if (eu !== CHEFE) return false; const f = FERIAS.find(x => x.id === id); f.ate = dISO(maisDias(hoje, -1));
       avisoMsg = `${curto(f.quem)} voltou: o ${ROTULO_AUSENCIA[f.tipo]} foi encerrado e as tarefas voltam para o titular.`; },
     "fe-tirar"({ id })   { const k = FERIAS.findIndex(x => x.id === id); if (k >= 0) FERIAS.splice(k, 1); },

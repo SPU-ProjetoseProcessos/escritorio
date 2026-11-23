@@ -170,44 +170,46 @@
   .mt-onde { font-size:13px; font-weight:700; color:var(--fc); overflow-wrap:anywhere; }
   .vazio { padding:16px 12px; text-align:center; color:var(--fg-muted); background:var(--surface); font-size:14px; }
   .vazio b { color:var(--ok); font-weight:700; }
-  /* Versão 37: a linha do tempo das férias. Uma linha por pessoa, um mês por coluna;
-     a barra cheia é homologada, a tracejada aguarda homologação; embaixo, quando há
-     duas ou mais pessoas fora ao mesmo tempo. */
-  /* Versão 41: os nomes ficam numa coluna parada, fora da parte que rola; cada pessoa tem
-     uma faixa, sombreada uma sim, uma não, que vai do nome até o fim das marcações. */
-  .lt2 { display:grid; grid-template-columns:118px minmax(0,1fr); background:var(--surface); padding:8px 0 10px; }
+  /* Versão 42: a linha do tempo das férias em quadradinhos de dia. Uma coluna riscada por dia
+     (--dw de largura), o número do dia no alto, fim de semana com leve sombreado; o dia marcado
+     é um quadradinho cheio (homologado) ou contornado (aguarda homologação). Os nomes ficam
+     numa coluna parada; cada pessoa tem uma faixa, sombreada uma sim, uma não. */
+  .lt2 { --dw:16px; display:grid; grid-template-columns:118px minmax(0,1fr); background:var(--surface); padding:8px 0 6px; }
   .lt-nomes { border-right:1.5px solid var(--border-forte); }
   .lt-rolo { overflow-x:auto; }
-  .lt-trilhos { min-width:300px; }
-  .lt-l { height:40px; display:flex; flex-direction:column; justify-content:center; }
-  .lt-l.cab { height:26px; }
+  .lt-l { height:34px; display:flex; flex-direction:column; justify-content:center; position:relative; }
+  .lt-l.cab-m { height:22px; }
+  .lt-l.cab-d { height:22px; }
   .lt-l.faixa { background:color-mix(in srgb, var(--fg) 7%, var(--surface)); }
   .lt-l.junto-l { border-top:1.5px solid var(--border-forte); }
   .lt-nomes .lt-l { padding:0 10px 0 12px; font-size:14.5px; font-weight:700; }
-  .lt-nome small { display:block; font-size:12px; font-weight:500; color:var(--fg-muted); }
-  .lt-trilho { position:relative; height:100%; }
-  .lt-div { position:absolute; top:0; bottom:0; width:0; border-left:1px solid var(--border); }
-  .lt-rot { position:absolute; top:0; line-height:40px; font-size:13px; font-weight:700; white-space:nowrap; color:var(--fg); padding:0 6px; }
-  .lt-rot.antes { text-align:right; }
+  .lt-nome small { display:block; font-size:12px; font-weight:500; color:var(--fg-muted); line-height:1.1; }
+  .lt-dias { position:relative; height:100%; }
+  .lt-fds { position:absolute; top:0; bottom:0; width:var(--dw); background:color-mix(in srgb, var(--fg) 6%, transparent); }
+  .lt-col { position:absolute; inset:0; background:repeating-linear-gradient(90deg, transparent 0 calc(var(--dw) - 1px), var(--border) calc(var(--dw) - 1px) var(--dw)); }
+  .lt-mesdiv { position:absolute; top:0; bottom:0; width:0; border-left:1.5px solid var(--border-forte); }
+  .lt-meses2 { display:flex; height:100%; }
+  .lt-mes2 { flex:none; border-left:1.5px solid var(--border-forte); }
+  .lt-mes2:first-child { border-left:0; }
+  .lt-mesnome { position:sticky; left:0; display:inline-block; line-height:22px; padding:0 6px; font-size:12.5px; font-weight:800; color:var(--fg);
+                text-transform:uppercase; letter-spacing:.04em; white-space:nowrap; background:var(--surface); }
+  .lt-dnum { position:absolute; top:0; width:var(--dw); line-height:22px; text-align:center; font-size:11px; font-weight:700; color:var(--fg-muted); }
+  .lt-dnum.fds { color:color-mix(in srgb, var(--fg-muted) 70%, var(--surface)); }
+  .lt-dnum.hoje { color:#fff; background:var(--alerta); border-radius:4px; }
+  .lt-q { position:absolute; top:calc(50% - (var(--dw) - 4px) / 2); width:calc(var(--dw) - 4px); height:calc(var(--dw) - 4px);
+          border-radius:3px; background:var(--mes); }
+  .lt-q.pedida { background:color-mix(in srgb, var(--mes) 18%, var(--surface)); border:1.5px dashed var(--mes); }
+  .lt-q.junto { background:var(--aviso); }
+  .lt-hoje { position:absolute; top:0; bottom:0; width:var(--dw); outline:2px solid var(--alerta); outline-offset:-1px; z-index:1; pointer-events:none; }
   .lt-dica { padding:8px 12px 0; background:var(--surface); font-size:13.5px; color:var(--fg-muted); }
-  .lt-lista { padding:4px 12px 10px; background:var(--surface); font-size:14.5px; display:grid; gap:4px; }
+  .lt-lista { padding:6px 12px 10px; background:var(--surface); font-size:14.5px; display:grid; gap:5px; }
   .lt-lista b { font-weight:800; }
-  .lt-meses { display:grid; height:26px; align-items:center; }
-  .lt-mes { font-size:12.5px; font-weight:700; color:var(--fg-muted); text-transform:uppercase; letter-spacing:.04em; padding-left:4px; }
-  .lt-barra { position:absolute; top:7px; bottom:7px; border-radius:6px; min-width:6px;
-              background:color-mix(in srgb, var(--mes) 28%, var(--surface)); border:1.5px solid var(--mes); }
-  .lt-barra.pedida { background:var(--surface); border-style:dashed; }
-  .lt-barra.aberta { border-right:0; border-radius:6px 0 0 6px; }
-  .lt-junto { position:absolute; top:7px; bottom:7px; border-radius:6px; min-width:18px; overflow:hidden;
-              font-size:13px; font-weight:800; line-height:22px; text-align:center; color:var(--fg);
-              background:color-mix(in srgb, var(--aviso) 22%, var(--surface)); border:1.5px solid var(--aviso); }
-  .lt-hoje { position:absolute; top:0; bottom:0; width:0; border-left:2px solid var(--alerta); z-index:1; }
+  .lt-lista .lt-tit { font-size:12.5px; font-weight:800; text-transform:uppercase; letter-spacing:.04em; color:var(--fg-muted); padding-top:4px; }
   .lt-legenda { display:flex; gap:14px; flex-wrap:wrap; font-size:13px; color:var(--fg-muted); padding:8px 12px 10px; background:var(--surface); }
-  .lt-legenda i { display:inline-block; width:22px; height:12px; border-radius:3px; vertical-align:-1px; margin-right:5px;
-                  background:color-mix(in srgb, var(--mes) 28%, var(--surface)); border:1.5px solid var(--mes); }
-  .lt-legenda i.pedida { background:var(--surface); border-style:dashed; }
-  .lt-legenda i.junto { background:color-mix(in srgb, var(--aviso) 22%, var(--surface)); border-color:var(--aviso); }
-  .lt-legenda i.hoje { width:0; height:14px; border:0; border-left:2px solid var(--alerta); border-radius:0; }
+  .lt-legenda i { display:inline-block; width:12px; height:12px; border-radius:3px; vertical-align:-1px; margin-right:5px; background:var(--mes); }
+  .lt-legenda i.pedida { background:color-mix(in srgb, var(--mes) 18%, var(--surface)); border:1.5px dashed var(--mes); }
+  .lt-legenda i.junto { background:var(--aviso); }
+  .lt-legenda i.hoje { background:var(--surface); outline:2px solid var(--alerta); outline-offset:-1px; }
   /* Versão 37: atalhos. Cada um é um botão largo, com borda, para acertar de primeira. */
   .atalhos { display:grid; grid-template-columns:repeat(2, minmax(0,1fr)); gap:8px; padding:10px; background:var(--surface); }
   .atalho { display:flex; align-items:center; justify-content:space-between; gap:6px; min-height:42px; padding:8px 12px;
@@ -2204,72 +2206,72 @@ window.iniciarArea = () => {
   }
   // Versão 37: a linha do tempo das férias da equipe, como um Gantt. Seis meses a partir
   // do mês atual (até doze, se houver férias marcadas mais longe). Todos veem.
+  // Versão 42: a linha do tempo das férias em quadradinhos de dia (pedido do Juarez em 23/11:
+  // com barras e textos, períodos colados se sobrepunham). Vai do mês atual até o mês da última
+  // férias marcada; rola para o lado, com os nomes parados, e abre na semana de hoje.
+  // As datas por extenso ficam na lista embaixo, por pessoa — nada de texto dentro do gráfico.
+  let ltRolagem = null;   // onde a pessoa deixou a rolagem; sobrevive ao redesenho
   function linhaTempoFerias() {
-    const ini = new Date(hoje.getFullYear(), hoje.getMonth(), 1);
+    const DIA = 864e5, ini = new Date(hoje.getFullYear(), hoje.getMonth(), 1);
     const valem = FERIAS.filter(aindaVale);
     const ultimo = valem.reduce((m, f) => f.ate && dData(f.ate) > m ? dData(f.ate) : m, ini);
-    // Versão 38: a tela mostra três meses; o resto, até a última férias marcada, rola para o lado.
-    const VISIVEIS = 3;
-    const nMeses = Math.min(13, Math.max(VISIVEIS, (ultimo.getFullYear() - ini.getFullYear()) * 12 + ultimo.getMonth() - ini.getMonth() + 1));
-    const fim = new Date(ini.getFullYear(), ini.getMonth() + nMeses, 1);   // exclusivo
-    const DIA = 864e5, total = Math.round((fim - ini) / DIA);
-    const pos = d => Math.max(0, Math.min(total, Math.round((d - ini) / DIA)));
-    const pct = n => (n / total * 100).toFixed(3) + "%";
-    const meses = Array.from({ length: nMeses }, (_, i) => new Date(ini.getFullYear(), ini.getMonth() + i, 1));
-    const larg = meses.map((m, i) => pos(meses[i + 1] || fim) - pos(m));
-    const colunas = larg.map(n => n + "fr").join(" ");
-    const hojeX = pos(hoje);
-    const barra = f => {
-      const a = pos(dData(f.de)), aberta = !f.ate, b = aberta ? total : pos(dData(f.ate)) + 1;
-      if (b <= 0 || a >= total) return "";
-      const rot = `${ROTULO_AUSENCIA[f.tipo]} ${ddmm(f.de)}${f.ate ? " a " + ddmm(f.ate) : " — sem data de volta"}`;
-      const dica = `${curto(f.quem)}: ${rot}${f.situacao === "homologada" ? "" : " (aguarda homologação)"}`;
-      // O texto vai ao lado da barra: depois dela, ou antes, se a barra chega perto do fim.
-      const txt = aberta ? `${ROTULO_AUSENCIA[f.tipo]} desde ${ddmm(f.de)}, sem volta marcada` : `${ddmm(f.de)} a ${ddmm(f.ate)}`;
-      const rotulo = aberta ? `<span class="lt-rot" style="left:${pct(a)}">${txt}</span>`
-        : b > total * .65 ? `<span class="lt-rot antes" style="right:calc(100% - ${pct(a)})">${txt}</span>`
-        : `<span class="lt-rot" style="left:${pct(b)}">${txt}</span>`;
-      return `<span class="lt-barra${f.situacao === "homologada" ? "" : " pedida"}${aberta ? " aberta" : ""}"
-        style="left:${pct(a)};width:${pct(Math.max(1, b - a))}" title="${dica}"></span>${rotulo}`;
+    const nMeses = Math.min(13, Math.max(3, (ultimo.getFullYear() - ini.getFullYear()) * 12 + ultimo.getMonth() - ini.getMonth() + 1));
+    const fim = new Date(ini.getFullYear(), ini.getMonth() + nMeses, 1);
+    const total = Math.round((fim - ini) / DIA);
+    const idx = d => Math.round((new Date(d.getFullYear(), d.getMonth(), d.getDate()) - ini) / DIA);
+    const x = n => `calc(var(--dw) * ${n})`;
+    const dias = Array.from({ length: total }, (_, i) => new Date(ini.getFullYear(), ini.getMonth(), 1 + i));
+    const hojeI = idx(hoje);
+    const fds = dias.map((d, i) => d.getDay() % 6 === 0 ? `<span class="lt-fds" style="left:${x(i)}"></span>` : "").join("");
+    const mesesI = dias.map((d, i) => d.getDate() === 1 ? i : -1).filter(i => i >= 0);
+    const divs = mesesI.slice(1).map(i => `<span class="lt-mesdiv" style="left:${x(i)}"></span>`).join("");
+    const fundo = fds + `<span class="lt-col"></span>` + divs + (hojeI >= 0 && hojeI < total ? `<span class="lt-hoje" style="left:${x(hojeI)}"></span>` : "");
+    const rotulo = f => `${ROTULO_AUSENCIA[f.tipo]} ${f.ate ? `${ddmm(f.de)} a ${ddmm(f.ate)}` : `desde ${ddmm(f.de)}, sem volta marcada`}`;
+    const quadros = f => {
+      const a = Math.max(0, idx(dData(f.de))), b = f.ate ? Math.min(total, idx(dData(f.ate)) + 1) : total;
+      if (b <= a) return "";
+      const cls = "lt-q" + (f.situacao === "homologada" ? "" : " pedida");
+      const dica = `${curto(f.quem)}: ${rotulo(f)}${f.situacao === "homologada" ? "" : " (aguarda homologação)"}`;
+      return Array.from({ length: b - a }, (_, k) => `<span class="${cls}" style="left:calc(${x(a + k)} + 1px)" title="${dica}"></span>`).join("");
     };
-    // Quem está fora em cada dia; trechos com duas ou mais pessoas viram a linha "ao mesmo tempo".
-    const fora = Array.from({ length: total }, (_, d) => {
-      const dia = new Date(ini.getTime() + d * DIA + 12 * 36e5);
-      return [...new Set(valem.filter(f => dData(f.de) <= dia && (!f.ate || dia <= new Date(dData(f.ate).getTime() + DIA - 1))).map(f => curto(f.quem)))].sort();
-    });
+    // Quem está fora em cada dia; dias com duas ou mais pessoas viram a linha "Ao mesmo tempo".
+    const fora = dias.map(d => [...new Set(valem.filter(f => dData(f.de) <= d && (!f.ate || d <= dData(f.ate))).map(f => curto(f.quem)))].sort());
     const juntos = [];
-    const deAte = j => `${ddmm(dISO(new Date(ini.getTime() + j.a * DIA)))} a ${ddmm(dISO(new Date(ini.getTime() + (j.b - 1) * DIA)))}`;
     fora.forEach((ns, d) => {
       const k = ns.join(", "), ult = juntos[juntos.length - 1];
       if (ns.length < 2) return;
-      if (ult && ult.k === k && ult.b === d) ult.b = d + 1; else juntos.push({ k, n: ns.length, a: d, b: d + 1 });
+      if (ult && ult.k === k && ult.b === d) ult.b = d + 1; else juntos.push({ k, a: d, b: d + 1 });
     });
-    const divs = meses.slice(1).map(m => `<span class="lt-div" style="left:${pct(pos(m))}"></span>`).join("");
-    const trilho = conteudo => `<div class="lt-trilho">${divs}${conteudo}${hojeX > 0 && hojeX < total ? `<span class="lt-hoje" style="left:${pct(hojeX)}"></span>` : ""}</div>`;
-    // Uma faixa sim, outra não, sombreada — a mesma nos dois lados, para o olho seguir a pessoa.
+    const deAte = j => j.b - j.a === 1 ? ddmm(dISO(dias[j.a])) : `${ddmm(dISO(dias[j.a]))} a ${ddmm(dISO(dias[j.b - 1]))}`;
     const faixa = i => i % 2 === 0 ? " faixa" : "";
-    const nomes = EQUIPE.map((n, i) => {
-      const fs = valem.filter(f => f.quem === n);
-      return `<div class="lt-l lt-nome${faixa(i)}">${curto(n)}${fs.length ? "" : "<small>nada marcado</small>"}</div>`;
-    }).join("");
-    const trilhos = EQUIPE.map((n, i) => `<div class="lt-l${faixa(i)}">${trilho(valem.filter(f => f.quem === n).map(barra).join(""))}</div>`).join("");
+    const nomes = EQUIPE.map((n, i) => `<div class="lt-l lt-nome${faixa(i)}">${curto(n)}${valem.some(f => f.quem === n) ? "" : "<small>nada marcado</small>"}</div>`).join("");
+    const linhas = EQUIPE.map((n, i) => `<div class="lt-l${faixa(i)}"><div class="lt-dias">${fundo}${valem.filter(f => f.quem === n).map(quadros).join("")}</div></div>`).join("");
+    const lista = EQUIPE.map(n => { const fs = valem.filter(f => f.quem === n).sort((a, b) => a.de < b.de ? -1 : 1);
+      return fs.length ? `<span><b>${curto(n)}:</b> ${fs.map(f => rotulo(f) + (f.situacao === "homologada" ? "" : " (aguarda homologação)")).join(" · ")}</span>` : ""; }).join("");
+    // Abre na semana de hoje; depois, fica onde a pessoa deixou.
+    setTimeout(() => document.querySelectorAll(".lt-rolo").forEach(r => {
+      r.scrollLeft = ltRolagem != null ? ltRolagem : Math.max(0, (hojeI - 3) * 16);
+      r.onscroll = () => { ltRolagem = r.scrollLeft; };
+    }));
     return bloco("var(--mes)", "Férias da equipe — linha do tempo", "", `
-      ${nMeses > VISIVEIS ? `<p class="lt-dica">Mostra três meses. Para ver até ${MESES[(ini.getMonth() + nMeses - 1) % 12]}, role as marcações para o lado → (os nomes ficam parados)</p>` : ""}
+      <p class="lt-dica">Cada quadradinho é um dia. Role as marcações para o lado → (os nomes ficam parados). As datas estão por extenso embaixo.</p>
       <div class="lt2">
         <div class="lt-nomes">
-          <div class="lt-l cab"></div>
+          <div class="lt-l cab-m"></div><div class="lt-l cab-d"></div>
           ${nomes}
           <div class="lt-l lt-nome junto-l">Ao mesmo tempo${juntos.length ? "" : "<small>ninguém junto</small>"}</div>
         </div>
-        <div class="lt-rolo"><div class="lt-trilhos" style="width:${(nMeses / VISIVEIS * 100).toFixed(2)}%">
-          <div class="lt-l cab lt-meses" style="grid-template-columns:${colunas}">${meses.map(m => `<span class="lt-mes">${MESES[m.getMonth()].slice(0, 3)}${m.getMonth() === 0 || m === meses[0] ? " " + String(m.getFullYear()).slice(2) : ""}</span>`).join("")}</div>
-          ${trilhos}
-          <div class="lt-l junto-l">${trilho(juntos.map(j =>
-            `<span class="lt-junto" style="left:${pct(j.a)};width:${pct(j.b - j.a)}" title="${j.k} — ${deAte(j)}">${j.n}</span>`).join(""))}</div>
+        <div class="lt-rolo"><div style="width:${x(total)};position:relative">
+          <div class="lt-l cab-m"><div class="lt-meses2">${mesesI.map((i, k) => `<div class="lt-mes2" style="width:${x((mesesI[k + 1] ?? total) - i)}"><span class="lt-mesnome">${MESES[dias[i].getMonth()]}${dias[i].getMonth() === 0 || i === 0 ? " " + dias[i].getFullYear() : ""}</span></div>`).join("")}</div></div>
+          <div class="lt-l cab-d">${dias.map((d, i) => `<span class="lt-dnum${d.getDay() % 6 === 0 ? " fds" : ""}${i === hojeI ? " hoje" : ""}" style="left:${x(i)}">${d.getDate()}</span>`).join("")}</div>
+          ${linhas}
+          <div class="lt-l junto-l"><div class="lt-dias">${fundo}${juntos.map(j =>
+            Array.from({ length: j.b - j.a }, (_, k) => `<span class="lt-q junto" style="left:calc(${x(j.a + k)} + 1px)" title="${j.k} — ${deAte(j)}"></span>`).join("")).join("")}</div></div>
         </div></div>
       </div>
-      ${juntos.length ? `<div class="lt-lista">${juntos.map(j => `<span><b>${deAte(j)}:</b> ${j.k.replace(/, ([^,]*)$/, " e $1")} fora ao mesmo tempo</span>`).join("")}</div>` : ""}
-      <div class="lt-legenda"><span><i></i>homologada</span><span><i class="pedida"></i>aguarda homologação</span><span><i class="junto"></i>duas ou mais pessoas fora</span><span><i class="hoje"></i>hoje</span></div>`);
+      <div class="lt-legenda"><span><i></i>homologada</span><span><i class="pedida"></i>aguarda homologação</span><span><i class="junto"></i>duas ou mais pessoas fora</span><span><i class="hoje"></i>hoje</span></div>
+      ${lista ? `<div class="lt-lista"><span class="lt-tit">As datas</span>${lista}</div>` : ""}
+      ${juntos.length ? `<div class="lt-lista"><span class="lt-tit">Fora ao mesmo tempo</span>${juntos.map(j => `<span><b>${deAte(j)}:</b> ${j.k.replace(/, ([^,]*)$/, " e $1")}</span>`).join("")}</div>` : ""}`);
   }
   // Cada pessoa vê as suas; o chefe vê o quadro de todos, por data de início.
   function blocoFerias() {
@@ -2749,8 +2751,8 @@ window.iniciarArea = () => {
     $("#pe").innerHTML = `<b>CGGES</b> — Escritório de Processos da SPU.
         ${REAL ? `<span class="versao">Home EPP · área da equipe · entrou como ${curto(eu)}</span>
         <button type="button" class="link" data-acao="sair">Sair</button>`
-        : `<span class="versao">Home EPP · área logada · protótipo de 23/11/2026 (versão 41) · dados de exemplo</span>
-        <button type="button" class="link" data-acao="vista" data-tipo="caixa" data-id="validar">Para validar nesta versão (41) →</button>`}`;
+        : `<span class="versao">Home EPP · área logada · protótipo de 23/11/2026 (versão 42) · dados de exemplo</span>
+        <button type="button" class="link" data-acao="vista" data-tipo="caixa" data-id="validar">Para validar nesta versão (42) →</button>`}`;
   }
 
   // Na frente os projetos vêm recolhidos. Abre sozinho só o que tem alerta: tarefa
@@ -3125,7 +3127,7 @@ window.iniciarArea = () => {
             pt.map(p => linhaPedido(p)).join("")) : ""}`;
     }
     return `
-      ${banda("var(--off)", "Protótipo", "Para validar", "Não faz parte da tela final. No alto, o que mudou na versão 41; embaixo, o que veio antes. Em itálico, o que eu decidi por conta própria para você confirmar.")}
+      ${banda("var(--off)", "Protótipo", "Para validar", "Não faz parte da tela final. No alto, o que mudou na versão 42; embaixo, o que veio antes. Em itálico, o que eu decidi por conta própria para você confirmar.")}
       <div class="bloco validar"><ol><li>Notas de revisão retiradas da versão publicada.</li></ol></div>`;
   }
 

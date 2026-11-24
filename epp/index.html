@@ -280,6 +280,9 @@
   .nova-linha { display:flex; gap:8px; padding:8px 12px; background:var(--surface); }
   .nova-linha input { flex:1; min-width:0; font-size:14px; padding:6px 10px; border:1.5px dashed var(--border-forte); border-radius:7px; background:var(--surface); color:var(--fg); }
   .nova-linha.solta { padding:0; }
+  /* Versão 44: todo campo de criar tem botão — "escreva e dê Enter" não era achado. */
+  .aviso-novo .bt-criar { align-self:flex-start; }
+  .bt-criar { flex:none; white-space:nowrap; border-color:var(--accent); color:var(--accent); font-weight:700; }
   /* Versão 27: o prazo ao lado do título, na hora de abrir a tarefa. */
   .nova-linha { flex-wrap:wrap; }
   .nova-linha input[type="text"] { flex:1 1 220px; }
@@ -2583,7 +2586,7 @@ window.iniciarArea = () => {
   // anotações, e só quem escreveu vê. Depois vincula a um projeto, ou vira tarefa.
   const campoMinha = () => `
     <div class="nova-linha"><input type="text" data-nova="minha" maxlength="300"
-      placeholder="Anotar — uma tarefa só sua, ou uma observação; escreva e dê Enter" aria-label="Anotar"></div>`;
+      placeholder="Uma tarefa só sua, ou uma observação" aria-label="Nova anotação"><button type="button" class="bt bt-criar" data-acao="criar-linha">Anotar</button></div>`;
   // ---- Minhas tarefas por situação (versão 25) ----
   function secaoDaTarefa(t) {
     const st = estadoTarefa(t);
@@ -2719,8 +2722,9 @@ window.iniciarArea = () => {
       (av.length ? "" : '<p class="vazio">Nenhum aviso para a equipe.</p>') +
       (av.length > VISIVEIS ? `<div class="aviso-item"><button type="button" class="link fino" data-acao="aviso-ver">${verAvisos ? `mostrar só os ${VISIVEIS} últimos` : `mais — ver os ${av.length} avisos`}</button></div>` : "") + `
       <div class="aviso-novo">
-        <input type="text" data-nova="aviso" maxlength="500" placeholder="Novo aviso para todos — escreva e dê Enter" aria-label="Novo aviso para a equipe">
+        <input type="text" data-nova="aviso" maxlength="500" placeholder="Novo aviso para todos" aria-label="Novo aviso para a equipe">
         <label>vale até <input type="date" id="aviso-ate" aria-label="O aviso vale até"></label>
+        <button type="button" class="bt bt-criar" data-acao="criar-linha">Publicar aviso</button>
       </div>`);
   }
 
@@ -2749,8 +2753,8 @@ window.iniciarArea = () => {
     $("#pe").innerHTML = `<b>CGGES</b> — Escritório de Processos da SPU.
         ${REAL ? `<span class="versao">Home EPP · área da equipe · entrou como ${curto(eu)}</span>
         <button type="button" class="link" data-acao="sair">Sair</button>`
-        : `<span class="versao">Home EPP · área logada · protótipo de 23/11/2026 (versão 43) · dados de exemplo</span>
-        <button type="button" class="link" data-acao="vista" data-tipo="caixa" data-id="validar">Para validar nesta versão (43) →</button>`}`;
+        : `<span class="versao">Home EPP · área logada · protótipo de 24/11/2026 (versão 44) · dados de exemplo</span>
+        <button type="button" class="link" data-acao="vista" data-tipo="caixa" data-id="validar">Para validar nesta versão (44) →</button>`}`;
   }
 
   // Na frente os projetos vêm recolhidos. Abre sozinho só o que tem alerta: tarefa
@@ -2860,7 +2864,7 @@ window.iniciarArea = () => {
       ${banda("var(--f9)", "", "Frentes de trabalho", "")}
       ${bloco("var(--f9)", "Frentes ativas", ativas.length, ativas.map(linha).join("") + (chefe ? `
         <div class="nova-linha"><input type="text" data-nova="frente" maxlength="80"
-          placeholder="Nova frente de trabalho — escreva o nome e dê Enter" aria-label="Nova frente de trabalho"></div>` : ""),
+          placeholder="Nome da nova frente de trabalho" aria-label="Nova frente de trabalho"><button type="button" class="bt bt-criar" data-acao="criar-linha">Criar frente</button></div>` : ""),
         "Nenhuma frente ativa.")}
       ${chefe && arq.length ? `<button type="button" class="link" data-acao="fr-ver-arq">${verFrentesArq ? "esconder as arquivadas"
           : `ver ${arq.length === 1 ? "a frente arquivada" : `as ${arq.length} frentes arquivadas`}`}</button>` : ""}
@@ -2980,7 +2984,8 @@ window.iniciarArea = () => {
       const fora = ausenciaDe(eu);
       return `
         ${banda("var(--accent)", "", "Minhas tarefas", fora
-            ? `<b>Você está de ${foraAte(fora)}.</b> As suas tarefas estão com os suplentes e voltam para você quando o período acabar.` : "")}
+            ? `<b>Você está de ${foraAte(fora)}.</b> As suas tarefas estão com os suplentes e voltam para você quando o período acabar.` : "",
+            `<div class="grupo-linha"><button type="button" class="bt pri" data-acao="nova-minha">Nova tarefa</button></div>`)}
         ${pedem.length ? bloco("var(--meio)", "Pediram andamento", pedem.length, pedem.map(t => linhaTarefa(t, { onde:true, comentar:true })).join("")) : ""}
         ${secao("nao",  "var(--off)",    "Não iniciadas", g.nao)}
         ${secao("and",  "var(--accent)", "Em andamento",  g.and)}
@@ -3075,7 +3080,7 @@ window.iniciarArea = () => {
                 <button type="button" class="bt" data-acao="ideia-descartar" data-id="${i.id}">Descartar</button>
               </div>
             </div>`).join("") +
-            `<div class="nova-linha"><input type="text" data-nova="ideia" placeholder="Anotar uma ideia — escreva e dê Enter" aria-label="Anotar uma ideia"></div>`)}`;
+            `<div class="nova-linha"><input type="text" data-nova="ideia" placeholder="Uma ideia que ainda não é trabalho" aria-label="Nova ideia"><button type="button" class="bt bt-criar" data-acao="criar-linha">Criar ideia</button></div>`)}`;
     }
     if (id === "paralisado") {
       const gs = chefe ? guardados() : [], sus = suspensas().filter(ehMeu), arq = chefe ? arquivados() : [];
@@ -3125,7 +3130,7 @@ window.iniciarArea = () => {
             pt.map(p => linhaPedido(p)).join("")) : ""}`;
     }
     return `
-      ${banda("var(--off)", "Protótipo", "Para validar", "Não faz parte da tela final. No alto, o que mudou na versão 43; embaixo, o que veio antes. Em itálico, o que eu decidi por conta própria para você confirmar.")}
+      ${banda("var(--off)", "Protótipo", "Para validar", "Não faz parte da tela final. No alto, o que mudou na versão 44; embaixo, o que veio antes. Em itálico, o que eu decidi por conta própria para você confirmar.")}
       <div class="bloco validar"><ol><li>Notas de revisão retiradas da versão publicada.</li></ol></div>`;
   }
 
@@ -3639,6 +3644,19 @@ window.iniciarArea = () => {
     "fr-editar"({ id }) { if (eu !== CHEFE) return false; editandoFrente = id;
       setTimeout(() => { const c = $("#frd-nome"); if (c) c.focus(); }); },
     "fr-cancelar"() { editandoFrente = null; },
+    // Versão 44: o botão ao lado do campo faz o mesmo que o Enter.
+    // Versão 44: nova tarefa a partir de Minhas tarefas — já no nome de quem clica; a frente se escolhe na ficha.
+    "nova-minha"() {
+      pedirNova({ rotulo:"Nova tarefa", como:"tarefa", fixo:true, frente: frenteProvavel(), projeto:null, responsavel: eu, fica:true });
+      return false;
+    },
+    "criar-linha"(_, alvo) {
+      const c = alvo && alvo.closest(".nova-linha, .aviso-novo"), campo = c && c.querySelector("input[data-nova]");
+      if (!campo) return false;
+      if (!campo.value.trim()) { campo.focus(); return false; }
+      campo.dispatchEvent(new KeyboardEvent("keydown", { key: "Enter", bubbles: true }));
+      return false;
+    },
     // ---- versão 40: criar por botão, no diálogo de novo trabalho ----
     "novo-projeto"({ frente: f }) {
       pedirNova({ rotulo:"Novo projeto em " + frente(f).nome, como:"projeto", fixo:true, frente:f });
@@ -3974,7 +3992,7 @@ window.iniciarArea = () => {
     const fn = ACOES[alvo.dataset.acao];
     if (!fn) return;
     const antes = avisoMsg;
-    if (fn(alvo.dataset) === false) return;      // só abriu alguma coisa: não redesenha
+    if (fn(alvo.dataset, alvo) === false) return;      // só abriu alguma coisa: não redesenha
     if (avisoMsg === antes) avisoMsg = "";       // o aviso dura até a ação seguinte
     desenhar();
   });

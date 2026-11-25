@@ -770,7 +770,7 @@
     { id:"p-spunet", frente:"prototipacao", nome:"Alteração SPUnet Cadastro",
       estado:"depois", motivo:"aguardando" },
     { id:"p-binst",  frente:"instrucao",    nome:"Backlog de demandas",
-      url:"https://claude.ai/artifact/7ospmmbwV3gH2rPFPZfXxv" },
+      url:"https://spu-projetoseprocessos.github.io/backlog-modulo-instrucao/" },
     { id:"p-col",    frente:"curadoria",    nome:"Coleção Fluxos e Procedimentos" },
     { id:"p-cat",    frente:"curadoria",    nome:"Catálogo do SPUProcessos" }
   ].map(p => ({ estado:"ativo", motivo:null, mexido:null, ...p }));
@@ -1142,7 +1142,8 @@
   const verArqPed = {}, verCofre = {};   // por projeto: o arquivo dos pedidos e o cofre das concluídas
   let trocandoPlano = false;            // o campo para subir o plano de entregas está aberto
   let verArquivados = false, verAvisos = false, novoAviso = false;
-  let editandoFrente = null, verFrentesArq = false, editandoProjeto = null, editandoAtalhos = false;   // versão 27: a tela das frentes
+  let editandoFrente = null, verFrentesArq = false, editandoProjeto = null, editandoAtalhos = false;
+  let marcouEm = 0;   // quando o "Preenchi o Petrvs" foi clicado (contra o clique duplo)   // versão 27: a tela das frentes
   let planoEditando = null;
   let excluindo = null;                               // versão 31: a tarefa ou recorrente cuja exclusão está sendo confirmada                           // versão 30: { quem, i } da linha do plano aberta
   const avisoAberto = {};                // versão 24: os avisos longos que a pessoa expandiu
@@ -3513,8 +3514,11 @@
 
     // ---- todo mês: Petrvs e frequência ----
     // A pessoa só marca o Petrvs. Assinar, aprovar a frequência e cobrar são do chefe.
-    "mes-marcar"({ mes, quem })     { if (podeMarcar(quem)) mesFech(mes).marcas[quem].petrvs = dISO(hoje); },
-    "mes-desmarcar"({ mes, quem })  { const x = mesFech(mes).marcas[quem]; if (podeMarcar(quem) && !x.assinado) x.petrvs = null; },
+    // 25/11/2026: o "desfazer" nasce no lugar do botão; um clique duplo em "Preenchi o Petrvs"
+    // desmarcava na hora. Agora o desfazer não vale no primeiro segundo e meio.
+    "mes-marcar"({ mes, quem })     { if (podeMarcar(quem)) { mesFech(mes).marcas[quem].petrvs = dISO(hoje); marcouEm = Date.now(); } },
+    "mes-desmarcar"({ mes, quem })  { if (Date.now() - marcouEm < 1500) return false;
+                                      const x = mesFech(mes).marcas[quem]; if (podeMarcar(quem) && !x.assinado) x.petrvs = null; },
     "mes-assinar"({ mes, quem })    { const x = mesFech(mes).marcas[quem]; if (eu === CHEFE && x.petrvs) x.assinado = dISO(hoje); },
     "mes-desassinar"({ mes, quem }) { if (eu === CHEFE) mesFech(mes).marcas[quem].assinado = null; },
     // A frequência é uma marca por mês, só do chefe (versão 24).

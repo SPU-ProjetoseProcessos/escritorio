@@ -922,6 +922,13 @@
   }
 
   let gravando = false, deNovo = false, falhas = 0, gravacoes = 0;
+  // Há o que gravar: algo mudou ou entrou — ou saiu (26/11/2026: a exclusão ainda não
+  // enviada não contava, e uma atualização nessa hora podia trazer de volta o excluído).
+  function temPendencia() {
+    const atual = docsAtuais();
+    return [...atual].some(([k, d]) => foto.get(k) !== canon(d.dados) + "@" + (d.dono || ""))
+      || [...foto.keys()].some(k => !atual.has(k));
+  }
   function aviso(txt) {
     let el = $("#epp-aviso");
     if (!txt) { if (el) el.hidden = true; return; }
@@ -981,7 +988,6 @@
     if (!R || gravando || ocupado() || document.visibilityState !== "visible") return;
     const foco = document.activeElement;
     if (foco && /^(INPUT|TEXTAREA|SELECT)$/.test(foco.tagName) && foco.value) return;
-    const temPendencia = () => [...docsAtuais()].some(([k, d]) => foto.get(k) !== canon(d.dados) + "@" + (d.dono || ""));
     if (temPendencia()) return;   // ainda há o que gravar
     // 25/11/2026: se alguém clicou e gravou enquanto o banco respondia, a leitura já nasceu velha —
     // aplicá-la desfazia o clique na tela (e, logo depois, no banco). Agora ela é descartada.
@@ -1014,7 +1020,7 @@
     document.addEventListener("visibilitychange", () => { if (document.visibilityState === "visible") atualizar(false); });
     setInterval(salvar, 5000);          // garante a gravação do que mudou sem redesenhar
     window.addEventListener("beforeunload", ev => {
-      if ([...docsAtuais()].some(([k, d]) => foto.get(k) !== canon(d.dados) + "@" + (d.dono || ""))) { salvar(); ev.preventDefault(); ev.returnValue = ""; }
+      if (temPendencia()) { salvar(); ev.preventDefault(); ev.returnValue = ""; }
     });
   }
   function sair() { guardar(null); location.reload(); }
@@ -3464,7 +3470,7 @@ window.iniciarArea = () => {
       : excluindo === t.id ? `<span class="pt-trab"><b>Excluir de vez?</b> Some da área para todos e não dá para desfazer.</span>
           <button type="button" class="bt vermelho" data-acao="t-excluir-sim">Excluir</button>
           <button type="button" class="bt" data-acao="t-excluir-nao">Cancelar</button>`
-      : `<button type="button" class="link fino" data-acao="t-excluir">Excluir tarefa</button>`;
+      : `<button type="button" class="bt" data-acao="t-excluir">Excluir tarefa</button>`;
     $("#ft-resp").innerHTML = opcoesEquipe(t.responsavel);
     $("#ft-resp").value = t.responsavel || "";
     // Suplente: quem atribui é o chefe (versão 24).
@@ -3557,8 +3563,8 @@ window.iniciarArea = () => {
           <button type="button" class="bt vermelho" data-acao="r-excluir-sim" data-id="${r.id}">Excluir</button>
           <button type="button" class="bt" data-acao="r-excluir-nao" data-id="${r.id}">Cancelar</button></div>`
         : `<div class="grupo-linha">
-          <button type="button" class="bt" data-acao="r-parar" data-id="${r.id}">Parar de repetir — vira tarefa de uma vez</button>
-          <button type="button" class="link fino" data-acao="r-excluir" data-id="${r.id}">Excluir tarefa recorrente</button></div>`}
+          <button type="button" class="bt" data-acao="r-excluir" data-id="${r.id}">Excluir tarefa recorrente</button>
+          <button type="button" class="bt" data-acao="r-parar" data-id="${r.id}">Parar de repetir — vira tarefa de uma vez</button></div>`}
       <div class="historico"><b>Rodadas concluídas</b>${feitas.length
         ? feitas.map(o => `<span><time>${dBR(dData(o.feita_em))}</time> — ${curto(o.quem)} ${DESFECHO[o.desfecho] || "fez"} (rodada de ${dBR(dData(o.vencimento))})</span>`).join("")
         : "<span>Nenhuma rodada registrada ainda.</span>"}</div>`;

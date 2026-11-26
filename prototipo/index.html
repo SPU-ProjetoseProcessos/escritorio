@@ -3122,7 +3122,7 @@
       : excluindo === t.id ? `<span class="pt-trab"><b>Excluir de vez?</b> Some da área para todos e não dá para desfazer.</span>
           <button type="button" class="bt vermelho" data-acao="t-excluir-sim">Excluir</button>
           <button type="button" class="bt" data-acao="t-excluir-nao">Cancelar</button>`
-      : `<button type="button" class="link fino" data-acao="t-excluir">Excluir tarefa</button>`;
+      : `<button type="button" class="bt" data-acao="t-excluir">Excluir tarefa</button>`;
     $("#ft-resp").innerHTML = opcoesEquipe(t.responsavel);
     $("#ft-resp").value = t.responsavel || "";
     // Suplente: quem atribui é o chefe (versão 24).
@@ -3215,8 +3215,8 @@
           <button type="button" class="bt vermelho" data-acao="r-excluir-sim" data-id="${r.id}">Excluir</button>
           <button type="button" class="bt" data-acao="r-excluir-nao" data-id="${r.id}">Cancelar</button></div>`
         : `<div class="grupo-linha">
-          <button type="button" class="bt" data-acao="r-parar" data-id="${r.id}">Parar de repetir — vira tarefa de uma vez</button>
-          <button type="button" class="link fino" data-acao="r-excluir" data-id="${r.id}">Excluir tarefa recorrente</button></div>`}
+          <button type="button" class="bt" data-acao="r-excluir" data-id="${r.id}">Excluir tarefa recorrente</button>
+          <button type="button" class="bt" data-acao="r-parar" data-id="${r.id}">Parar de repetir — vira tarefa de uma vez</button></div>`}
       <div class="historico"><b>Rodadas concluídas</b>${feitas.length
         ? feitas.map(o => `<span><time>${dBR(dData(o.feita_em))}</time> — ${curto(o.quem)} ${DESFECHO[o.desfecho] || "fez"} (rodada de ${dBR(dData(o.vencimento))})</span>`).join("")
         : "<span>Nenhuma rodada registrada ainda.</span>"}</div>`;

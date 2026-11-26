@@ -1921,7 +1921,55 @@ window.iniciarArea = () => {
       const n = r.ocorrencias.filter(o => rodadaConta(r, o, nome) && no(o.feita_em)).length;
       if (n) por(r, "rotinas", { r, n, tipo:"rotinas" });
     });
-    return { mes, linhas, sem };
+    // Versão 45: no rascunho do chefe, cada linha ganha a coordenação do que a equipe
+    // fez naquela entrega — sem detalhar tarefa por tarefa. O que a equipe fez numa
+    // entrega que não está no plano do chefe sai à parte, para ele decidir onde entra.
+    const coordSem = {};
+    linhas.forEach(l => { l.equipe = []; });
+    if (nome === CHEFE) {
+      const daEquipe = t => !doNome(t, CHEFE) && [t.responsavel, ...outrosDe(t)].some(n => n && n !== CHEFE);
+      const add = (t, tipo) => {
+        const e = entregaDaEquipe(t);
+        if (!e || e === "outra" || !ENTREGAS[e]) return;
+        const i = linhasDoPlano(nome).findIndex(l => l.entrega === e);
+        (i >= 0 ? linhas[i].equipe : (coordSem[e] = coordSem[e] || [])).push({ t, tipo });
+      };
+      TAREFAS.filter(t => t.estado === "concluida" && daEquipe(t) && no(t.concluida_em))
+        .sort((a, b) => a.concluida_em < b.concluida_em ? -1 : 1).forEach(t => add(t, "feita"));
+      TAREFAS.filter(t => (t.estado === "aberta" || t.estado === "suspensa") && daEquipe(t) && noAr(t))
+        .forEach(t => add(t, "andando"));
+    }
+    return { mes, linhas, sem, coordSem };
+  }
+  // A entrega de uma tarefa da equipe: a da linha do plano que a própria pessoa escolheu,
+  // ou a do projeto ou da frente.
+  function entregaDaEquipe(t) {
+    const lp = t.linhaPetrvs, pl = lp && PLANOS[lp.quem];
+    if (pl && pl[lp.i] && pl[lp.i].entrega !== undefined) return pl[lp.i].entrega;
+    return entregaDe(t);
+  }
+  const juntarNomes = xs => xs.length < 2 ? (xs[0] || "") : xs.slice(0, -1).join(", ") + " e " + xs[xs.length - 1];
+  // Uma frase por projeto (ou frente): quantas concluídas, por quem, o que saiu, e quantas
+  // seguem em andamento.
+  function textoCoordenacao(itens) {
+    const grupos = new Map();
+    itens.forEach(({ t, tipo }) => {
+      const k = lugar(t);
+      if (!grupos.has(k)) grupos.set(k, { feitas:[], andando:0, quem:new Set() });
+      const g = grupos.get(k);
+      [t.responsavel, ...outrosDe(t)].filter(n => n && n !== CHEFE).forEach(n => g.quem.add(curto(n)));
+      if (tipo === "feita") g.feitas.push(t.entregue && t.entregue.produto ? t.entregue.produto : t.titulo);
+      else g.andando++;
+    });
+    return [...grupos].map(([onde, g]) => {
+      const quem = juntarNomes([...g.quem]);
+      const and = g.andando ? `${g.andando} em andamento` : "";
+      if (!g.feitas.length) return `• ${onde}, com ${quem}: ${and}.`;
+      const mostra = g.feitas.slice(0, 3), resto = g.feitas.length - mostra.length;
+      const oque = mostra.join("; ") + (resto ? `; e mais ${resto}` : "");
+      const n = g.feitas.length === 1 ? "1 concluída" : `${g.feitas.length} concluídas`;
+      return `• ${onde}, com ${quem}: ${n} (${oque})${and ? `; ${and}` : ""}.`;
+    }).join("\n");
   }
   function textoDaLinha(l, estilo) {
     const feitas = l.feitas.map(({ t }) => {
@@ -1942,13 +1990,16 @@ window.iniciarArea = () => {
     });
     const partes = [["Entregues no período", feitas], ["Em andamento", andando], ["Tarefas recorrentes", rotinas]]
       .filter(([, xs]) => xs.length);
+    const coord = l.equipe && l.equipe.length ? textoCoordenacao(l.equipe) : "";
     if (estilo === "corrido")
       return partes.map(([tit, xs]) => `${tit}: ${xs.map(x => x.corrido).join("; ")}.`).join(" ");
-    return partes.map(([tit, xs]) => `${tit}:\n${xs.map(x => x.lista).join("\n")}`).join("\n\n");
+    return [...partes.map(([tit, xs]) => `${tit}:\n${xs.map(x => x.lista).join("\n")}`),
+            ...(coord ? [`Coordenação da equipe:\n${coord}`] : [])].join("\n\n");
   }
   function rascunhoPetrvs(nome) {
     const r = montarRascunho(nome), dono = nome === eu, estilo = "lista";   // versão 26: sempre em lista
-    const total = r.linhas.reduce((n, l) => n + l.feitas.length + l.andando.length + l.rotinas.length, 0) + r.sem.length;
+    const total = r.linhas.reduce((n, l) => n + l.feitas.length + l.andando.length + l.rotinas.length + l.equipe.length, 0)
+      + r.sem.length + Object.keys(r.coordSem).length;
     const escolha = `
       <div class="pt-escolha">Mês:
         <button type="button" class="bt" data-acao="pt-mes" data-corrente="" aria-pressed="${!ptCorrente}">${nomeMes(MES_ATUAL)} — o que fecha agora</button>
@@ -1960,7 +2011,7 @@ window.iniciarArea = () => {
         ${total ? "" : `<p class="vazio">Nada registrado na área em ${r.mes.nome} ${dono ? "no seu nome" : "no nome de " + curto(nome)}.</p>`}
       </div>`);
     const proprio = temPlanoProprio(nome);
-    const linhas = r.linhas.filter(l => proprio || l.feitas.length || l.andando.length || l.rotinas.length).map(l => {
+    const linhas = r.linhas.filter(l => proprio || l.feitas.length || l.andando.length || l.rotinas.length || l.equipe.length).map(l => {
       const texto = textoDaLinha(l, estilo);
       const faltam = l.feitas.filter(({ t }) => !(t.entregue && t.entregue.produto));
       const titulo = !l.entrega ? "Não vinculada" : l.entrega === "outra" ? "Entrega de outra unidade ou órgão"
@@ -1992,7 +2043,21 @@ window.iniciarArea = () => {
               <option value="">levar para a linha…</option>${opcoes}</select>` : ""}</div>`;
         }).join("")}
       </div>`) : "";
-    return cab + sem + linhas;
+    const coordSem = Object.keys(r.coordSem).sort().map(e => {
+      const texto = `Coordenação da equipe:\n${textoCoordenacao(r.coordSem[e])}`;
+      return bloco("var(--meio)", esc(ENTREGAS[e]), "não está no seu plano", `
+        <div class="pt-corpo">
+          <p class="pt-falta"><b>O seu plano de trabalho não tem linha ${esc(e)}.</b>
+            <span>A equipe trabalhou nesta entrega, mas a sua coordenação não tem onde entrar. Inclua uma linha ${esc(e)} no
+            seu plano no Petrvs, ou leve o texto para a linha que achar melhor.</span></p>
+          <p class="lembrete-texto pt-texto" id="pt-c${esc(e)}">${esc(texto)}</p>
+          <div class="grupo-linha">
+            <button type="button" class="bt" data-acao="pt-copiar" data-i="c${esc(e)}">Copiar o texto</button>
+            <span class="mt-pe" id="pt-ok-c${esc(e)}">${texto.length} caracteres</span>
+          </div>
+        </div>`);
+    }).join("");
+    return cab + sem + linhas + coordSem;
   }
   // ---- o plano de trabalho de cada pessoa no Petrvs (versão 30) ----
   // As linhas que a pessoa tem no Petrvs: a entrega, o trabalho planejado e o percentual.
